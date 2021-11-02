@@ -20,7 +20,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends GenericFilterBean {
     private final TokenService tokenService;
-
+    
+    // TODO 권한 변경
+    
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String token = ((HttpServletRequest)request).getHeader("Auth");
@@ -41,7 +43,7 @@ public class JwtAuthFilter extends GenericFilterBean {
 
         chain.doFilter(request, response);
     }
-
+    
     public Authentication getAuthentication(String email) {
         return new UsernamePasswordAuthenticationToken(email, "",
                 List.of(new SimpleGrantedAuthority("ROLE_USER")));

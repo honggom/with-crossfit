@@ -52,11 +52,12 @@ public class SpOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandle
 		System.out.println("oauth2 성공");
 
 		// TODO "USER" 서버에서 롤 가져와야 됨
+		// TODO env 설정
 		Token token = tokenService.generateToken(authentication.getName(), "USER");
 		System.out.println(token);
 		System.out.println(token);
 		Cookie jwtCookie = new Cookie("jwt", token.getToken());
-		jwtCookie.setPath("http://localhost:3000/index.html");
+		jwtCookie.setPath("/");
 		
 		// 쿠키 저장 후 프론트 페이지로
 		response.addCookie(jwtCookie);

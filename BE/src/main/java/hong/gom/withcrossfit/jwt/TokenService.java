@@ -15,6 +15,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class TokenService {
 	
+	// TODO env 설정
+	
     private String secretKey = "token-secret-key";
 
     @PostConstruct
