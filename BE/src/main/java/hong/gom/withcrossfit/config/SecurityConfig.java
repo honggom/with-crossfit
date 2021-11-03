@@ -7,10 +7,11 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import hong.gom.withcrossfit.jwt.JwtAuthFilter;
-import hong.gom.withcrossfit.jwt.TokenService;
+import hong.gom.withcrossfit.jwt.JwtAuthenticationFilter;
+import hong.gom.withcrossfit.jwt.TokenUtils;
 import hong.gom.withcrossfit.service.SpOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
     private final SpOAuth2SuccessHandler successHandler;
     private final SpOAuth2UserService oAuth2UserService;
-    private final TokenService tokenService;
+    private final TokenUtils tokenService;
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -35,9 +36,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .oauth2Login()
                 .successHandler(successHandler)
-                .userInfoEndpoint().userService(oAuth2UserService);
-
-        http.addFilterBefore(new JwtAuthFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
+                .userInfoEndpoint().userService(oAuth2UserService)
+                ;
+        
+        http.addFilterBefore(new JwtAuthenticationFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
     }
     
     @Override
