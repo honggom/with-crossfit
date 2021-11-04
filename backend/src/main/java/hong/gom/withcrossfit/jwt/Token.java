@@ -11,7 +11,7 @@ import lombok.ToString;
 @Getter
 public class Token {
 	
-    private String token;
-    private String refreshToken;
+    private String jwt;
+    private String refresh;
 
 }

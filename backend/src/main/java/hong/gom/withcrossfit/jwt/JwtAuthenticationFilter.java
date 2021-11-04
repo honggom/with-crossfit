@@ -11,8 +11,11 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.StreamingHttpOutputMessage;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final TokenUtils tokenUtils;
 
@@ -37,34 +42,32 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		System.out.println("JwtAuthFilter 진입 ====================================");
+		logger.info("JwtAuthFilter 진입 ====================================");
 
 		if (requestMatcher.matches((HttpServletRequest) request)) {
 			Map<String, String> jwts = tokenUtils.getJwtFromCookie(((HttpServletRequest) request).getCookies());
 
-			String jwt = jwts.get("jwt");
-			String refreshJwt = jwts.get("refreshJwt");
-
-			System.out.println(tokenUtils.isExpired(jwt));
+			String jwt = jwts.get(env.getProperty("jwt.name"));
+			String refresh = jwts.get(env.getProperty("jwt.refresh-name"));
 
 			// jwt 기간 만료
 			if (tokenUtils.isExpired(jwt)) {
-				System.out.println("jwt 만료됨");
-				if (!tokenUtils.isExpired(refreshJwt)) {
-					System.out.println("ref 살아있음");
-					Map<String, Object> refreshJwtClaims = tokenUtils.getJwtBody(refreshJwt);
-					String refreshJwtEmail = refreshJwtClaims.get("email").toString();
+				
+				// ref 기간 유효
+				if (!tokenUtils.isExpired(refresh)) {
+					Map<String, Object> refreshJwtClaims = tokenUtils.getJwtBody(refresh);
 					
+					String refreshJwtEmail = refreshJwtClaims.get("email").toString();
 					String newJwt = tokenUtils.generateJwt(refreshJwtEmail, refreshJwtClaims.get("role").toString());
-
+					
 					cookieUtils.addJwtCookie((HttpServletResponse) response, newJwt);
 					
 					authenticated(refreshJwtEmail);
-					
-					System.out.println("재발급 완료");
-					
 					chain.doFilter(request, response);
+				
+				// jwt, ref 둘다 기간 만료
 				} else {
+					// TODO 쿠키 삭제
 					((HttpServletResponse) response)
 							.sendRedirect(env.getProperty("front-end.base-url") + "/index.html");
 					return;
@@ -72,7 +75,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 			}
 			Map<String, Object> jwtClaims = tokenUtils.getJwtBody(jwt);
 			authenticated(jwtClaims.get("email").toString());
-
 			chain.doFilter(request, response);
 		}
 	}
@@ -83,8 +85,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 				List.of(new SimpleGrantedAuthority("ROLE_USER")));
 
 		SecurityContextHolder.getContext().setAuthentication(auth);
-
-		System.out.println(SecurityContextHolder.getContext());
 	}
 
 }

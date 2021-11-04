@@ -7,6 +7,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
@@ -25,9 +27,13 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class SpOAuth2SuccessHandler implements AuthenticationSuccessHandler  {
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final TokenUtils tokenUtils;
+	
 	private final SpUserService userService;
+	
 	private final CookieUtils cookieUtils;
 	
 	@Autowired
@@ -36,19 +42,17 @@ public class SpOAuth2SuccessHandler implements AuthenticationSuccessHandler  {
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-		System.out.println("success filter 진입 ====================================");
+		logger.info("success filter 진입 ====================================");
 
 		Object principal = authentication.getPrincipal();
 
 		if (principal instanceof OidcUser) {
 			SpOAuth2User oauth = SpOAuth2User.Provider.google.convert((OidcUser) principal);
 			SpUser user = userService.load(oauth);
-			System.out.println("oauth2 인증 성공 user : " + user.toString());
 
 			// TODO "USER" 서버에서 롤 가져와야 됨
 			Token token = tokenUtils.generateJwtAndRefresh(user.getEmail(), "USER");
 			cookieUtils.addCookies(response, token);
-			System.out.println("토큰 추가");
 		}
 		response.sendRedirect(env.getProperty("front-end.base-url") + "/index.html");
 	}
