@@ -1,11 +1,16 @@
-import Cookie from "./component/Cookie";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Home, Login, Logout } from './pages';
 
 export default function App() {
   return (
     <div>
-      <a href="http://localhost:8080/oauth2/authorization/google" ><button>구글 로그인</button></a>
-      <a href="http://localhost:8080/api/hello" ><button>hello</button></a>
-      <Cookie />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} exact />
+          <Route path="/logout" element={<Logout />} exact />
+          <Route path="/home" element={<Home />} exact />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

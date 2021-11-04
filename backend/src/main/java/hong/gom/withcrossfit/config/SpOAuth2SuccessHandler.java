@@ -56,7 +56,7 @@ public class SpOAuth2SuccessHandler implements AuthenticationSuccessHandler  {
 		}
 		
 		// TODO main 페이지로 가야됨
-		response.sendRedirect(env.getProperty("front-end.base-url") + "/index.html");
+		response.sendRedirect(env.getProperty("front-end.base-url") + "/home");
 	}
 
 

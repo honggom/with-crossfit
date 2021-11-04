@@ -67,9 +67,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 				
 				// jwt, ref 둘다 기간 만료
 				} else {
-					// TODO 쿠키 삭제
 					((HttpServletResponse) response)
-							.sendRedirect(env.getProperty("front-end.base-url") + "/index.html");
+							.sendRedirect(env.getProperty("front-end.base-url") + "/logout");
 					return;
 				}
 			}
