@@ -54,6 +54,8 @@ public class SpOAuth2SuccessHandler implements AuthenticationSuccessHandler  {
 			Token token = tokenUtils.generateJwtAndRefresh(user.getEmail(), "USER");
 			cookieUtils.addCookies(response, token);
 		}
+		
+		// TODO main 페이지로 가야됨
 		response.sendRedirect(env.getProperty("front-end.base-url") + "/index.html");
 	}
 

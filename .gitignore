@@ -1,7 +1,7 @@
 HELP.md
 .DS_Store
-/BE/.gradle
-/BE/build/
+/backend/.gradle
+/backend/build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
@@ -39,7 +39,7 @@ out/
 .vscode/
 
 ### application.yml ###
-/BE/src/main/resources/application.yml
+/backend/src/main/resources/application.yml
 
 ### front ###
 /**/node_modules

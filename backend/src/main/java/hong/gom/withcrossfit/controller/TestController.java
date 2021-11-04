@@ -11,4 +11,11 @@ public class TestController {
 		return "hello";
 	}
 	
+	
+	/*
+	 * 1. 로그인 페이지로 진입하면 쿠키 무조건 삭제하고 시작
+	 * 
+	 * 
+	 * 
+	 */
 }
