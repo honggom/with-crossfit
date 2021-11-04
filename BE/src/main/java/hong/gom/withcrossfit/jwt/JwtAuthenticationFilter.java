@@ -26,10 +26,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
-	@Autowired
-	private Environment env;
-
 	private final TokenUtils tokenUtils;
+
+	private final CookieUtils cookieUtils;
+
+	private final Environment env;
 
 	private RequestMatcher requestMatcher = new AntPathRequestMatcher("/api/**");
 
@@ -49,12 +50,20 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 			// jwt 기간 만료
 			if (tokenUtils.isExpired(jwt)) {
 				System.out.println("jwt 만료됨");
-				// 리프레쉬는 살아있음
 				if (!tokenUtils.isExpired(refreshJwt)) {
 					System.out.println("ref 살아있음");
-					// TODO jwt 재발급
+					Map<String, Object> refreshJwtClaims = tokenUtils.getJwtBody(refreshJwt);
+					String refreshJwtEmail = refreshJwtClaims.get("email").toString();
+					
+					String newJwt = tokenUtils.generateJwt(refreshJwtEmail, refreshJwtClaims.get("role").toString());
 
-					// 토큰 둘다 만료됨
+					cookieUtils.addJwtCookie((HttpServletResponse) response, newJwt);
+					
+					authenticated(refreshJwtEmail);
+					
+					System.out.println("재발급 완료");
+					
+					chain.doFilter(request, response);
 				} else {
 					((HttpServletResponse) response)
 							.sendRedirect(env.getProperty("front-end.base-url") + "/index.html");
@@ -62,7 +71,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 				}
 			}
 			Map<String, Object> jwtClaims = tokenUtils.getJwtBody(jwt);
-			authenticated((String) jwtClaims.get("email"));
+			authenticated(jwtClaims.get("email").toString());
+
 			chain.doFilter(request, response);
 		}
 	}
@@ -73,6 +83,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 				List.of(new SimpleGrantedAuthority("ROLE_USER")));
 
 		SecurityContextHolder.getContext().setAuthentication(auth);
+
+		System.out.println(SecurityContextHolder.getContext());
 	}
 
 }

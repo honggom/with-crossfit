@@ -10,6 +10,7 @@ import javax.servlet.http.Cookie;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -17,7 +18,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-@Service
+@Component
 public class TokenUtils {
 	
 	@Autowired
@@ -44,9 +45,30 @@ public class TokenUtils {
 		}
     	return jwts;
     }
+    
+    public String generateJwt(String email, String role) {
+    	// 10분
+        // long tokenPeriod = 1000L * 60L * 10L;
+        
+        // 10 초
+        long tokenPeriod = 1000L * 10L;
+        
+        Map<String, Object> claims = new HashMap<>();
+        
+        Date now = new Date();
+        
+        claims.put("role", role);
+        claims.put("email", email);
 
-    public Token generateToken(String email, String role) {
-    	
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + tokenPeriod))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
+    public Token generateJwtAndRefresh(String email, String role) {
     	// 10분
         // long tokenPeriod = 1000L * 60L * 10L;
         
