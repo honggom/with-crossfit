@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
-	
+
 	@Autowired
 	private Environment env;
 
@@ -49,42 +49,22 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 			// jwt 기간 만료
 			if (tokenUtils.isExpired(jwt)) {
 				System.out.println("jwt 만료됨");
-				
 				// 리프레쉬는 살아있음
 				if (!tokenUtils.isExpired(refreshJwt)) {
 					System.out.println("ref 살아있음");
-					
 					// TODO jwt 재발급
-					
-				// 토큰 둘다 만료됨
-				} else { 
-					((HttpServletResponse) response).sendRedirect(env.getProperty("front-end.base-url") + "/index.html");
+
+					// 토큰 둘다 만료됨
+				} else {
+					((HttpServletResponse) response)
+							.sendRedirect(env.getProperty("front-end.base-url") + "/index.html");
 					return;
 				}
 			}
 			Map<String, Object> jwtClaims = tokenUtils.getJwtBody(jwt);
-			authenticated(jwtClaims.get("email").toString());
-
+			authenticated((String) jwtClaims.get("email"));
+			chain.doFilter(request, response);
 		}
-		chain.doFilter(request, response);
-
-//		Map<String, Object> jwtClaims = tokenUtils.getJwtBody(jwt);
-//		Map<String, Object> refeshJwtClaims = tokenUtils.getJwtBody(refreshJwt);
-//		
-//		System.out.println("============================");
-//		System.out.println("jwt : " + jwt);
-//		System.out.println("jwt email : " + jwtClaims.get("email"));
-//		System.out.println("jwt iat : " + jwtClaims.get("iat"));
-//		System.out.println("jwt exp : " + jwtClaims.get("exp"));
-//		System.out.println("is expired : " + tokenUtils.isExpired(jwt));
-//		System.out.println();
-//		System.out.println("ref : " + refreshJwt);
-//		System.out.println("ref email : " + refeshJwtClaims.get("email"));
-//		System.out.println("ref iat : " + refeshJwtClaims.get("iat"));
-//		System.out.println("ref exp : " + refeshJwtClaims.get("exp"));
-//		System.out.println("is expired : " + tokenUtils.isExpired(refreshJwt));
-//		System.out.println("============================");
-
 	}
 
 	// TODO 권한 처리
