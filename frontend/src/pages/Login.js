@@ -1,10 +1,12 @@
 export default function Login() {
+    
+    const backEndBaseUri = process.env.REACT_APP_BACK_END_BASE_URI;
+    
     return (
         <div>
-            <a href="http://localhost:8080/oauth2/authorization/google">구글 로그인</a>
-
+            <a href={backEndBaseUri + "/oauth2/authorization/google"}>구글 로그인</a>
             <div>
-            <a href = "http://localhost:8080/api/hello">api test</a>
+            <a href={backEndBaseUri + "/api/hello"}>api test</a>
             </div>
         </div>
     );
