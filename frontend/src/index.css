@@ -1,0 +1,17 @@
+:root {
+    --comm-box-shadow: 3px 3px 3px rgba(244, 244, 244 , 0.6);
+    --comm-border-radius: 8px;
+    --comm-margin: 5px;
+    --comm-bg-color: rgba(244, 244, 244, 0.3);
+    --comm-font-color:
+}
+
+@font-face {
+    font-family: "nom";
+    src: url('./static/font/reco.ttf');
+}
+
+span {
+    font-family: "nom";
+    color: rgb(45, 46, 46, 0.8);
+}

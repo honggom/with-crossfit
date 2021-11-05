@@ -1,23 +1,42 @@
 .mypage {
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column; 
 }
 
 .topWrapper {
-    background-color: red;
+    margin: var(--comm-margin);
+    border-radius: var(--comm-border-radius);
+    box-shadow: var(--comm-box-shadow);
+    background-color: var(--comm-bg-color);
     display: flex;
-    justify-content: space-around;
     align-items: center;
     height: 35%;
 }
 
+.profileImageWrapper {
+    height: 100%;
+    width: 50%;
+}
+
+.nameAndGradeWrapper {
+    height: 100%;
+    width: 50%;
+}
+
 .middleWrapper {
-    background-color: blue;
+    margin: var(--comm-margin);
+    border-radius: var(--comm-border-radius);
+    box-shadow: var(--comm-box-shadow);
+    background-color: var(--comm-bg-color);
     height: 35%;
 }
 
 .bottomWrapper {
-    background-color: green;
+    margin: var(--comm-margin);
+    border-radius: var(--comm-border-radius);
+    box-shadow: var(--comm-box-shadow);
+    background-color: var(--comm-bg-color);
     height: 30%;
 }

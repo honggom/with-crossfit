@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Home, Login, Logout, Wod, Reservation, Board, MyPage } from './pages';
 import Nav from './component/Nav/Nav';
 import styles from './App.module.css';
+import './index.css';
 // import { isMobile, isBrowser } from 'react-device-detect';
 
 export default function App() {

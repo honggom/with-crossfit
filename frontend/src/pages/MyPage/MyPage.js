@@ -17,10 +17,10 @@ export default function MyPage() {
         <div className={styles.mypage}>
 
             <div className={styles.topWrapper}>
-                <div>
+                <div className={styles.profileImageWrapper}>
                     <ProfileImage />
                 </div>
-                <div>
+                <div className={styles.nameAndGradeWrapper}>
                     <MyName />
                     <MyGrade />
                 </div>
