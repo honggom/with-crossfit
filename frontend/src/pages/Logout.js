@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { Navigate } from 'react-router-dom';
 
+// JWT 쿠키 삭제 후 로그인 페이지로 이동한다.
 export default function Logout() {
 
     const [cookies, setCookie, removeCookie] = useCookies(['with-crossfit']);

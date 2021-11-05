@@ -1,28 +1,32 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Home, Login, Logout } from './pages';
+import { Home, Login, Logout, Wod, Reservation, Board, MyPage } from './pages';
 import Nav from './component/Nav/Nav';
 import styles from './App.module.css';
-import { isMobile, isBrowser } from 'react-device-detect';
+// import { isMobile, isBrowser } from 'react-device-detect';
 
 export default function App() {
 
-    console.log(isBrowser);
-    console.log(isMobile);
+    // console.log(isBrowser);
+    // console.log(isMobile);
 
     return (
         <div className={styles.app}>
-            <section>
-                <BrowserRouter>
+            <BrowserRouter>
+                <section>
                     <Routes>
                         <Route path="/" element={<Login />} exact />
                         <Route path="/logout" element={<Logout />} exact />
                         <Route path="/home" element={<Home />} exact />
+                        <Route path="/wod" element={<Wod />} exact />
+                        <Route path="/reservation" element={<Reservation />} exact />
+                        <Route path="/board" element={<Board />} exact />
+                        <Route path="/mypage" element={<MyPage />} exact />
                     </Routes>
-                </BrowserRouter>
-            </section>
-            <nav className={styles.nav}>
-                <Nav />
-            </nav>
+                </section>
+                <nav>
+                    <Nav />
+                </nav>
+            </BrowserRouter>
         </div>
     );
 }

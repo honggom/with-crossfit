@@ -1,2 +1,28 @@
 .wrapper {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+}
+
+.button {
+    width: 25%;
+    height: 100%;
+
+}
+
+.wod {
+    background-color: red;
+}
+
+.reservation {
+    background-color: green;
+}
+
+.board {
+    background-color: honeydew;
+}
+
+.mypage {
+    background-color: hotpink;
 }

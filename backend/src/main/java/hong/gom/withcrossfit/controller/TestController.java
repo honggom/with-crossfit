@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TestController {
-
+	
+	// FIXME 쿠키 전부 삭제하고 api 요청하면 에러남 
+	
 	@GetMapping("/api/hello")
 	public String hello() {
 		return "hello";

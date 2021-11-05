@@ -1,0 +1,23 @@
+.mypage {
+    height: 100%;
+    display: flex;
+    flex-direction: column; 
+}
+
+.topWrapper {
+    background-color: red;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 35%;
+}
+
+.middleWrapper {
+    background-color: blue;
+    height: 35%;
+}
+
+.bottomWrapper {
+    background-color: green;
+    height: 30%;
+}
