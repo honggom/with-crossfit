@@ -1,6 +1,7 @@
 package hong.gom.withcrossfit.jwt;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -23,12 +24,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends GenericFilterBean {
-	
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final TokenUtils tokenUtils;
@@ -40,11 +42,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 	private RequestMatcher requestMatcher = new AntPathRequestMatcher("/api/**");
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
-		logger.info("JwtAuthFilter 진입 ====================================");
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
+		try {
 
-		if (requestMatcher.matches((HttpServletRequest) request)) {
+			logger.info("JwtAuthFilter 진입 ====================================");
+
 			Map<String, String> jwts = tokenUtils.getJwtFromCookie(((HttpServletRequest) request).getCookies());
 
 			String jwt = jwts.get(env.getProperty("jwt.name"));
@@ -52,29 +55,41 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
 			// jwt 기간 만료
 			if (tokenUtils.isExpired(jwt)) {
-				
+
+				System.out.println("jwt 만료");
+
 				// ref 기간 유효
 				if (!tokenUtils.isExpired(refresh)) {
 					Map<String, Object> refreshJwtClaims = tokenUtils.getJwtBody(refresh);
-					
+
 					String refreshJwtEmail = refreshJwtClaims.get("email").toString();
 					String newJwt = tokenUtils.generateJwt(refreshJwtEmail, refreshJwtClaims.get("role").toString());
-					
+
 					cookieUtils.addJwtCookie((HttpServletResponse) response, newJwt);
-					
+
 					authenticated(refreshJwtEmail);
-					chain.doFilter(request, response);
-				
-				// jwt, ref 둘다 기간 만료
+					filterChain.doFilter(request, response);
+
+					// jwt, ref 둘다 기간 만료
 				} else {
-					((HttpServletResponse) response)
-							.sendRedirect(env.getProperty("front-end.base-url") + "/logout");
+
+					System.out.println("ref 만료");
+
+					((HttpServletResponse) response).sendRedirect(env.getProperty("front-end.base-url") + "/logout");
+//				request.getRequestDispatcher(env.getProperty("front-end.base-url") + "/logout").forward(request,
+//						response);
 					return;
 				}
 			}
 			Map<String, Object> jwtClaims = tokenUtils.getJwtBody(jwt);
 			authenticated(jwtClaims.get("email").toString());
-			chain.doFilter(request, response);
+			filterChain.doFilter(request, response);
+		} catch (Exception e) {
+			System.out.println("예외 발생");
+			response.sendRedirect(env.getProperty("front-end.base-url") + "/logout");
+//			request.getRequestDispatcher(env.getProperty("front-end.base-url") + "/logout").forward(request,
+//					response);
+			filterChain.doFilter(request, response);
 		}
 	}
 

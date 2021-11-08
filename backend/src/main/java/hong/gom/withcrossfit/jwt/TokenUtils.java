@@ -48,10 +48,10 @@ public class TokenUtils {
     
     public String generateJwt(String email, String role) {
     	// 10분
-        long tokenPeriod = 1000L * 60L * 10L;
+        // long tokenPeriod = 1000L * 60L * 10L;
         
         // 10 초
-        // long tokenPeriod = 1000L * 10L;
+        long tokenPeriod = 1000L * 10L;
         
         Map<String, Object> claims = new HashMap<>();
         
@@ -70,16 +70,16 @@ public class TokenUtils {
 
     public Token generateJwtAndRefresh(String email, String role) {
     	// 10분
-        long tokenPeriod = 1000L * 60L * 10L;
+//        long tokenPeriod = 1000L * 60L * 10L;
         
         // 10 초
-        // long tokenPeriod = 1000L * 10L;
+        long tokenPeriod = 1000L * 10L;
         
         // 3주
-        long refreshPeriod = 1000L * 60L * 60L * 24L * 21L;
+//        long refreshPeriod = 1000L * 60L * 60L * 24L * 21L;
         
         // 30 초
-        // long refreshPeriod = 1000L * 30L;
+        long refreshPeriod = 1000L * 30L;
 
         Map<String, Object> claims = new HashMap<>();
         
@@ -123,5 +123,11 @@ public class TokenUtils {
         		.setSigningKey(secretKey)
         		.parseClaimsJws(token)
         		.getBody();
+    }
+    
+    public String getEmail(String token) {
+    	return Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token).getBody().get("email").toString();
     }
 }

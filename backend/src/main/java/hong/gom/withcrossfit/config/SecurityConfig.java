@@ -2,6 +2,7 @@ package hong.gom.withcrossfit.config;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsUtils;
 
 import hong.gom.withcrossfit.jwt.CookieUtils;
 import hong.gom.withcrossfit.jwt.JwtAuthenticationFilter;
@@ -27,16 +29,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final Environment env;
     private final CookieUtils cookieUtils;
     
+    // TODO 토큰없이 접근시 예외처리
+    // https://fenderist.tistory.com/344
+    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().disable()
+        http.httpBasic().disable().cors().and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
                 .authorizeRequests()
-                .antMatchers("/token/**").permitAll()
                 .anyRequest().authenticated()
             .and()
+            .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler()).and()
                 .oauth2Login()
                 .successHandler(successHandler)
                 .userInfoEndpoint().userService(oAuth2UserService)
