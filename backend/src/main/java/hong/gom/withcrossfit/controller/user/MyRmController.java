@@ -1,9 +1,7 @@
 package hong.gom.withcrossfit.controller.user;
 
 import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -22,9 +20,13 @@ public class MyRmController {
 	
 	private final MyRmService myRmService;
 	
+	// TODO 수정, 삭제
+	// myrm 아이디로 변경 또는 삭제 요청시 본인이 맞는지 검증이 필요함
+	
 	@GetMapping("/api/my-rm")
-	public String getMyRm() throws IOException {
-		return "hi";
+	public ResponseEntity<List<MyRmDto>> getMyRm(@CookieValue(name="jwt") String jwt) throws IOException {
+		return ResponseEntity.ok()
+		        .body(myRmService.getMyRmService(jwt));
 	}
 	
 	@PostMapping("/api/my-rm")

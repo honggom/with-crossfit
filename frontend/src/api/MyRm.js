@@ -28,8 +28,6 @@ const insertMyRm = async (MyRmDto) => {
     withCredentials: true,
   }
 
-  console.log(config.url);
-
   return await axios(config);
 };
 

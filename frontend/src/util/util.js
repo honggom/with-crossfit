@@ -7,4 +7,25 @@ function ifExpired(response, navigate) {
     }
 }
 
-export { ifExpired };
+// value가 숫자면 ture를 리턴 아니면 false를 리턴
+function isRightNumber(value) {
+    const regex = /^[0-9]*$/;
+
+    if (regex.test(value)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// kg를 lb로 환산
+function calculateToLb(kg) {
+    return Math.ceil(kg * 2.2046);
+}
+
+// lb를 kg로 환산
+function calculateToKg(lb) {
+    return Math.ceil(lb * 0.4535);
+}
+
+export { ifExpired, isRightNumber, calculateToLb, calculateToKg };

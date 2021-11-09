@@ -1,33 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './MyRm.module.css';
 import { getMyRm, insertMyRm } from '../../api/MyRm';
 import Modal from 'react-modal';
 import MyRmDto from '../../dto/MyRmDto'
 import { useNavigate } from "react-router-dom";
 import {
-    wrapperStyle, fontStyle, inputStyle, buttonWrapperStyle,
+    wrapperStyle, weightWrapperStyle, fontStyle, inputStyle, weightInputStyle, buttonWrapperStyle,
     addButtonWrapperStyle, closeButtonWrapperStyle, addButtonStyle, closeButtonStyle
 } from './modalStyle'
-import { ifExpired } from '../../util/util';
+import { ifExpired, isRightNumber, calculateToLb, calculateToKg } from '../../util/util';
+import Rms from './Rms/Rms';
 
 export default function MyRm() {
 
     let navigate = useNavigate();
-
     const [modalIsOpen, setModalIsOpen] = useState(false);
+
     const [name, setName] = useState("");
     const [repetition, setRepetition] = useState(0);
     const [lb, setLb] = useState(0);
+    const [kg, setKg] = useState(0);
 
-    function Rm(props) {
-        return (
-            <tr>
-                <td>{props.name}</td>
-                <td>{props.repetition}</td>
-                <td>{props.lb}</td>
-            </tr>
-        );
-    }
+    const [rms, setRms] = useState([]);
+
+    useEffect(() => {
+        getMyRm().then((response) => {
+            ifExpired(response, navigate);
+            setRms(response.data);
+        }).catch((error) => {
+            // TODO 예외처리
+        });
+    }, []);
 
     return (
         <div className={styles.myRm}>
@@ -39,12 +42,17 @@ export default function MyRm() {
                     <tr className={styles.head}>
                         <th>운동</th>
                         <th>횟수</th>
-                        <th>중량</th>
+                        <th>중량(lb/kg)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr className={styles.plusButton} onClick={() => setModalIsOpen(true)}>
-                        <td colSpan={3}>+</td>
+                    <Rms rms={rms} />
+                    <tr className={styles.plusButtonWrapper} onClick={() => setModalIsOpen(true)}>
+                        <td colSpan={3}>
+                            <button className={styles.plusButton}>
+                                추가
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -75,7 +83,7 @@ export default function MyRm() {
                             type="text"
                             value={name}
                             onChange={({ target: { value } }) => {
-                                setName(value)
+                                setName(value);
                             }}
                         ></input>
                     </div>
@@ -91,7 +99,12 @@ export default function MyRm() {
                             type="text"
                             value={repetition}
                             onChange={({ target: { value } }) => {
-                                setRepetition(value)
+                                if (isRightNumber(value)) {
+                                    setRepetition(Number(value));
+                                } else {
+                                    setRepetition(0);
+                                    alert("숫자만 입력해주세요.");
+                                }
                             }}
                         ></input>
                     </div>
@@ -101,15 +114,47 @@ export default function MyRm() {
                     <div>
                         <span style={fontStyle}>중량</span>
                     </div>
-                    <div>
-                        <input
-                            style={inputStyle}
-                            type="text"
-                            value={lb}
-                            onChange={({ target: { value } }) => {
-                                setLb(value)
-                            }}
-                        ></input>
+                    <div style={weightWrapperStyle}>
+                        <div>
+                            <input
+                                style={weightInputStyle}
+                                type="text"
+                                value={lb}
+                                onChange={({ target: { value } }) => {
+                                    if (isRightNumber(value)) {
+                                        setLb(Number(value));
+                                        setKg(calculateToKg(value));
+                                    } else {
+                                        setLb(0);
+                                        setKg(0);
+                                        alert("숫자만 입력해주세요.");
+                                    }
+                                }}
+                            ></input>
+                            <span style={{
+                                marginLeft: '3px'
+                            }}>lb</span>
+                        </div>
+                        <div>
+                            <input
+                                style={weightInputStyle}
+                                type="text"
+                                value={kg}
+                                onChange={({ target: { value } }) => {
+                                    if (isRightNumber(value)) {
+                                        setKg(Number(value));
+                                        setLb(calculateToLb(value));
+                                    } else {
+                                        setLb(0);
+                                        setKg(0);
+                                        alert("숫자만 입력해주세요.");
+                                    }
+                                }}
+                            ></input>
+                            <span style={{
+                                marginLeft: '3px'
+                            }}>kg</span>
+                        </div>
                     </div>
                 </div>
 
@@ -119,8 +164,21 @@ export default function MyRm() {
                             onClick={() => {
                                 insertMyRm(new MyRmDto(name, repetition, lb)).then((response) => {
                                     ifExpired(response, navigate);
+
+                                    getMyRm().then((response) => {
+                                        ifExpired(response, navigate);
+                                        setRms(response.data);
+                                    }).catch((error) => {
+                                        // TODO 예외처리
+                                    });
+
+                                    setName("");
+                                    setRepetition(0);
+                                    setLb(0);
+                                    setKg(0);
+
                                 }).catch((error) => {
-                                    // 로그인 만료된 경우 실행
+                                    // TODO 예외처리
                                 });
                             }}>추가</button>
                     </div>

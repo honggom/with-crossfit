@@ -4,13 +4,19 @@ const wrapperStyle = {
     height: '33%',
 }
 
+const weightWrapperStyle = {
+    display: 'flex',
+    flexDirection: 'column', 
+}
+
 const fontStyle = {
     fontSize: '1.3rem',
     width: '15%'
 }
 
 const inputStyle = {
-    fontSize: '2rem',
+    fontFamily: 'var(--comm-font-family)',
+    fontSize: '1.8rem',
     backgroundColor: 'rgba(230, 244, 243, 1)',
     borderRadius: '5px',
     border: '0',
@@ -18,6 +24,19 @@ const inputStyle = {
     right: '10%',
     width: '100%',
     height: '100px'
+}
+
+const weightInputStyle = {
+    marginTop: '3px',
+    fontFamily: 'var(--comm-font-family)',
+    fontSize: '1.8rem',
+    backgroundColor: 'rgba(230, 244, 243, 1)',
+    borderRadius: '5px',
+    border: '0',
+    outline: '0',
+    right: '10%',
+    width: '80%',
+    height: '50px'
 }
 
 const buttonWrapperStyle = {
@@ -38,6 +57,7 @@ const closeButtonWrapperStyle = {
 }
 
 const addButtonStyle = {
+    fontFamily: 'var(--comm-font-family)',
     height: '100%',
     outline: '0',
     backgroundColor: 'rgba(230, 244, 243, 1)',
@@ -47,6 +67,7 @@ const addButtonStyle = {
 }
 
 const closeButtonStyle = {
+    fontFamily: 'var(--comm-font-family)',
     marginLeft: '3px',
     height: '100%',
     outline: '0',
@@ -56,5 +77,5 @@ const closeButtonStyle = {
     width: '100%',
 }
 
-export { wrapperStyle, fontStyle, inputStyle, buttonWrapperStyle, 
+export { wrapperStyle, weightWrapperStyle, fontStyle, inputStyle, weightInputStyle, buttonWrapperStyle, 
     addButtonWrapperStyle, closeButtonWrapperStyle, addButtonStyle, closeButtonStyle };

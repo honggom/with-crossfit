@@ -30,7 +30,7 @@ public class MyRm extends BaseEntity {
     
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private SpUser spUser;
+    private SpUser user;
     
     private String name;
     	

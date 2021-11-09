@@ -3,7 +3,7 @@
     --comm-border-radius: 8px;
     --comm-margin: 5px;
     --comm-bg-color: rgba(244, 244, 244, 0.6);
-    --comm-font-color:
+    --comm-font-family: "nom";
 }
 
 @font-face {
