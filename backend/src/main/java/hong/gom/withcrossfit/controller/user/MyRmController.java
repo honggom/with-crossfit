@@ -32,5 +32,4 @@ public class MyRmController {
 							 @CookieValue(name="jwt") String jwt) {
 		return myRmService.insertMyRmService(myRmDto, jwt);
 	}
-	
 }

@@ -5,7 +5,9 @@ import MyRm from '../../component/MyRm/MyRm';
 import MyGrade from '../../component/MyGrade/MyGrade';
 import Attendance from '../../component/Attendance/Attendance';
 
-export default function MyPage() {
+export default function MyPage({history}) {
+
+    console.log(history);
 
     /**
      * 1. 정보 변경

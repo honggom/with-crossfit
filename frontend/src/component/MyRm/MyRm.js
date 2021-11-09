@@ -3,8 +3,16 @@ import styles from './MyRm.module.css';
 import { getMyRm, insertMyRm } from '../../api/MyRm';
 import Modal from 'react-modal';
 import MyRmDto from '../../dto/MyRmDto'
+import { useNavigate } from "react-router-dom";
+import {
+    wrapperStyle, fontStyle, inputStyle, buttonWrapperStyle,
+    addButtonWrapperStyle, closeButtonWrapperStyle, addButtonStyle, closeButtonStyle
+} from './modalStyle'
+import { ifExpired } from '../../util/util';
 
 export default function MyRm() {
+
+    let navigate = useNavigate();
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [name, setName] = useState("");
@@ -29,7 +37,7 @@ export default function MyRm() {
                         <th colSpan={3} className={styles.myRmTitle}>내 RM</th>
                     </tr>
                     <tr className={styles.head}>
-                        <th>운동명</th>
+                        <th>운동</th>
                         <th>횟수</th>
                         <th>중량</th>
                     </tr>
@@ -45,42 +53,82 @@ export default function MyRm() {
                 overlay: {
                 },
                 content: {
+                    display: 'flex',
+                    flexDirection: 'column',
                     position: 'absolute',
                     top: '15%',
-                    height: '50%',
+                    height: '60%',
                     margin: 'var(--comm-margin)',
                     borderRadius: 'var(--comm-border-radius)',
+                },
+                nameWrapper: {
+                    backgroundColor: 'red'
                 }
             }}>
-                <button onClick={() => setModalIsOpen(false)}>x</button>
-
-                <span>운동명 : </span><input 
+                <div style={wrapperStyle}>
+                    <div>
+                        <span style={fontStyle}>운동</span>
+                    </div>
+                    <div>
+                        <input
+                            style={inputStyle}
                             type="text"
                             value={name}
-                            onChange={({ target: {value} }) => {
+                            onChange={({ target: { value } }) => {
                                 setName(value)
                             }}
                         ></input>
-                <span>횟수 : </span><input 
+                    </div>
+                </div>
+
+                <div style={wrapperStyle}>
+                    <div>
+                        <span style={fontStyle}>횟수</span>
+                    </div>
+                    <div>
+                        <input
+                            style={inputStyle}
                             type="text"
                             value={repetition}
-                            onChange={({ target: {value} }) => {
+                            onChange={({ target: { value } }) => {
                                 setRepetition(value)
                             }}
                         ></input>
-                <span>중량 : </span><input 
+                    </div>
+                </div>
+
+                <div style={wrapperStyle}>
+                    <div>
+                        <span style={fontStyle}>중량</span>
+                    </div>
+                    <div>
+                        <input
+                            style={inputStyle}
                             type="text"
                             value={lb}
-                            onChange={({ target: {value} }) => {
+                            onChange={({ target: { value } }) => {
                                 setLb(value)
                             }}
                         ></input>
+                    </div>
+                </div>
 
-                <button onClick={() => {
-                    console.log("click");
-                    insertMyRm(new MyRmDto(name, repetition, lb));
-                    // console.log(insertMyRm());
-                }}>추가</button>
+                <div style={buttonWrapperStyle}>
+                    <div style={addButtonWrapperStyle}>
+                        <button style={addButtonStyle}
+                            onClick={() => {
+                                insertMyRm(new MyRmDto(name, repetition, lb)).then((response) => {
+                                    ifExpired(response, navigate);
+                                }).catch((error) => {
+                                    // 로그인 만료된 경우 실행
+                                });
+                            }}>추가</button>
+                    </div>
+
+                    <div style={closeButtonWrapperStyle}>
+                        <button style={closeButtonStyle} onClick={() => setModalIsOpen(false)}>x</button>
+                    </div>
+                </div>
             </Modal>
         </div>
     );

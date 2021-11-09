@@ -29,25 +29,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final Environment env;
     private final CookieUtils cookieUtils;
     
-    // TODO 토큰없이 접근시 예외처리
-    // https://fenderist.tistory.com/344
-    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().disable().cors().and()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http.httpBasic()
+        		.disable()
+        		.cors()
+        	.and()
+                .csrf()
+                	.disable()
+                .sessionManagement()
+                	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
+            	.addFilterBefore(new JwtAuthenticationFilter(tokenUtils, cookieUtils, env), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .anyRequest().authenticated()
+                .requestMatchers(CorsUtils::isPreFlightRequest)
+                	.permitAll()
+                .anyRequest()
+                	.authenticated()
             .and()
-            .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler()).and()
+            	.exceptionHandling()
+            	.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+            .and()
                 .oauth2Login()
-                .successHandler(successHandler)
-                .userInfoEndpoint().userService(oAuth2UserService)
+                	.successHandler(successHandler)
+                .userInfoEndpoint()
+                	.userService(oAuth2UserService)
                 ;
-        
-        http.addFilterBefore(new JwtAuthenticationFilter(tokenUtils, cookieUtils, env), UsernamePasswordAuthenticationFilter.class);
     }
     
     @Override

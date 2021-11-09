@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,8 @@ public class TokenUtils {
 	private Environment env;
 	
     private String secretKey;
+    
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PostConstruct
     protected void init() {
@@ -48,10 +52,10 @@ public class TokenUtils {
     
     public String generateJwt(String email, String role) {
     	// 10분
-        // long tokenPeriod = 1000L * 60L * 10L;
+        long tokenPeriod = 1000L * 60L * 10L;
         
         // 10 초
-        long tokenPeriod = 1000L * 10L;
+        // long tokenPeriod = 1000L * 10L;
         
         Map<String, Object> claims = new HashMap<>();
         
@@ -70,16 +74,16 @@ public class TokenUtils {
 
     public Token generateJwtAndRefresh(String email, String role) {
     	// 10분
-//        long tokenPeriod = 1000L * 60L * 10L;
+        long tokenPeriod = 1000L * 60L * 10L;
         
         // 10 초
-        long tokenPeriod = 1000L * 10L;
+//        long tokenPeriod = 1000L * 10L;
         
         // 3주
-//        long refreshPeriod = 1000L * 60L * 60L * 24L * 21L;
+        long refreshPeriod = 1000L * 60L * 60L * 24L * 21L;
         
         // 30 초
-        long refreshPeriod = 1000L * 30L;
+//        long refreshPeriod = 1000L * 30L;
 
         Map<String, Object> claims = new HashMap<>();
         
