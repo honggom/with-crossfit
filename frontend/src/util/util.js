@@ -28,4 +28,9 @@ function calculateToKg(lb) {
     return Math.ceil(lb * 0.4535);
 }
 
-export { ifExpired, isRightNumber, calculateToLb, calculateToKg };
+// number를 percent에 맞게 변환해줌 ex) percent : 90, number : 100 ==> return 90
+function percentTranslate(percent, number) {
+    return percent * number / 100;
+}
+
+export { ifExpired, isRightNumber, calculateToLb, calculateToKg, percentTranslate };

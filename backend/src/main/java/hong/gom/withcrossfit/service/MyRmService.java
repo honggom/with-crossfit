@@ -1,6 +1,7 @@
 package hong.gom.withcrossfit.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -36,6 +37,28 @@ public class MyRmService {
 		return rms.stream()
 				  .map(rm -> modelMapper.map(rm, MyRmDto.class))
 				  .collect(Collectors.toList());
+	}
+	
+	public MyRmDto getMyRmByIdService(Long id) {
+		MyRm rm = myRmRepository.findById(id).get();
+		return modelMapper.map(rm, MyRmDto.class);
+	}
+	
+	public ResponseEntity updateMyRmService(MyRmDto myRmDto) {
+		MyRm rm = myRmRepository.findById(myRmDto.getId()).get();
+		
+		rm.setName(myRmDto.getName());
+		rm.setRepetition(myRmDto.getRepetition());
+		rm.setLb(myRmDto.getLb());
+		
+		myRmRepository.save(rm);
+		
+		return new ResponseEntity(HttpStatus.OK);
+	}
+	
+	public ResponseEntity deleteMyRmByIdService(Long id) {
+		myRmRepository.deleteById(id);
+		return new ResponseEntity(HttpStatus.OK);
 	}
 	
 	public ResponseEntity insertMyRmService(MyRmDto myRmDto, String jwt) {

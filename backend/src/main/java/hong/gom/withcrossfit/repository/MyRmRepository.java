@@ -10,5 +10,7 @@ import hong.gom.withcrossfit.entity.SpUser;
 public interface MyRmRepository extends JpaRepository<MyRm, Long> {
 	
 	List<MyRm> findByUser(SpUser user);
+	
+	void deleteById(Long id);
 
 }

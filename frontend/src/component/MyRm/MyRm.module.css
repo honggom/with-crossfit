@@ -24,8 +24,24 @@ table {
     position: sticky;
     top: 0;
     background-color: rgba(230, 244, 243, 1);
-    width: 33%;
 }
+
+.th1 {
+    width: 30%;
+}
+
+.th2 {
+    width: 18%;
+}
+
+.th3 {
+    width: 30%;
+}
+
+.th4, .th5 {
+    width: 11%;
+}
+
 
 tbody tr {
     background-color: white;

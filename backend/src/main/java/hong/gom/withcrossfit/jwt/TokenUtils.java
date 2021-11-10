@@ -55,7 +55,7 @@ public class TokenUtils {
         long tokenPeriod = 1000L * 60L * 10L;
         
         // 10 초
-        // long tokenPeriod = 1000L * 10L;
+//         long tokenPeriod = 1000L * 10L;
         
         Map<String, Object> claims = new HashMap<>();
         

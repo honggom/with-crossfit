@@ -4,6 +4,7 @@
     --comm-margin: 5px;
     --comm-bg-color: rgba(244, 244, 244, 0.6);
     --comm-font-family: "nom";
+    --comm-bg-sky-blue: rgba(230, 244, 243, 1);
 }
 
 @font-face {

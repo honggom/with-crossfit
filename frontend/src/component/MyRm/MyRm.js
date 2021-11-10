@@ -11,7 +11,10 @@ import {
 import { ifExpired, isRightNumber, calculateToLb, calculateToKg } from '../../util/util';
 import Rms from './Rms/Rms';
 
+
 export default function MyRm() {
+
+    // TODO 1RM 대비 퍼센트 산출 기능
 
     let navigate = useNavigate();
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -37,18 +40,20 @@ export default function MyRm() {
             <table>
                 <thead>
                     <tr>
-                        <th colSpan={3} className={styles.myRmTitle}>내 RM</th>
+                        <th colSpan={5} className={styles.myRmTitle}>내 RM</th>
                     </tr>
                     <tr className={styles.head}>
-                        <th>운동</th>
-                        <th>횟수</th>
-                        <th>중량(lb/kg)</th>
+                        <th className={styles.th1}>운동</th>
+                        <th className={styles.th2}>횟수</th>
+                        <th className={styles.th3}>중량(lb/kg)</th>
+                        <th className={styles.th4}>수정</th>
+                        <th className={styles.th5}>%</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <Rms rms={rms} />
+                    <Rms rms={rms} setRms={setRms} />
                     <tr className={styles.plusButtonWrapper} onClick={() => setModalIsOpen(true)}>
-                        <td colSpan={3}>
+                        <td colSpan={5}>
                             <button className={styles.plusButton}>
                                 추가
                             </button>
