@@ -14,7 +14,7 @@ import Rms from './Rms/Rms';
 
 export default function MyRm() {
 
-    // TODO 1RM 대비 퍼센트 산출 기능
+    // TODO 추가 모달 레이아웃 수장
 
     let navigate = useNavigate();
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -61,7 +61,7 @@ export default function MyRm() {
                     </tr>
                 </tbody>
             </table>
-
+        
             <Modal isOpen={modalIsOpen} style={{
                 overlay: {
                 },

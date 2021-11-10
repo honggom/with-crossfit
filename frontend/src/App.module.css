@@ -3,14 +3,14 @@ section {
     overflow-y: scroll;
     position: absolute;
     top: 0;
-    height: 85%;
+    height: 90%;
     width: 100%;
 }
 
 nav {
+    border-top: 1px solid rgba(124, 129, 135, 0.5);
     position: absolute;
-    background-color: blue;
     bottom: 0;
-    height: 15%;
+    height: 10%;
     width: 100%;
 }

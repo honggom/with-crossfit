@@ -2,26 +2,87 @@
     display: flex;
     align-items: center;
     height: 100%;
+    margin: var(--comm-margin);
+    border-radius: var(--comm-border-radius);
 }
 
 .button {
     width: 25%;
     height: 100%;
-
 }
 
 .wod {
-    background-color: red;
+    background-color: white;
+}
+
+.wodIconWrapper {
+    position: relative;
+    width: 93%;
+    height: 93%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.wodIcon {
+    color: rgba(0, 0, 0, 0.7);
+    width: 90%;
+    height: 90%;
 }
 
 .reservation {
-    background-color: green;
+    background-color: white;
+}
+
+.reservationIconWrapper {
+    position: relative;
+    width: 93%;
+    height: 93%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.reservationIcon {
+    color: rgba(0, 0, 0, 0.7);
+    width: 70%;
+    height: 70%;
 }
 
 .board {
-    background-color: honeydew;
+    background-color: white;
+}
+
+.boardIconWrapper {
+    position: relative;
+    width: 93%;
+    height: 93%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.boardIcon {
+    color: rgba(0, 0, 0, 0.7);
+    width: 70%;
+    height: 70%;
 }
 
 .mypage {
-    background-color: hotpink;
+    background-color: white;
+}
+
+.mypageIconWrapper {
+    position: relative;
+    width: 93%;
+    height: 93%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.mypageIcon {
+    color: rgba(0, 0, 0, 0.7);
+    width: 70%;
+    height: 70%;
 }

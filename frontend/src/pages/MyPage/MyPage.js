@@ -5,6 +5,8 @@ import MyRm from '../../component/MyRm/MyRm';
 import MyGrade from '../../component/MyGrade/MyGrade';
 import Attendance from '../../component/Attendance/Attendance';
 
+
+// TODO 레이아웃 수정
 export default function MyPage() {
     /**
      * 1. 정보 변경
@@ -14,6 +16,8 @@ export default function MyPage() {
      */
     return (
         <div className={styles.mypage}>
+
+            
 
             <div className={styles.topWrapper}>
                 <div className={styles.profileImageWrapper}>
