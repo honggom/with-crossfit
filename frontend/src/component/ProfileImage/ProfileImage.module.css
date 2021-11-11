@@ -1,13 +1,12 @@
-.profileImage {
-    height: 100%;
-    width: 100%;
+.wrapper {
     display: flex;
     justify-content: space-around;
-    align-items: center;
+    width: 100%;
+    height: 100%;
 }
 
 .userIcon {
     color: rgba(212, 213, 212, 0.6);
-    width: 80%;
-    height: 80%;;
+    height: 90%;
+    width: 90%;
 }

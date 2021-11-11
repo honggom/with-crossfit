@@ -7,10 +7,21 @@
     --comm-bg-sky-blue: rgba(230, 244, 243, 1);
 }
 
-@font-face {
+/* @font-face {
     font-family: "nom";
     src: url('./static/font/reco.ttf');
+} */
+
+/* @font-face {
+    font-family: "nom";
+    src: url('./static/font/noto.otf');
+} */
+
+@font-face {
+    font-family: "nom";
+    src: url('./static/font/noto-m.otf');
 }
+
 
 span {
     font-family: "nom";

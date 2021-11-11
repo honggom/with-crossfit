@@ -1,0 +1,63 @@
+.wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+}
+
+.attendanceTitleWrapper {
+    text-align: center;
+    height: 20%;
+}
+
+.title {
+    font-size: 1.4rem;
+}
+
+.progressBarWrapper {
+    width: 100%;
+    height: 22%;
+} 
+
+.startDayWrapper {
+    width: 100%;
+    height: 20%;
+    display: flex;
+}
+
+.startDayTitle {
+    width: 25%;
+}
+
+.startDay {
+    width: 75%;
+}
+
+.totalDayWrapper {
+    width: 100%;
+    height: 20%;
+    display: flex;
+}
+
+.totalDayTitle {
+    width: 25%;
+}
+
+.totalDay {
+    width: 75%;
+}
+
+.totalAttendanceDayWrapper {
+    width: 100%;
+    height: 20%;
+    display: flex;
+}
+
+.totalAttendanceDayTitle {
+    width: 25%;
+}
+
+.totalAttendanceDay {
+    width: 75%;
+}

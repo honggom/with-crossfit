@@ -8,7 +8,7 @@
 
 .myRmTitle {
     font-size: 1.4rem;
-    background-color: white;
+    background-color: var(--comm-bg-color);
 }
 
 table {

@@ -5,16 +5,14 @@ import Modal from 'react-modal';
 import MyRmDto from '../../dto/MyRmDto'
 import { useNavigate } from "react-router-dom";
 import {
-    wrapperStyle, weightWrapperStyle, fontStyle, inputStyle, weightInputStyle, buttonWrapperStyle,
-    addButtonWrapperStyle, closeButtonWrapperStyle, addButtonStyle, closeButtonStyle
+    fontStyle, inputStyle, buttonWrapperStyle, addButtonWrapperStyle, closeButtonWrapperStyle, 
+    addButtonStyle,  closeButtonStyle, modalWrapper, rowWrapper, dotLine
 } from './modalStyle'
 import { ifExpired, isRightNumber, calculateToLb, calculateToKg } from '../../util/util';
 import Rms from './Rms/Rms';
 
 
 export default function MyRm() {
-
-    // TODO 추가 모달 레이아웃 수장
 
     let navigate = useNavigate();
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -61,7 +59,7 @@ export default function MyRm() {
                     </tr>
                 </tbody>
             </table>
-        
+
             <Modal isOpen={modalIsOpen} style={{
                 overlay: {
                 },
@@ -74,15 +72,11 @@ export default function MyRm() {
                     margin: 'var(--comm-margin)',
                     borderRadius: 'var(--comm-border-radius)',
                 },
-                nameWrapper: {
-                    backgroundColor: 'red'
-                }
             }}>
-                <div style={wrapperStyle}>
-                    <div>
+                <div style={modalWrapper}>
+
+                    <div style={rowWrapper}>
                         <span style={fontStyle}>운동</span>
-                    </div>
-                    <div>
                         <input
                             style={inputStyle}
                             type="text"
@@ -92,13 +86,9 @@ export default function MyRm() {
                             }}
                         ></input>
                     </div>
-                </div>
 
-                <div style={wrapperStyle}>
-                    <div>
+                    <div style={rowWrapper}>
                         <span style={fontStyle}>횟수</span>
-                    </div>
-                    <div>
                         <input
                             style={inputStyle}
                             type="text"
@@ -113,85 +103,78 @@ export default function MyRm() {
                             }}
                         ></input>
                     </div>
-                </div>
 
-                <div style={wrapperStyle}>
-                    <div>
-                        <span style={fontStyle}>중량</span>
+                    <div style={rowWrapper}>
+                        <span style={fontStyle}>lb</span>
+                        <input
+                            style={inputStyle}
+                            type="text"
+                            value={lb}
+                            onChange={({ target: { value } }) => {
+                                if (isRightNumber(value)) {
+                                    setLb(Number(value));
+                                    setKg(calculateToKg(value));
+                                } else {
+                                    setLb(0);
+                                    setKg(0);
+                                    alert("숫자만 입력해주세요.");
+                                }
+                            }}
+                        ></input>
                     </div>
-                    <div style={weightWrapperStyle}>
-                        <div>
-                            <input
-                                style={weightInputStyle}
-                                type="text"
-                                value={lb}
-                                onChange={({ target: { value } }) => {
-                                    if (isRightNumber(value)) {
-                                        setLb(Number(value));
-                                        setKg(calculateToKg(value));
-                                    } else {
-                                        setLb(0);
-                                        setKg(0);
-                                        alert("숫자만 입력해주세요.");
-                                    }
-                                }}
-                            ></input>
-                            <span style={{
-                                marginLeft: '3px'
-                            }}>lb</span>
-                        </div>
-                        <div>
-                            <input
-                                style={weightInputStyle}
-                                type="text"
-                                value={kg}
-                                onChange={({ target: { value } }) => {
-                                    if (isRightNumber(value)) {
-                                        setKg(Number(value));
-                                        setLb(calculateToLb(value));
-                                    } else {
-                                        setLb(0);
-                                        setKg(0);
-                                        alert("숫자만 입력해주세요.");
-                                    }
-                                }}
-                            ></input>
-                            <span style={{
-                                marginLeft: '3px'
-                            }}>kg</span>
-                        </div>
+                    <div style={rowWrapper}>
+                        <span style={fontStyle}>kg</span>
+                        <input
+                            style={inputStyle}
+                            type="text"
+                            value={kg}
+                            onChange={({ target: { value } }) => {
+                                if (isRightNumber(value)) {
+                                    setKg(Number(value));
+                                    setLb(calculateToLb(value));
+                                } else {
+                                    setLb(0);
+                                    setKg(0);
+                                    alert("숫자만 입력해주세요.");
+                                }
+                            }}
+                        ></input>
                     </div>
-                </div>
 
-                <div style={buttonWrapperStyle}>
-                    <div style={addButtonWrapperStyle}>
-                        <button style={addButtonStyle}
-                            onClick={() => {
-                                insertMyRm(new MyRmDto(name, repetition, lb)).then((response) => {
-                                    ifExpired(response, navigate);
+                    <p style={dotLine}></p>
 
-                                    getMyRm().then((response) => {
+                    <div style={buttonWrapperStyle}>
+                        <div style={addButtonWrapperStyle}>
+                            <button style={addButtonStyle}
+                                onClick={() => {
+                                    insertMyRm(new MyRmDto(name, repetition, lb)).then((response) => {
                                         ifExpired(response, navigate);
-                                        setRms(response.data);
+
+                                        getMyRm().then((response) => {
+                                            ifExpired(response, navigate);
+                                            setRms(response.data);
+                                        }).catch((error) => {
+                                            // TODO 예외처리
+                                        });
+
+                                        setName("");
+                                        setRepetition(0);
+                                        setLb(0);
+                                        setKg(0);
+
                                     }).catch((error) => {
                                         // TODO 예외처리
                                     });
+                                }}>추가</button>
+                        </div>
 
-                                    setName("");
-                                    setRepetition(0);
-                                    setLb(0);
-                                    setKg(0);
-
-                                }).catch((error) => {
-                                    // TODO 예외처리
-                                });
-                            }}>추가</button>
+                        <div style={closeButtonWrapperStyle}>
+                            <button style={closeButtonStyle} onClick={() => setModalIsOpen(false)}>x</button>
+                        </div>
                     </div>
 
-                    <div style={closeButtonWrapperStyle}>
-                        <button style={closeButtonStyle} onClick={() => setModalIsOpen(false)}>x</button>
-                    </div>
                 </div>
+
             </Modal>
         </div>
     );

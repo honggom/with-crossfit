@@ -5,8 +5,7 @@ import Modal from 'react-modal';
 import MyRmDto from '../../../dto/MyRmDto'
 import { useNavigate } from "react-router-dom";
 import {
-    wrapperStyle, weightWrapperStyle, fontStyle, fontStyle2, inputStyle, inputStyle2, weightInputStyle,
-    buttonWrapperStyle, addButtonWrapperStyle2, closeButtonWrapperStyle2, deleteButtonWrapperStyle,
+    fontStyle, inputStyle, buttonWrapperStyle, addButtonWrapperStyle2, closeButtonWrapperStyle2, deleteButtonWrapperStyle,
     addButtonStyle, deleteButtonStyle, closeButtonStyle, closeButtonStyle2, content, modalWrapper, rowWrapper,
     dotLine, buttonWrapperStyle2, percentInput
 } from '../modalStyle'
@@ -83,8 +82,8 @@ function CalculatorButton({ id }) {
                 <div style={modalWrapper}>
 
                     <div style={rowWrapper}>
-                        <span style={fontStyle2}>운동</span>
-                        <input style={inputStyle2}
+                        <span style={fontStyle}>운동</span>
+                        <input style={inputStyle}
                             type='text'
                             readOnly
                             value={name}
@@ -93,8 +92,8 @@ function CalculatorButton({ id }) {
                     </div>
 
                     <div style={rowWrapper}>
-                        <span style={fontStyle2}>횟수</span>
-                        <input style={inputStyle2}
+                        <span style={fontStyle}>횟수</span>
+                        <input style={inputStyle}
                             type='text'
                             readOnly
                             value={repetition}
@@ -103,8 +102,8 @@ function CalculatorButton({ id }) {
                     </div>
 
                     <div style={rowWrapper}>
-                        <span style={fontStyle2}>현 lb</span>
-                        <input style={inputStyle2}
+                        <span style={fontStyle}>현 lb</span>
+                        <input style={inputStyle}
                             type='text'
                             readOnly
                             value={lb}
@@ -113,8 +112,8 @@ function CalculatorButton({ id }) {
                     </div>
 
                     <div style={rowWrapper}>
-                        <span style={fontStyle2}>현 kg</span>
-                        <input style={inputStyle2}
+                        <span style={fontStyle}>현 kg</span>
+                        <input style={inputStyle}
                             type='text'
                             readOnly
                             value={calculateToKg(lb)}
@@ -125,8 +124,8 @@ function CalculatorButton({ id }) {
                     <p style={dotLine}></p>
 
                     <div style={rowWrapper}>
-                        <span style={fontStyle2}>% lb</span>
-                        <input style={inputStyle2}
+                        <span style={fontStyle}>% lb</span>
+                        <input style={inputStyle}
                             type='text'
                             value={percentLb}
                             readOnly
@@ -138,8 +137,8 @@ function CalculatorButton({ id }) {
                     </div>
 
                     <div style={rowWrapper}>
-                        <span style={fontStyle2}>% kg</span>
-                        <input style={inputStyle2}
+                        <span style={fontStyle}>% kg</span>
+                        <input style={inputStyle}
                             type='text'
                             value={percentKg}
                             readOnly
@@ -218,9 +217,9 @@ function EditButton({ id, setRms }) {
                 <div style={modalWrapper}>
 
                     <div style={rowWrapper}>
-                        <span style={fontStyle2}>운동</span>
+                        <span style={fontStyle}>운동</span>
                         <input
-                            style={inputStyle2}
+                            style={inputStyle}
                             type="text"
                             value={name}
                             onChange={({ target: { value } }) => {
@@ -230,9 +229,9 @@ function EditButton({ id, setRms }) {
                     </div>
 
                     <div style={rowWrapper}>
-                        <span style={fontStyle2}>횟수</span>
+                        <span style={fontStyle}>횟수</span>
                         <input
-                            style={inputStyle2}
+                            style={inputStyle}
                             type="text"
                             value={repetition}
                             onChange={({ target: { value } }) => {
@@ -247,9 +246,9 @@ function EditButton({ id, setRms }) {
                     </div>
 
                     <div style={rowWrapper}>
-                        <span style={fontStyle2}>lb</span>
+                        <span style={fontStyle}>lb</span>
                         <input
-                            style={inputStyle2}
+                            style={inputStyle}
                             type="text"
                             value={lb}
                             onChange={({ target: { value } }) => {
@@ -266,9 +265,9 @@ function EditButton({ id, setRms }) {
                     </div>
 
                     <div style={rowWrapper}>
-                        <span style={fontStyle2}>kg</span>
+                        <span style={fontStyle}>kg</span>
                         <input
-                            style={inputStyle2}
+                            style={inputStyle}
                             type="text"
                             value={kg}
                             onChange={({ target: { value } }) => {
@@ -298,6 +297,7 @@ function EditButton({ id, setRms }) {
                                     getMyRm().then((response) => {
                                         ifExpired(response, navigate);
                                         setRms(response.data);
+                                        setModalIsOpen(false)
                                     }).catch((error) => {
                                         // TODO 예외처리
                                     });

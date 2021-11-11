@@ -21,27 +21,10 @@ const weightWrapperStyle = {
 
 const fontStyle = {
     fontSize: '1.3rem',
-    width: '15%'
-}
-
-const fontStyle2 = {
-    fontSize: '1.3rem',
     width: '25%'
 }
 
 const inputStyle = {
-    fontFamily: 'var(--comm-font-family)',
-    fontSize: '1.8rem',
-    backgroundColor: 'var(--comm-bg-sky-blue)',
-    borderRadius: '5px',
-    border: '0',
-    outline: '0',
-    right: '10%',
-    width: '100%',
-    height: '100px'
-}
-
-const inputStyle2 = {
     fontFamily: 'var(--comm-font-family)',
     fontSize: '1.8rem',
     backgroundColor: 'var(--comm-bg-sky-blue)',
@@ -182,6 +165,6 @@ const percentInput = {
     backgroundColor: 'var(--comm-bg-sky-blue)',
 }
 
-export { modalWrapper, wrapperStyle, weightWrapperStyle, fontStyle, fontStyle2, inputStyle, inputStyle2, weightInputStyle, buttonWrapperStyle, buttonWrapperStyle2, 
+export { modalWrapper, wrapperStyle, weightWrapperStyle, fontStyle, inputStyle, weightInputStyle, buttonWrapperStyle, buttonWrapperStyle2, 
     addButtonWrapperStyle, closeButtonWrapperStyle, closeButtonStyle2, addButtonWrapperStyle2, closeButtonWrapperStyle2, closeButtonWrapperStyle3, deleteButtonWrapperStyle, addButtonStyle, 
     deleteButtonStyle, closeButtonStyle, content, rowWrapper, dotLine, percentInput };
