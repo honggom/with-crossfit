@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import hong.gom.withcrossfit.entity.listener.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +32,7 @@ import lombok.ToString;
 @Builder
 @Entity
 @Table(name = "sp_user")
+@EqualsAndHashCode(callSuper = true)
 public class SpUser extends BaseEntity implements UserDetails {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

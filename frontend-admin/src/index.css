@@ -1,0 +1,34 @@
+:root {
+  --comm-box-shadow: 3px 3px 3px rgba(244, 244, 244, 1);
+  --comm-border-radius: 8px;
+  --comm-margin: 5px;
+  --comm-bg-color: rgba(244, 244, 244, 0.6);
+  --comm-font-family: "nom";
+  --comm-bg-sky-blue: rgba(230, 244, 243, 1);
+}
+
+/* @font-face {
+  font-family: "nom";
+  src: url('./static/font/reco.ttf');
+} */
+
+/* @font-face {
+  font-family: "nom";
+  src: url('./static/font/noto.otf');
+} */
+
+@font-face {
+  font-family: "nom";
+  src: url('./static/font/noto-m.otf');
+}
+
+
+span {
+  font-family: "nom";
+  color: rgb(45, 46, 46, 0.8);
+}
+
+p {
+  font-family: "nom";
+  color: rgb(45, 46, 46, 0.8);
+}

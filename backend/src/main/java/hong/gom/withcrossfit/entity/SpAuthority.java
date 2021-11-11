@@ -11,9 +11,11 @@ import org.springframework.security.core.GrantedAuthority;
 import hong.gom.withcrossfit.entity.listener.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -21,8 +23,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Entity
+@ToString
 @IdClass(SpAuthority.class)
 @Table(name = "sp_user_authority")
+@EqualsAndHashCode(callSuper = true)
 public class SpAuthority extends BaseEntity implements GrantedAuthority {
 
     @Id

@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import hong.gom.withcrossfit.entity.listener.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +23,7 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "sp_oauth2_user")
+@EqualsAndHashCode(callSuper = true)
 public class SpOAuth2User extends BaseEntity{
 
     @Id
