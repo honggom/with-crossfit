@@ -26,7 +26,6 @@ import lombok.ToString;
 @ToString
 @IdClass(SpAuthority.class)
 @Table(name = "sp_user_authority")
-@EqualsAndHashCode(callSuper = true)
 public class SpAuthority extends BaseEntity implements GrantedAuthority {
 
     @Id

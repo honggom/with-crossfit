@@ -1,9 +1,9 @@
 package hong.gom.withcrossfit.config;
 
 import java.io.IOException;
+import java.util.Set;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -46,29 +46,35 @@ public class SpOAuth2SuccessHandler implements AuthenticationSuccessHandler  {
 		logger.info("AuthenticationSuccessHandler 진입 ====================================");
 
 		Object principal = authentication.getPrincipal();
+		boolean isAdmin = false;
+		String redirectUrl = "";
 
 		if (principal instanceof OidcUser) {
 			SpOAuth2User oauth = SpOAuth2User.Provider.google.convert((OidcUser) principal);
 			SpUser user = userService.load(oauth);
 			
-			// TODO 관리자를 지정하는 방법 구상..
-			// 1. 슈퍼관리자가 관리자를 지정 (슈퍼관리자는 '나')
-			// 2. 아이디를 미리 만들어 놓고 제공 (구글로 하는게 의미가 없음)
+			// TODO ADMIN 권한 추가 페이지 제작
 			
-			// TODO 여기서 만약 관리자의 가입 처리가 안 됐다면 걸러줘야됨
-			SpAuthority adminRole = new SpAuthority(user.getUserId(), "ROLE_ADMIN");
-	    	if (user.getAuthorities().contains(adminRole)) {
+			Set<SpAuthority> authorities = user.getAuthorities();
+			
+			for(SpAuthority authority : authorities) {
+			    if(authority.getAuthority().equals("ROLE_ADMIN")) {
+			    	isAdmin = true;
+			    }
+			}
+			
+			if (isAdmin) {
+				logger.info("관리자 로그인");
 				Token adminToken = tokenUtils.generateJwtAndRefresh(user.getEmail(), "ROLE_ADMIN");
 				cookieUtils.addCookies(response, adminToken);
-				response.sendRedirect(env.getProperty("front-end-admin.base-url") + "/home");
-				return;
-	    	}
-			
-			// TODO "USER" 서버에서 롤 가져와야 됨
-			Token userToken = tokenUtils.generateJwtAndRefresh(user.getEmail(), "ROLE_USER");
-			cookieUtils.addCookies(response, userToken);
+				redirectUrl = env.getProperty("front-end-admin.base-url") + "/home";
+			} else {
+				logger.info("유저 로그인");
+				Token userToken = tokenUtils.generateJwtAndRefresh(user.getEmail(), "ROLE_USER");
+				cookieUtils.addCookies(response, userToken);
+				redirectUrl = env.getProperty("front-end.base-url") + "/home";
+			}
 		}
-		response.sendRedirect(env.getProperty("front-end.base-url") + "/home");
+		response.sendRedirect(redirectUrl);
 	}
-	
 }
