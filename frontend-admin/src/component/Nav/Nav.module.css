@@ -1,0 +1,19 @@
+.wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.menuWrapper {
+    width: 10%;
+    border: 1px solid black;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column; 
+}
+
+.childrenMenu {
+    display: none;
+}

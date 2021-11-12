@@ -53,7 +53,7 @@ public class SpOAuth2SuccessHandler implements AuthenticationSuccessHandler  {
 			SpOAuth2User oauth = SpOAuth2User.Provider.google.convert((OidcUser) principal);
 			SpUser user = userService.load(oauth);
 			
-			// TODO ADMIN 권한 추가 페이지 제작
+			// TODO ADMIN 권한 추가 페이지 제작, 지점지정
 			
 			Set<SpAuthority> authorities = user.getAuthorities();
 			

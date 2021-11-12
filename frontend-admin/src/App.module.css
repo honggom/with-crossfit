@@ -1,8 +1,8 @@
 section {
   background-color: white;
-  overflow-y: scroll;
+  overflow-y: hidden;
   position: absolute;
-  top: 0;
+  top: 10%;
   height: 90%;
   width: 100%;
 }
@@ -10,7 +10,7 @@ section {
 nav {
   border-top: 1px solid rgba(124, 129, 135, 0.5);
   position: fixed;
-  bottom: 0;
+  top: 0;
   height: 10%;
   width: 100%;
 }
