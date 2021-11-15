@@ -1,5 +1,6 @@
 package hong.gom.withcrossfit.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,7 @@ public interface SpUserRepository extends JpaRepository<SpUser, Long> {
     SpUser findByEmail(String email);
     
     boolean existsByEmail(String email);
+    
+    List<SpUser> findByBoxIsNull();
 
 }

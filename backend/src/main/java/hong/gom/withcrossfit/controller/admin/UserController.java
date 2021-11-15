@@ -7,21 +7,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hong.gom.withcrossfit.dto.BoxDto;
-import hong.gom.withcrossfit.service.BoxService;
+import hong.gom.withcrossfit.dto.UserDto;
+import hong.gom.withcrossfit.service.UserApiService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/api")
-public class BoxController {
+public class UserController {
+
+	private final UserApiService userService;
 	
-	private final BoxService boxService;
+	// TODO api 테스트
 	
-	@GetMapping("/box")
-	public ResponseEntity<List<BoxDto>> getBox() {
-		return ResponseEntity.ok()
-		        .body(boxService.getBoxService());
+	@GetMapping("/user/not-registered")
+	public ResponseEntity<List<UserDto>> getNotRegisteredUser() {
+		return ResponseEntity.ok().body(userService.getNotRegisteredUserService());
 	}
-	
+
 }
