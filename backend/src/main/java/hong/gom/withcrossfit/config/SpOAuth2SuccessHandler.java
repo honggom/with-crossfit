@@ -69,6 +69,9 @@ public class SpOAuth2SuccessHandler implements AuthenticationSuccessHandler  {
 				cookieUtils.addCookies(response, adminToken);
 				redirectUrl = env.getProperty("front-end-admin.base-url") + "/home";
 			} else {
+				
+				// TODO 여기서 등록되지 않은 회원 처리
+				
 				logger.info("유저 로그인");
 				Token userToken = tokenUtils.generateJwtAndRefresh(user.getEmail(), "ROLE_USER");
 				cookieUtils.addCookies(response, userToken);

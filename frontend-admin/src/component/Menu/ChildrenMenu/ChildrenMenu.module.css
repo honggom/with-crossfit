@@ -1,0 +1,12 @@
+.subMenu {
+    text-align: center;
+    cursor: pointer;
+}
+
+.subMenu:hover {
+    background-color: var(--comm-bg-sky-blue);
+}
+
+a {
+    text-decoration: none;
+}

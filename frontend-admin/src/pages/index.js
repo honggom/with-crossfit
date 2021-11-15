@@ -1,4 +1,6 @@
 import Login from './Login';
 import Home from './Home';
+import UserRegister from './UserRegister/UserRegister';
+import WriteWod from './WriteWod';
 
-export { Login, Home };
+export { Login, Home, UserRegister, WriteWod };

@@ -1,19 +1,19 @@
 .wrapper {
     width: 100%;
-    display: flex;
-    justify-content: space-around;
-}
-
-.menuWrapper {
-    width: 10%;
-    border: 1px solid black;
-}
-
-.menu {
+    height: 100%;
     display: flex;
     flex-direction: column; 
 }
 
-.childrenMenu {
-    display: none;
+.topWrapper {
+    background-color: rgba(244, 244, 244, 1);
+    font-size: 1.4rem;
+    text-align: center;
+}
+
+.menuWrapper {
+    text-align: right;
+    margin: 1px;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }

@@ -1,0 +1,21 @@
+.mainMenu {
+    position: relative;
+    display: flex;
+    width: 100%;
+    cursor: pointer
+}
+
+.mainMenu:hover {
+    background-color: var(--comm-bg-sky-blue);
+}
+
+.mainMenuTitle {
+    text-align: center;
+    width: 100%;
+}
+
+.upDownButton {
+    position: absolute;
+    top: 10%;
+    right: 5%;
+}

@@ -48,7 +48,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 				logger.info("jwt 유효");
 
 				Map<String, Object> jwtClaims = tokenUtils.getJwtBody(jwt);
-				authenticated(jwtClaims.get("email").toString());
+				authenticated(jwtClaims.get("email").toString(), jwtClaims.get("role").toString());
 			} else {
 				if (!tokenUtils.isExpired(refresh)) {
 					logger.info("ref 유효");
@@ -60,7 +60,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 					logger.info("jwt 갱신");
 
 					cookieUtils.addJwtCookie((HttpServletResponse) response, newJwt);
-					authenticated(refreshJwtEmail);
+					authenticated(refreshJwtEmail, refreshJwtClaims.get("role").toString());
 				}
 			}
 		} catch (Exception e) {
@@ -70,10 +70,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 		}
 	}
 
-	// TODO 권한 처리
-	private void authenticated(String email) {
+	private void authenticated(String email, String role) {
 		Authentication auth = new UsernamePasswordAuthenticationToken(email, "",
-				List.of(new SimpleGrantedAuthority("ROLE_USER")));
+				List.of(new SimpleGrantedAuthority(role)));
 
 		SecurityContextHolder.getContext().setAuthentication(auth);
 	}

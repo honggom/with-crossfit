@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +39,10 @@ public class SpUser extends BaseEntity implements UserDetails {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "user_id"))
     private Set<SpAuthority> authorities;
+    
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private Box box;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
