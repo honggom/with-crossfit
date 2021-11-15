@@ -41,7 +41,7 @@ public class SpUser extends BaseEntity implements UserDetails {
     private Set<SpAuthority> authorities;
     
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "box_id")
     private Box box;
     
     @Id

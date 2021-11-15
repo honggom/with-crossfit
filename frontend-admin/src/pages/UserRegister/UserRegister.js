@@ -32,30 +32,18 @@ export default function UserRegister() {
 
                     <div className={styles.searchDetail}>
                         <div>
+                            <span>이메일 : </span>
+                            <input className={styles.inputStyle}
+                                type={'text'}
+                            ></input>
+                        </div>
+
+                        <div>
                             <span>이름 : </span>
                             <input className={styles.inputStyle}
-                                   type={'text'}
+                                type={'text'}
                             ></input>
                         </div>
-
-                        <div>
-                            <span>등급 : </span>
-                            <input className={styles.inputStyle}
-                                   type={'text'}
-                            ></input>
-                        </div>
-                        <div>
-                            <span>지점 : </span>
-                            <input className={styles.inputStyle}
-                                   type={'text'}
-                            ></input>
-                        </div>
-                    </div>
-
-                    <div className={styles.searchDetail}>
-                        <div>ex 1</div>
-                        <div>ex 2</div>
-                        <div>ex 3</div>
                     </div>
 
                     <div className={styles.buttonWrapper}>

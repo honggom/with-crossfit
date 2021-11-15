@@ -1,6 +1,7 @@
 .subMenu {
     text-align: center;
     cursor: pointer;
+    background-color: rgba(150, 150, 150, 0.1);
 }
 
 .subMenu:hover {
