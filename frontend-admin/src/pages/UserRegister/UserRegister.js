@@ -1,23 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getBox } from '../../api/pages/UserRegister';
-import { useNavigate } from "react-router-dom";
-import { ifExpired } from '../../util/util';
 import styles from './UserRegister.module.css';
 import { BsSearch } from 'react-icons/bs';
 import { IoMdRefresh } from 'react-icons/io';
+import UserTable from '../../component/UserTable/UserTable';
 
 export default function UserRegister() {
-
-    let navigate = useNavigate();
-
-    useEffect(() => {
-        getBox().then((response) => {
-            ifExpired(response, navigate);
-            console.log(response.data);
-        }).catch((error) => {
-            // TODO 예외처리
-        });
-    }, []);
 
     return (
         <div className={styles.wrapper}>
@@ -60,7 +47,17 @@ export default function UserRegister() {
             </div>
 
             <div className={styles.bottomWrapper}>
-                a
+                <table>
+                    <thead>
+                        <tr>
+                            <th>이메일</th>
+                            <th>이름</th>
+                            <th>가입일자</th>
+                            <th>등록</th>
+                        </tr>
+                    </thead>
+                    <UserTable />
+                </table>
             </div>
 
         </div>

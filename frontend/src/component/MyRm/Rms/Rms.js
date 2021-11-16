@@ -11,7 +11,7 @@ import {
 } from '../modalStyle'
 import { getMyRmById, updateMyRm, deleteMyRmById } from '../../../api/Rms/EditButton';
 import { getMyRm } from '../../../api/MyRm';
-import { ifExpired, isRightNumber, calculateToLb, calculateToKg, percentTranslate } from '../../../util/util';
+import { errorHandle, isRightNumber, calculateToLb, calculateToKg, percentTranslate } from '../../../util/util';
 
 export default function Rms({ rms, setRms }) {
     return (
@@ -58,7 +58,6 @@ function CalculatorButton({ id }) {
                 setModalIsOpen(true);
 
                 getMyRmById(idx).then((response) => {
-                    ifExpired(response, navigate);
 
                     const rm = response.data;
 
@@ -70,7 +69,7 @@ function CalculatorButton({ id }) {
                     setPercentKg(percentTranslate(percent, calculateToKg(rm.lb)));
 
                 }).catch((error) => {
-                    // TODO 예외처리
+                    errorHandle(error, navigate);
                 });
             }} />
 
@@ -195,8 +194,6 @@ function EditButton({ id, setRms }) {
                 setModalIsOpen(true);
 
                 getMyRmById(idx).then((response) => {
-                    ifExpired(response, navigate);
-
                     const rm = response.data;
 
                     setName(rm.name);
@@ -204,7 +201,7 @@ function EditButton({ id, setRms }) {
                     setLb(rm.lb);
                     setKg(calculateToKg(rm.lb));
                 }).catch((error) => {
-                    // TODO 예외처리
+                    errorHandle(error, navigate);
                 });
 
             }} />
@@ -292,17 +289,14 @@ function EditButton({ id, setRms }) {
                                 rmDto.id = idx;
 
                                 updateMyRm(rmDto).then((response) => {
-                                    ifExpired(response, navigate);
-
                                     getMyRm().then((response) => {
-                                        ifExpired(response, navigate);
                                         setRms(response.data);
                                         setModalIsOpen(false)
                                     }).catch((error) => {
-                                        // TODO 예외처리
+                                        errorHandle(error, navigate);
                                     });
                                 }).catch((error) => {
-                                    // TODO 예외처리
+                                    errorHandle(error, navigate);
                                 });
                             }}>수정</button>
                         </div>
@@ -310,16 +304,14 @@ function EditButton({ id, setRms }) {
                         <div style={deleteButtonWrapperStyle}>
                             <button style={deleteButtonStyle} onClick={() => {
                                 deleteMyRmById(idx).then((response) => {
-                                    ifExpired(response, navigate);
 
                                     getMyRm().then((response) => {
-                                        ifExpired(response, navigate);
                                         setRms(response.data);
                                     }).catch((error) => {
-                                        // TODO 예외처리
+                                        errorHandle(error, navigate);
                                     });
                                 }).catch((error) => {
-                                    // TODO 예외처리
+                                    errorHandle(error, navigate);
                                 })
                             }}>삭제</button>
                         </div>

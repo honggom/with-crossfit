@@ -53,8 +53,6 @@ public class SpOAuth2SuccessHandler implements AuthenticationSuccessHandler  {
 			SpOAuth2User oauth = SpOAuth2User.Provider.google.convert((OidcUser) principal);
 			SpUser user = userService.load(oauth);
 			
-			// TODO ADMIN 권한 추가 페이지 제작, 지점지정
-			
 			Set<SpAuthority> authorities = user.getAuthorities();
 			
 			for(SpAuthority authority : authorities) {
@@ -69,13 +67,15 @@ public class SpOAuth2SuccessHandler implements AuthenticationSuccessHandler  {
 				cookieUtils.addCookies(response, adminToken);
 				redirectUrl = env.getProperty("front-end-admin.base-url") + "/home";
 			} else {
-				
-				// TODO 여기서 등록되지 않은 회원 처리
-				
-				logger.info("유저 로그인");
-				Token userToken = tokenUtils.generateJwtAndRefresh(user.getEmail(), "ROLE_USER");
-				cookieUtils.addCookies(response, userToken);
-				redirectUrl = env.getProperty("front-end.base-url") + "/home";
+				if(user.getBox() == null) {
+					logger.info("미등록 유저 로그인");
+					redirectUrl = env.getProperty("front-end.base-url") + "/not-registered";
+				} else {
+					logger.info("유저 로그인");
+					Token userToken = tokenUtils.generateJwtAndRefresh(user.getEmail(), "ROLE_USER");
+					cookieUtils.addCookies(response, userToken);
+					redirectUrl = env.getProperty("front-end.base-url") + "/home";
+				}
 			}
 		}
 		response.sendRedirect(redirectUrl);

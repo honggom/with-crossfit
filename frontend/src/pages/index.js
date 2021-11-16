@@ -5,5 +5,6 @@ import Wod from './Wod';
 import Reservation from './Reservation/Reservation';
 import Board from './Board';
 import MyPage from './MyPage/MyPage';
+import NotRegistered from './NotRegistered';
 
-export { Home, Login, Logout, Wod, Reservation, Board, MyPage };
+export { Home, Login, Logout, Wod, Reservation, Board, MyPage, NotRegistered };

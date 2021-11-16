@@ -20,12 +20,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.filter.GenericFilterBean;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends GenericFilterBean {
+public class AdminJwtAuthenticationFilter extends GenericFilterBean {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -35,14 +36,15 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
 	private final Environment env;
 
-	private RequestMatcher requestMatcher = new AntPathRequestMatcher("/api/**");
+	private RequestMatcher requestMatcher = new AntPathRequestMatcher("/admin/api/**");
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
 			throws IOException, ServletException {
 		try {
 			if (requestMatcher.matches((HttpServletRequest) request)) {
-				logger.info("JwtAuthFilter 진입 ====================================");
+
+				logger.info("AdminJwtAuthenticationFilter 진입 ====================================");
 
 				Map<String, String> jwts = tokenUtils.getJwtFromCookie(((HttpServletRequest) request).getCookies());
 
@@ -53,7 +55,14 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 					logger.info("jwt 유효");
 
 					Map<String, Object> jwtClaims = tokenUtils.getJwtBody(jwt);
-					authenticated(jwtClaims.get("email").toString(), jwtClaims.get("role").toString());
+					
+					if (jwtClaims.get("role").toString().equals("ROLE_ADMIN")) {
+						logger.info("ADMIN 권한 있음");
+						authenticated(jwtClaims.get("email").toString(), jwtClaims.get("role").toString());
+					} else {
+						logger.info("ADMIN 권한 없음");
+						((HttpServletResponse)response).setStatus(403);
+					}
 				} else {
 					if (!tokenUtils.isExpired(refresh)) {
 						logger.info("ref 유효");

@@ -22,9 +22,6 @@ public class MyRmController {
 	
 	private final MyRmService myRmService;
 	
-	// TODO 수정, 삭제
-	// myrm 아이디로 변경 또는 삭제 요청시 본인이 맞는지 검증이 필요함
-	
 	@GetMapping("/api/my-rm")
 	public ResponseEntity<List<MyRmDto>> getMyRm(@CookieValue(name="refresh") String jwt) {
 		return ResponseEntity.ok()

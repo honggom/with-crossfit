@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Home, Login, Logout, Wod, Reservation, Board, MyPage } from './pages';
+import { Home, Login, Logout, Wod, Reservation, Board, MyPage, NotRegistered } from './pages';
 import Nav from './component/Nav/Nav';
 import styles from './App.module.css';
 import './index.css';
@@ -22,6 +22,7 @@ export default function App() {
                         <Route path="/reservation" element={<Reservation />} exact />
                         <Route path="/board" element={<Board />} exact />
                         <Route path="/mypage" element={<MyPage />} exact />
+                        <Route path="/not-registered" element={<NotRegistered />} exact />
                     </Routes>
                 </section>
                 <nav>

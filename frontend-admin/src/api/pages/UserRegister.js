@@ -13,4 +13,32 @@ const getBox = async (id) => {
     return await axios(config);
 };
 
-export { getBox };
+const getNotRegisteredUser = async (id) => {
+
+    const config = {
+        method: 'GET',
+        url: `${backEndBaseUri}/admin/api/user/not-registered`,
+        withCredentials: true,
+    }
+
+    return await axios(config);
+};
+
+const insertNewBoxToUser = async (boxId, email) => {
+
+    const data = {
+        boxId: boxId,
+        email: email,
+    }
+
+    const config = {
+        method: 'POST',
+        url: `${backEndBaseUri}/admin/api/user/register`,
+        data: data,
+        withCredentials: true,
+    }
+
+    return await axios(config);
+};
+
+export { getBox, getNotRegisteredUser, insertNewBoxToUser };

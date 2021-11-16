@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
 
+import hong.gom.withcrossfit.jwt.AdminJwtAuthenticationFilter;
 import hong.gom.withcrossfit.jwt.CookieUtils;
 import hong.gom.withcrossfit.jwt.JwtAuthenticationFilter;
 import hong.gom.withcrossfit.jwt.TokenUtils;
@@ -40,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
+            	.addFilterBefore(new AdminJwtAuthenticationFilter(tokenUtils, cookieUtils, env), UsernamePasswordAuthenticationFilter.class)
             	.addFilterBefore(new JwtAuthenticationFilter(tokenUtils, cookieUtils, env), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest)

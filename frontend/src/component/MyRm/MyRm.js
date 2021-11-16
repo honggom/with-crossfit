@@ -8,7 +8,7 @@ import {
     fontStyle, inputStyle, buttonWrapperStyle, addButtonWrapperStyle, closeButtonWrapperStyle, 
     addButtonStyle,  closeButtonStyle, modalWrapper, rowWrapper, dotLine
 } from './modalStyle'
-import { ifExpired, isRightNumber, calculateToLb, calculateToKg } from '../../util/util';
+import { errorHandle, isRightNumber, calculateToLb, calculateToKg } from '../../util/util';
 import Rms from './Rms/Rms';
 
 
@@ -26,10 +26,9 @@ export default function MyRm() {
 
     useEffect(() => {
         getMyRm().then((response) => {
-            ifExpired(response, navigate);
             setRms(response.data);
         }).catch((error) => {
-            // TODO 예외처리
+            errorHandle(error, navigate);
         });
     }, []);
 
@@ -148,13 +147,11 @@ export default function MyRm() {
                             <button style={addButtonStyle}
                                 onClick={() => {
                                     insertMyRm(new MyRmDto(name, repetition, lb)).then((response) => {
-                                        ifExpired(response, navigate);
 
                                         getMyRm().then((response) => {
-                                            ifExpired(response, navigate);
                                             setRms(response.data);
                                         }).catch((error) => {
-                                            // TODO 예외처리
+                                            errorHandle(error, navigate);
                                         });
 
                                         setName("");
@@ -163,7 +160,7 @@ export default function MyRm() {
                                         setKg(0);
 
                                     }).catch((error) => {
-                                        // TODO 예외처리
+                                        errorHandle(error, navigate);
                                     });
                                 }}>추가</button>
                         </div>
