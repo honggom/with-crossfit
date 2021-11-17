@@ -22,7 +22,6 @@
 .middleWrapper2 {
     margin: var(--comm-margin);
     border-radius: var(--comm-border-radius);
-    box-shadow: var(--comm-box-shadow);
     display: flex;
     flex-direction: column; 
 }
@@ -39,4 +38,8 @@
     background-color: var(--comm-bg-sky-blue);
     border: 2px solid rgba(163, 185, 184, 0.2);
     border-radius: 3px;
+}
+
+.border {
+    border: 1px solid #ccc;
 }

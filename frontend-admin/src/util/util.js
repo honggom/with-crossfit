@@ -1,10 +1,13 @@
 // 쿠키가 없거나 토큰이 만료됐을 경우 동작
 function errorHandle(error, navigate) {
-    if (error.message === 'Request failed with status code 401') {
+    if (error.response.status === 401) {
         alert("로그인이 만료되었습니다.");
         navigate("/logout", { replace: true });
-    } else if (error.message === 'Request failed with status code 403') {
+    } else if (error.response.status === 403) {
         alert("권한이 없습니다.");
+        navigate("/logout", { replace: true });
+    } else {
+        alert("오류가 발생했습니다.");
         navigate("/logout", { replace: true });
     }
 }
