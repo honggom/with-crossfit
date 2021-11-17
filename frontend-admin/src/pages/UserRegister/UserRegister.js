@@ -6,6 +6,8 @@ import UserTable from '../../component/UserTable/UserTable';
 
 export default function UserRegister() {
 
+    // TODO 검색 기능 구현
+
     return (
         <div className={styles.wrapper}>
 
