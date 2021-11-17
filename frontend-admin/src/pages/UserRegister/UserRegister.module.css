@@ -47,7 +47,7 @@
     margin: var(--comm-margin);
     border-radius: var(--comm-border-radius);
     box-shadow: var(--comm-box-shadow);
-    border: 1px solid rgba(0, 0, 0, 0.1);;
+    border: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column; 
 }
@@ -74,5 +74,4 @@ th {
     width: 25%;
     font-family: var(--comm-font-family);
     text-align: center;
-    border-bottom: 1px dotted rgba(0, 0, 0, 0.3);
 }

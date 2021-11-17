@@ -1,5 +1,7 @@
 package hong.gom.withcrossfit.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,10 @@ public class WodService {
 	private final SpUserRepository userRepository;
 	private final TokenUtils tokenUtils;
 	private final WodRepository wodRepository;
+	
+	public ResponseEntity<Page<Wod>> getWodService(Pageable pageable) {
+		return ResponseEntity.ok().body(wodRepository.findAll(pageable));
+	}
 
 	public ResponseEntity insertWodService(String jwt, WodDto wodDto) {
 		String email = tokenUtils.getEmail(jwt);
