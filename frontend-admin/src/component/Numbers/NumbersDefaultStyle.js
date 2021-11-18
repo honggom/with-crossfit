@@ -10,7 +10,10 @@ const numbersStyle = {
         cursor: 'pointer'
     },
     leftButtonWrapper: {
-        width: '10%'
+        width: '10%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     numbersWarpper: {
         width: '80%',
@@ -18,7 +21,10 @@ const numbersStyle = {
         justifyContent: 'space-around'
     },
     rightButtonWrapper: {
-        width: '10%'
+        width: '10%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
 
 }

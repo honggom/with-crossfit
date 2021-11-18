@@ -13,4 +13,15 @@ const getWod = async (size, page, sort) => {
     return await axios(config);
 };
 
-export { getWod };
+const getWodById = async (id) => {
+
+    const config = {
+        method: 'GET',
+        url: `${backEndBaseUri}/admin/api/wod?id=${id}`,
+        withCredentials: true,
+    }
+
+    return await axios(config);
+};
+
+export { getWod, getWodById };

@@ -1,8 +1,7 @@
 .wrapper {
+    margin: var(--comm-margin);
     display: flex;
-    flex-direction: column; 
-    height: 100%;
-    width: 100%;
+    flex-direction: column;
 }
 
 .topWrapper {
@@ -16,8 +15,6 @@
 .middleWrapper {
     margin: var(--comm-margin);
     border-radius: var(--comm-border-radius);
-    box-shadow: var(--comm-box-shadow);
-    border: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column; 
 }
@@ -25,23 +22,17 @@
 .bottomWrapper {
     margin: var(--comm-margin);
     border-radius: var(--comm-border-radius);
-    box-shadow: var(--comm-box-shadow);
-    border: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
+    justify-content: center;
 }
 
-.th1 {
-    width: 50%;
+.button {
+    outline: 0;
+    background-color: var(--comm-bg-sky-blue);
+    border: 2px solid rgba(163, 185, 184, 0.2);
+    border-radius: 3px;
 }
 
-.th2, .th3 {
-    width: 25%;
-}
-
-.wodTitle {
-    cursor: pointer;
-}
-
-.wodTitle:hover {
-    text-decoration: underline;
+.border {
+    border: 1px solid #ccc;
 }

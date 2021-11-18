@@ -19,4 +19,6 @@ public class WodDto {
     private String title;
     
     private String content;
+    
+    private LocalDateTime createdAt;
 }

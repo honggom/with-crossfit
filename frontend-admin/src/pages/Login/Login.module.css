@@ -1,0 +1,20 @@
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.loginWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.googleIcon {
+    
+}
+
+.loginButton {
+    
+}

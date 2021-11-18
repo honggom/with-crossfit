@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,9 +23,15 @@ public class WodController {
 	
 	private final WodService wodService;
 	
+	// TODO wod -> wod dto
 	@GetMapping("/wod")
 	public ResponseEntity<Page<Wod>> getWod(Pageable pageable) {
 		return wodService.getWodService(pageable);
+	}
+	
+	@GetMapping("/wod/{id}")
+	public ResponseEntity<WodDto> getWodById(@PathVariable Long id) {
+		return wodService.getWodByIdService(id);
 	}
 	
 	@PostMapping("/wod")

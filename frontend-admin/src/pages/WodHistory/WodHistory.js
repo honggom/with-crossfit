@@ -1,10 +1,10 @@
 import styles from './WodHistory.module.css';
 import React, { useState, useEffect } from 'react';
 import { getWod } from '../../api/pages/WodHistory';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { errorHandle } from '../../util/util';
 import Numbers from '../../component/Numbers/Numbers';
-import numbersStyle from '../../component/Numbers/NumbersDefaultStyle'; 
+import numbersStyle from '../../component/Numbers/NumbersDefaultStyle';
 
 export default function WodHistory() {
 
@@ -57,9 +57,13 @@ export default function WodHistory() {
                     <tbody>
                         {wods.map(wod => (
                             <tr key={wod.id}>
-                                <td>{wod.title}</td>
-                                <td>{wod.writer.name}</td>
-                                <td>{wod.date}</td>
+                                <td>
+                                    <Link to={`/read-wod/${wod.id}`}>
+                                        <span className={styles.wodTitle}>{wod.title}</span>
+                                    </Link>
+                                </td>
+                                <td><span>{wod.writer.name}</span></td>
+                                <td><span>{wod.date}</span></td>
                             </tr>
                         ))}
                     </tbody>
@@ -67,12 +71,12 @@ export default function WodHistory() {
             </div>
 
             <div className={styles.bottomWrapper}>
-                <Numbers startPage={startPage} 
-                         maxPageShow={maxPageShow} 
-                         totalPages={totalPages} 
-                         style={numbersStyle} 
-                         setPage={setPage} 
-                         page={page}
+                <Numbers startPage={startPage}
+                    maxPageShow={maxPageShow}
+                    totalPages={totalPages}
+                    style={numbersStyle}
+                    setPage={setPage}
+                    page={page}
                 />
             </div>
         </div>

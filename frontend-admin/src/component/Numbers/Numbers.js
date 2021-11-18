@@ -1,3 +1,5 @@
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
+
 export default function Numbers({ startPage, maxPageShow, totalPages, style, setPage, page }) {
     const cumstomStyle = style.numbersStyle;
 
@@ -18,9 +20,7 @@ export default function Numbers({ startPage, maxPageShow, totalPages, style, set
     return (
         <>
             <div style={cumstomStyle.leftButtonWrapper}>
-                {left && (<div onClick={() => {
-                    setPage(startPage - 2);
-                }}>{'<'}</div>)}
+                {left && (<MdKeyboardArrowLeft onClick={() => {setPage(startPage - 2); }}/>)}
             </div>
 
             <div style={cumstomStyle.numbersWarpper}>
@@ -28,7 +28,7 @@ export default function Numbers({ startPage, maxPageShow, totalPages, style, set
             </div>
 
             <div style={cumstomStyle.rightButtonWrapper}>
-                {right && (<div onClick={() => { setPage((startPage - 1) + maxPageShow); }}>{'>'}</div>)}
+                {right && (<MdKeyboardArrowRight onClick={() => { setPage((startPage - 1) + maxPageShow); }} />)}
             </div>
         </>
     );

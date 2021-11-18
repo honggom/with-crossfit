@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { insertWod } from '../../api/pages/WriteWod';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { errorHandle } from '../../util/util';
 
 export default function WriteWod() {
@@ -26,7 +26,7 @@ export default function WriteWod() {
             </div>
 
             <div className={styles.middleWrapper1}>
-                <span>날짜</span>
+                <span>WOD 일시</span>
                 <DatePicker className={styles.border} selected={date} onChange={(date) => {
                     setDate(date);
                 }} />
@@ -59,7 +59,8 @@ export default function WriteWod() {
                             alert('제목을 작성해주세요.');
                         } else {
                             insertWod(date, title, text).then((response) => {
-
+                                alert('작성 되었습니다.');
+                                navigate('/home', {replace: true})
                             }).catch((error) => {
                                 if (error.response.status === 400) {
                                     alert(error.response.data);
@@ -70,7 +71,6 @@ export default function WriteWod() {
                         }
                     }}>작성</button>
             </div>
-
         </div>
     );
 
