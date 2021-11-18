@@ -3,56 +3,39 @@ import React, { useState, useEffect } from 'react';
 import { getWod } from '../../api/pages/WodHistory';
 import { useNavigate } from "react-router-dom";
 import { errorHandle } from '../../util/util';
+import Numbers from '../../component/Numbers/Numbers';
+import numbersStyle from '../../component/Numbers/NumbersDefaultStyle'; 
 
 export default function WodHistory() {
 
     let navigate = useNavigate();
 
-    let page = 0;
-    const size = 10;
-    const sort = 'date,DESC';
-    const maxPageShow = 10;
+    let size = 10;
+    let sort = 'date,DESC';
+    let maxPageShow = 10;
 
-    let startPage = Math.ceil(page + 1 / maxPageShow);
-    let totalPages = 0;
-
-    const [left, setLeft] = useState(page > maxPageShow - 1);
-    const [right, setRight] = useState(totalPages - maxPageShow >= page);
+    const [page, setPage] = useState(0);
+    const [startPage, setStartPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
     const [wods, setWods] = useState([]);
 
-    const [status, setStatus] = useState({start: start, maxPageShow: maxPageShow, totalPages: totalPages});
-
     useEffect(() => {
+        setStatus(page);
         setGrid(size, page, sort);
-    }, []);
+    }, [page, totalPages]);
 
     function setGrid(size, page, sort) {
         getWod(size, page, sort).then((response) => {
             setWods(response.data.content);
-            totalPages = response.data.totalPages;
+            setTotalPages(response.data.totalPages);
         }).catch((error) => {
             errorHandle(error, navigate);
         });
     }
 
-
-    // TODO numbers ==> 컴포넌트로 바꾸고 status 전달
-
-    function numbers(start) {
-        const arr = [];
-
-        for (let i = start; i < start + maxPageShow; i++) {
-            if (i <= totalPages) {
-                arr.push(<div key={i}
-                    className={styles.number}
-                    onClick={(item) => {
-                    }}
-                >
-                    {i}
-                </div>);
-            }
-        }
-        return arr;
+    function setStatus(clickedPage) {
+        setPage(clickedPage);
+        setStartPage((Math.ceil((clickedPage + 1) / maxPageShow) - 1) * maxPageShow + 1);
     }
 
     return (
@@ -73,7 +56,7 @@ export default function WodHistory() {
                     </thead>
                     <tbody>
                         {wods.map(wod => (
-                            <tr key={wod.date}>
+                            <tr key={wod.id}>
                                 <td>{wod.title}</td>
                                 <td>{wod.writer.name}</td>
                                 <td>{wod.date}</td>
@@ -84,19 +67,13 @@ export default function WodHistory() {
             </div>
 
             <div className={styles.bottomWrapper}>
-
-                <div className={styles.leftButtonWrapper}>
-                    {left && ('<')}
-                </div>
-
-                <div className={styles.numbersWarpper}>
-                    {numbers(startPage)}
-                </div>
-
-                <div className={styles.rightButtonWrapper}>
-                    {right && ('>')}
-                </div>
-
+                <Numbers startPage={startPage} 
+                         maxPageShow={maxPageShow} 
+                         totalPages={totalPages} 
+                         style={numbersStyle} 
+                         setPage={setPage} 
+                         page={page}
+                />
             </div>
         </div>
     );

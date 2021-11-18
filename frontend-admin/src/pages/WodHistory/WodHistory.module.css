@@ -37,17 +37,3 @@
 .th2, .th3 {
     width: 25%;
 }
-
-.leftButtonWrapper, .rightButtonWrapper {
-    width: 10%;
-}
-
-.numbersWarpper {
-    width: 80%;
-    display: flex;
-    justify-content: space-around;
-}
-
-.number {
-    cursor: pointer;
-}

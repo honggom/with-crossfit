@@ -26,8 +26,10 @@ export default function UserTable() {
             setUsers(response.data);
             getBox().then((response) => {
                 setBoxes(response.data);
-                setCurBox(response.data[0].name);
-                setCurBoxId(response.data[0].id);
+                if (response.data.length !== 0) {
+                    setCurBox(response.data[0].name);
+                    setCurBoxId(response.data[0].id);
+                } 
             }).catch((error) => {
                 errorHandle(error, navigate);
             });

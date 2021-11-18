@@ -30,7 +30,7 @@ public class WodService {
 		String email = tokenUtils.getEmail(jwt);
 		SpUser user = userRepository.findByEmail(email);
 		Wod oldWod = wodRepository.findByDate(wodDto.getDate());
-
+		
 		if (oldWod == null) {
 			wodRepository.save(Wod.builder()
 					              .writer(user)
@@ -40,9 +40,6 @@ public class WodService {
 					              .build());
 			return new ResponseEntity(HttpStatus.OK);
 		} else {
-			System.out.println("중복");
-			System.out.println("중복");
-			System.out.println("중복");
 			return new ResponseEntity("이미 해당 날짜에 작성된 WOD가 존재합니다.", HttpStatus.BAD_REQUEST);
 		}
 
