@@ -43,7 +43,7 @@ public class SpOAuth2SuccessHandler implements AuthenticationSuccessHandler  {
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-		logger.info("AuthenticationSuccessHandler 진입 ====================================");
+		logger.info("AuthenticationSuccessHandler 진입 ...");
 
 		Object principal = authentication.getPrincipal();
 		boolean isAdmin = false;

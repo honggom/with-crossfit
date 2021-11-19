@@ -7,5 +7,6 @@ import Logout from './Logout';
 import ReadWod from './ReadWod/ReadWod';
 import EditWod from './EditWod/EditWod'
 import NotRegistered from './NotRegistered';
+import ManageSchedule from './ManageSchedule/ManageSchedule';
 
-export { Login, Home, UserRegister, WriteWod, WodHistory, Logout, ReadWod, EditWod, NotRegistered };
+export { Login, Home, UserRegister, WriteWod, WodHistory, Logout, ReadWod, EditWod, NotRegistered, ManageSchedule };

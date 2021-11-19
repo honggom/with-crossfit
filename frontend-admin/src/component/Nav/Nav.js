@@ -36,12 +36,14 @@ export default function Nav() {
             </div>
 
             <div className={styles.menuWrapper}>
-                <Menu title={'WOD'} childrens={wodChildren}/>
+                <Menu title={'WOD'} childrens={wodChildren} />
             </div>
 
-            <div className={styles.menuWrapper}>
-                <Menu title={'예약 확인'} />
-            </div>
+            <Link to="/manage-schedule">
+                <div className={styles.menuWrapper}>
+                    <Menu title={'일정 관리'} />
+                </div>
+            </Link>
 
             <div className={styles.menuWrapper}>
                 <Menu title={'회원 관리'} childrens={userRegisterChildren} />
