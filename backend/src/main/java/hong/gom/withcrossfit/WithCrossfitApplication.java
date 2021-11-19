@@ -6,8 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+import hong.gom.withcrossfit.entity.Box;
+import hong.gom.withcrossfit.repository.BoxRepository;
+import lombok.RequiredArgsConstructor;
+
 @SpringBootApplication
-@EnableJpaAuditing // Auditing 활성화
+@EnableJpaAuditing
 public class WithCrossfitApplication {
 
 	@Bean

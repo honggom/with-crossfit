@@ -2,9 +2,9 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import React, { useState, useEffect } from 'react';
 
-export default function TextEditor({ setText }) {
+export default function TextEditor({ setText, text }) {
 
-    const [viewText, setViewText] = useState('');
+    const [viewText, setViewText] = useState(text);
 
     const modules = {
         toolbar: [
@@ -25,19 +25,9 @@ export default function TextEditor({ setText }) {
         'align', 'color', 'background',
     ]
 
-    let instance;
-
-    function getHTML() {
-        console.log(instance.unprivilegedEditor.getHTML());
-        return instance.unprivilegedEditor.getHTML();
-    }
-
     return (
         <>
             <ReactQuill
-                ref={(el) => {
-                    instance = el;
-                }}
                 theme="snow"
                 modules={modules}
                 formats={formats}

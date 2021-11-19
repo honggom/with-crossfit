@@ -62,10 +62,15 @@ public class SpOAuth2SuccessHandler implements AuthenticationSuccessHandler  {
 			}
 			
 			if (isAdmin) {
-				logger.info("관리자 로그인");
-				Token adminToken = tokenUtils.generateJwtAndRefresh(user.getEmail(), "ROLE_ADMIN");
-				cookieUtils.addCookies(response, adminToken);
-				redirectUrl = env.getProperty("front-end-admin.base-url") + "/home";
+				if(user.getBox() == null) {
+					logger.info("박스 미등록 관리자 로그인");
+					redirectUrl = env.getProperty("front-end-admin.base-url") + "/not-registered";
+				} else {
+					logger.info(user.getBox().getName() + " 지점 관리자 로그인");
+					Token adminToken = tokenUtils.generateJwtAndRefresh(user.getEmail(), "ROLE_ADMIN");
+					cookieUtils.addCookies(response, adminToken);
+					redirectUrl = env.getProperty("front-end-admin.base-url") + "/home";
+				}
 			} else {
 				if(user.getBox() == null) {
 					logger.info("미등록 유저 로그인");

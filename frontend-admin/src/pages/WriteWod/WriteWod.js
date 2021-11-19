@@ -50,9 +50,6 @@ export default function WriteWod() {
             <div className={styles.bottomWrapper}>
                 <button className={styles.button}
                     onClick={() => {
-                        console.log(text);
-                        console.log(title);
-                        console.log(date);
                         if (date === null) {
                             alert('날짜를 선택해주세요.');
                         } else if (title === '') {
@@ -60,7 +57,7 @@ export default function WriteWod() {
                         } else {
                             insertWod(date, title, text).then((response) => {
                                 alert('작성 되었습니다.');
-                                navigate('/home', {replace: true})
+                                navigate('/wod-history', {replace: true})
                             }).catch((error) => {
                                 if (error.response.status === 400) {
                                     alert(error.response.data);

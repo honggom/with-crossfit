@@ -11,7 +11,7 @@ export default function WodHistory() {
     let navigate = useNavigate();
 
     let size = 10;
-    let sort = 'date,DESC';
+    let sort = 'createdAt,DESC';
     let maxPageShow = 10;
 
     const [page, setPage] = useState(0);
@@ -63,7 +63,7 @@ export default function WodHistory() {
                                     </Link>
                                 </td>
                                 <td><span>{wod.writer.name}</span></td>
-                                <td><span>{wod.date}</span></td>
+                                <td><span>{wod.createdAt}</span></td>
                             </tr>
                         ))}
                     </tbody>

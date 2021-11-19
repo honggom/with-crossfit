@@ -13,4 +13,15 @@ const getWodById = async (id) => {
     return await axios(config);
 };
 
-export { getWodById };
+const deleteWodById = async (id) => {
+
+    const config = {
+        method: 'DELETE',
+        url: `${backEndBaseUri}/admin/api/wod/${id}`,
+        withCredentials: true,
+    }
+
+    return await axios(config);
+};
+
+export { getWodById, deleteWodById };

@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import { getWodById } from '../../api/pages/ReadWod';
+import { getWodById, deleteWodById } from '../../api/pages/ReadWod';
 import styles from './ReadWod.module.css';
 import DatePicker from 'react-datepicker';
 import TextReader from '../../component/TextReader';
@@ -49,6 +49,34 @@ export default function ReadWod() {
         </div>
 
         <div className={styles.bottomWrapper}>
+          {
+            wod.editable &&
+            (<>
+              <button onClick={() => {
+                navigate('/edit-wod', { replace: true, state: wod })
+              }}
+              >
+                수정
+              </button>
+              <button onClick={() => {
+                if (window.confirm('WOD를 삭제하시겠습니까?')) {
+                  deleteWodById(wod.id).then((response) => {
+                    alert('삭제되었습니다.');
+                    navigate('/wod-history', { replace: true })
+                  }).catch((error) => {
+                    if (error.response.status === 400) {
+                      alert(error.response.data);
+                    } else {
+                      errorHandle(error, navigate)
+                    }
+                  })
+                }
+              }}
+              >
+                삭제
+              </button>
+            </>)
+          }
         </div>
 
       </div>

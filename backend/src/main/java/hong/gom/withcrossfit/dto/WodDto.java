@@ -3,6 +3,7 @@ package hong.gom.withcrossfit.dto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import hong.gom.withcrossfit.entity.SpUser;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,6 +20,8 @@ public class WodDto {
     private String title;
     
     private String content;
+
+    private boolean editable;
     
     private LocalDateTime createdAt;
 }
