@@ -20,12 +20,12 @@ export default function ManageSchedule() {
         <div className={styles.wrapper}>
 
             <div className={styles.titleWrapper}>
-                <span>일정 관리</span>
+                <span>시간표 관리</span>
             </div>
 
             <div className={styles.middleWrapper}>
                 <Link to='/set-default-schedule'>
-                <button className={styles.defaultScheduleButton}>기본 일정 설정</button>
+                <button className={styles.defaultScheduleButton}>기본 시간표 설정</button>
                 </Link>
             </div>
 

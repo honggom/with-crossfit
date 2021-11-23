@@ -41,7 +41,7 @@ export default function Nav() {
 
             <Link to="/manage-schedule">
                 <div className={styles.menuWrapper}>
-                    <Menu title={'일정 관리'} />
+                    <Menu title={'시간표 관리'} />
                 </div>
             </Link>
 
