@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { BsPen } from 'react-icons/bs';
-import styles from './UserTable.module.css';
 import Modal from 'react-modal';
 import { content, fontStyle, inputStyle, rowWrapper, rowWrapper2, selectStyle, addButtonStyle, closeButtonStyle } from './modalStyle';
 import { getBox, getNotRegisteredUser, insertNewBoxToUser } from '../../api/pages/UserRegister';

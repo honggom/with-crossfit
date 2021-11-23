@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import styles from './UserRegister.module.css';
 import { BsSearch } from 'react-icons/bs';
 import { IoMdRefresh } from 'react-icons/io';

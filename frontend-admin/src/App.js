@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Login, Home, UserRegister, WriteWod, WodHistory, Logout, ReadWod, EditWod, NotRegistered, ManageSchedule } from './pages';
+import { Login, Home, UserRegister, WriteWod, WodHistory, Logout, ReadWod, EditWod, NotRegistered, ManageSchedule, SetDefaultSchedule } from './pages';
 import styles from './App.module.css';
 import './index.css';
 import Nav from './component/Nav/Nav';
@@ -23,6 +23,7 @@ export default function App() {
             <Route path="/wod-history" element={<WodHistory />} exact />
             <Route path="/user-register" element={<UserRegister />} exact />
             <Route path="/not-registered" element={<NotRegistered />} exact />
+            <Route path="/set-default-schedule" element={<SetDefaultSchedule />} exact />
           </Routes>
         </section>
       </BrowserRouter>

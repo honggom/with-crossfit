@@ -54,7 +54,7 @@ export default function WodHistory() {
                             <th className={styles.th3}>작성일</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className={styles.tbody}>
                         {wods.map(wod => (
                             <tr key={wod.id}>
                                 <td>

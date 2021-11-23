@@ -1,0 +1,115 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.titleWrapper1 {
+    height: 15%;
+    margin: var(--comm-margin);
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.titleWrapper2 {
+    margin: var(--comm-margin);
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.titleWrapper3 {
+    height: 15%;
+    margin: var(--comm-margin);
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.defaultScheduleWrapper {
+    width: 70%;
+    margin: var(--comm-margin);
+    border-radius: var(--comm-border-radius);
+    box-shadow: var(--comm-box-shadow);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+}
+
+.table {
+    width: 100%;
+}
+
+.th1 {
+    text-align: left;
+    width: 80%;
+}
+
+.th2 {
+    width: 20%;
+}
+
+.addButton {
+    font-size: 1.2rem;
+    font-family: var(--comm-font-family);
+    outline: 0;
+    background-color: var(--comm-bg-sky-blue);
+    border: 2px solid rgba(163, 185, 184, 0.2);
+    border-radius: 3px;
+    width: 95%;
+    cursor: pointer;
+}
+
+.td {
+    text-align: left;
+}
+
+.td span {
+    color: rgba(101, 163, 238, 1);
+    cursor: pointer;
+}
+
+.td span:hover {
+    text-decoration: underline;
+}
+
+.weekWrapper {
+    width: 70%;
+    margin: var(--comm-margin);
+    border-radius: var(--comm-border-radius);
+    box-shadow: var(--comm-box-shadow);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+}
+
+.th3 {
+
+}
+
+.th4 {
+
+}
+
+.th5 {
+
+}
+
+.td2 {
+    text-align: center;
+}
+
+.td3 {
+    text-align: center;
+}
+
+.td3 span {
+    color: rgba(101, 163, 238, 1);
+}
+
+.td4 {
+    text-align: center;
+}

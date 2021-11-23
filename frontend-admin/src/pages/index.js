@@ -8,5 +8,6 @@ import ReadWod from './ReadWod/ReadWod';
 import EditWod from './EditWod/EditWod'
 import NotRegistered from './NotRegistered';
 import ManageSchedule from './ManageSchedule/ManageSchedule';
+import SetDefaultSchedule from './SetDefaultSchedule/SetDefaultSchedule';
 
-export { Login, Home, UserRegister, WriteWod, WodHistory, Logout, ReadWod, EditWod, NotRegistered, ManageSchedule };
+export { Login, Home, UserRegister, WriteWod, WodHistory, Logout, ReadWod, EditWod, NotRegistered, ManageSchedule, SetDefaultSchedule };

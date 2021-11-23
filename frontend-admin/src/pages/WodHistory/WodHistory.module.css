@@ -38,6 +38,10 @@
     width: 25%;
 }
 
+.tbody td {
+    text-align: center;
+}
+
 .wodTitle {
     cursor: pointer;
 }
