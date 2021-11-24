@@ -1,0 +1,12 @@
+.td {
+    text-align: left;
+}
+
+.td span {
+    color: rgba(101, 163, 238, 1);
+    cursor: pointer;
+}
+
+.td span:hover {
+    text-decoration: underline;
+}

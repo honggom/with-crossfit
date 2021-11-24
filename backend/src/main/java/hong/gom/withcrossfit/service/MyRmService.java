@@ -25,7 +25,6 @@ public class MyRmService {
 	private final MyRmRepository myRmRepository;
 	private final SpUserRepository userRepository;
 	private final TokenUtils tokenUtils;
-	
 	private final ModelMapper modelMapper;
 	
 	public List<MyRmDto> getMyRmService(String jwt) {

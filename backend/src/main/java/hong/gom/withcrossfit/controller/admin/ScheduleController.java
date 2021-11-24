@@ -7,16 +7,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import hong.gom.withcrossfit.dto.ScheduleDto;
 import hong.gom.withcrossfit.entity.SpecificSchedule;
+import hong.gom.withcrossfit.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/api")
 public class ScheduleController {
+	
+	private final ScheduleService scheduleService;
 	
 	@GetMapping("/now")
 	public ResponseEntity<LocalDate> getNow() {
@@ -33,8 +39,17 @@ public class ScheduleController {
 		
 		System.out.println(start);
 		System.out.println(end);
-		
 		return null;
+	}
+	
+	@PostMapping("/schedule")
+	public ResponseEntity insertSchedule(@CookieValue(name = "refresh") String jwt, @RequestBody ScheduleDto scheduleDto) {
+		return scheduleService.insertScheduleService(jwt, scheduleDto);
+	}
+	
+	@GetMapping("/schedule")
+	public ResponseEntity<List<ScheduleDto>> getScheduleByBox(@CookieValue(name = "refresh") String jwt) {
+		return scheduleService.getScheduleByBox(jwt);
 	}
 
 }

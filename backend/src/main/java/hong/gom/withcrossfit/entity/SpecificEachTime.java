@@ -22,8 +22,8 @@ import lombok.ToString;
 @ToString
 @Builder
 @Entity
-@Table(name = "each_time")
-public class EachTime {
+@Table(name = "specific_each_time")
+public class SpecificEachTime {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +34,7 @@ public class EachTime {
     private LocalTime end;
     
     @ManyToOne(targetEntity = Schedule.class)
-    @JoinColumn(name="schedule_id")
-    private Schedule schedule;
+    @JoinColumn(name="specific_schedule_id")
+    private SpecificSchedule specificSchedule;
+
 }

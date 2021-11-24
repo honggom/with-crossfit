@@ -63,19 +63,6 @@
     cursor: pointer;
 }
 
-.td {
-    text-align: left;
-}
-
-.td span {
-    color: rgba(101, 163, 238, 1);
-    cursor: pointer;
-}
-
-.td span:hover {
-    text-decoration: underline;
-}
-
 .weekWrapper {
     width: 70%;
     margin: var(--comm-margin);

@@ -45,7 +45,7 @@ export default function ManageSchedule() {
                         getSpecificSchedule(info.startStr, info.endStr).then((respnose) => {
                             console.log(respnose.data);
                         }).catch((error) => {
-                            console.log(error);
+                            errorHandle(error, navigate);
                         });
                     }}
                     eventClick={(info) => {

@@ -1,10 +1,26 @@
 import styles from './SetDefaultSchedule.module.css';
 import React, { useState, useEffect } from 'react';
 import AddDefaultScheduleModal from '../../component/AddDefaultScheduleModal/AddDefaultScheduleModal';
+import Schedule from './Schedule/Schedule';
+import { getScheduleByBox } from '../../api/pages/SetDefaultSchedule';
+import { errorHandle } from '../../util/util';
+import { useNavigate } from "react-router-dom";
 
 export default function SetDefaultSchedule() {
 
+    let navigate = useNavigate();
+
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [schedules, setSchedules] = useState([]);
+
+    useEffect(() => {
+        getScheduleByBox().then((response) => {
+            console.log(response.data);
+            setSchedules(response.data);
+        }).catch((error) => {
+            errorHandle(error, navigate);
+        });
+    },[]);
 
     return (
         <div className={styles.wrapper}>
@@ -34,17 +50,7 @@ export default function SetDefaultSchedule() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td className={styles.td} colSpan={2}><span>평일</span></td>
-                        </tr>
-
-                        <tr>
-                            <td className={styles.td} colSpan={2}><span>토요일</span></td>
-                        </tr>
-
-                        <tr>
-                            <td className={styles.td} colSpan={2}><span>휴일</span></td>
-                        </tr>
+                        <Schedule schedules={schedules} setSchedules={setSchedules} />
                     </tbody>
                 </table>
             </div>

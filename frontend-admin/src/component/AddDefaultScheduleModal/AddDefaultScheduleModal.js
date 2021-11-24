@@ -5,10 +5,10 @@ import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import TimePicker from '@mui/lab/TimePicker';
-
-
-// TODO
-// 1. 시작시간, 종료시간 이벤트
+import EachTime from './EachTime/EachTime';
+import { insertSchedule } from '../../api/component/AddDefaultScheduleModal';
+import { useNavigate } from "react-router-dom";
+import { errorHandle } from '../../util/util';
 
 export default function AddDefaultScheduleModal({ modalIsOpen, setModalIsOpen }) {
 
@@ -23,8 +23,12 @@ export default function AddDefaultScheduleModal({ modalIsOpen, setModalIsOpen })
         overflowX: 'hidden'
     }
 
+    let navigate = useNavigate();
+
+    const [name, setName] = useState('');
     const [start, setStart] = useState(null);
     const [end, setEnd] = useState(null);
+    const [eachTimes, setEachTimes] = useState([]); 
 
     return (
         <>
@@ -32,31 +36,20 @@ export default function AddDefaultScheduleModal({ modalIsOpen, setModalIsOpen })
 
                 <div className={styles.rowWrapper1}>
                     <span className={styles.fontStyle}>시간표 명</span>
-                    <input className={styles.inputStyle}></input>
+                    <input className={styles.inputStyle}
+                           value={name}
+                           type={'text'}
+                           onChange={(e) => {
+                                setName(e.target.value);
+                           }}
+                    >
+                    </input>
                 </div>
 
                 <div className={styles.rowWrapper2}>
 
                     <div className={styles.eachTimeWrapper}>
-                        <div className={styles.eachTime}>
-                            <span>10:00 ~ 11:00</span>
-                            <button className={styles.deleteButtonStyle}>X</button>
-                        </div>
-
-                        <div className={styles.eachTime}>
-                            <span>11:00 ~ 12:00</span>
-                            <button className={styles.deleteButtonStyle}>X</button>
-                        </div>
-
-                        <div className={styles.eachTime}>
-                            <span>10:00 ~ 11:00</span>
-                            <button className={styles.deleteButtonStyle}>X</button>
-                        </div>
-
-                        <div className={styles.eachTime}>
-                            <span>11:00 ~ 12:00</span>
-                            <button className={styles.deleteButtonStyle}>X</button>
-                        </div>
+                        <EachTime eachTimes={eachTimes} setEachTimes={setEachTimes} />
                     </div>
 
                     <div className={styles.addWrapper}>
@@ -86,12 +79,42 @@ export default function AddDefaultScheduleModal({ modalIsOpen, setModalIsOpen })
 
                         </div>
 
-                        <button className={styles.addButtonStyle}>추가</button>
+                        <button className={styles.addButtonStyle}
+                                onClick={() => {
+                                    if (start === null || end === null) {
+                                        alert('시간을 선택해주세요.');
+                                    } else {
+                                        setEachTimes([...eachTimes, {start: start.toTimeString().substring(0, 5), end: end.toTimeString().substring(0, 5)}]);
+                                    }
+                                }}
+                        >
+                            추가
+                        </button>
                     </div>
                 </div>
 
                 <div className={styles.rowWrapper3}>
-                    <button className={styles.submitButtonStyle}>작성</button>
+                    <button className={styles.submitButtonStyle}
+                            onClick={() => {
+                                if (name === '') {
+                                    alert('시간표 명을 작성해주세요.');
+                                } else if (eachTimes.length === 0) {
+                                    alert('시간표를 최소 1개 이상 작성해주세요.');
+                                } else {
+                                    insertSchedule(name, eachTimes).then((response) => {
+                                        alert('작성되었습니다.');
+                                        setName('');
+                                        setStart(null);
+                                        setEnd(null);
+                                        setEachTimes([]);
+                                    }).catch((error) => {
+                                        errorHandle(error, navigate);
+                                    })
+                                }
+                            }}        
+                    >
+                        작성
+                    </button>
                     <button className={styles.closeButtonStyle}
                         onClick={() => {
                             setModalIsOpen(false);

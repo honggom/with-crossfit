@@ -1,15 +1,11 @@
 package hong.gom.withcrossfit.entity;
 
-import java.util.List;
-
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -33,13 +29,8 @@ public class Schedule {
     
     private String name;
     
-    @OneToOne
+    @ManyToOne(targetEntity = Box.class)
     @JoinColumn(name = "box_id")
     private Box box;
     
-    private boolean isDayOff;
-    
-    @OneToMany
-    @JoinColumn(name = "id", foreignKey = @ForeignKey(name = "id"))
-    private List<EachTime> times;
 }

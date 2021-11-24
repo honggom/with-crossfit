@@ -60,23 +60,6 @@
     width: 100%;
 }
 
-.eachTime {
-    margin: 0;
-    display: flex;
-    width: 100%;
-    justify-content: center;
-}
-
-.eachTime > span {
-    text-align: center;
-    width: 45%;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.eachTime > button {
-    width: 5%;
-}
-
 .inputWrapper {
     margin-bottom: 5px;
 }
@@ -123,15 +106,5 @@
     border: 2px solid rgba(163, 185, 184, 0.2);
     border-radius: 3px;
     width: 30%;
-    cursor: pointer;
-}
-
-.deleteButtonStyle {
-    font-family: var(--comm-font-family);
-    margin-left: 3px;
-    outline: 0;
-    background-color: rgba(238, 139, 154, 1);
-    border: 2px solid rgba(163, 185, 184, 0.2);
-    border-radius: 3px;
     cursor: pointer;
 }
