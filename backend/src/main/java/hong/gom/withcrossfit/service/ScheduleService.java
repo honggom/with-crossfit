@@ -56,14 +56,31 @@ public class ScheduleService {
 		return new ResponseEntity(HttpStatus.OK);
 	}
 	
-	public ResponseEntity<List<ScheduleDto>> getScheduleByBox(String jwt) {
+	public ResponseEntity<List<ScheduleDto>> getScheduleByBoxService(String jwt) {
 		String email = tokenUtils.getEmail(jwt);
 		Box box = userRepository.findByEmail(email).getBox();
 		
 		List<Schedule> schedules = scheduleRepository.findByBox(box);
 		
 		return ResponseEntity.ok().body(schedules.stream()
-				                           .map(schedule -> modelMapper.map(schedule, ScheduleDto.class))
-				                           .collect(Collectors.toList()));
+				                                 .map(schedule -> modelMapper.map(schedule, ScheduleDto.class))
+				                                 .collect(Collectors.toList()));
+	}
+	
+	public ResponseEntity<List<EachTimeDto>> getEachTimeByScheduleIdService(Long id) {
+		List<EachTime> eachTimes = eachTimeRepository.findBySchedule(scheduleRepository.findById(id).get());
+		
+		return ResponseEntity.ok().body(eachTimes.stream()
+				                                 .map(eachTime -> modelMapper.map(eachTime, EachTimeDto.class))
+				                                 .collect(Collectors.toList()));
+	}
+	
+	public ResponseEntity deleteScheduleByIdService(Long id) {
+		Schedule schedule = scheduleRepository.findById(id).get();
+		
+		int result = eachTimeRepository.deleteBySchedule(schedule);
+		scheduleRepository.delete(schedule);
+		
+		return new ResponseEntity(HttpStatus.OK);
 	}
 }

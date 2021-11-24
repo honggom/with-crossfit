@@ -1,5 +1,5 @@
 import styles from './ManageSchedule.module.css';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';

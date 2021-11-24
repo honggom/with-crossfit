@@ -2,9 +2,13 @@ import styles from './SetDefaultSchedule.module.css';
 import React, { useState, useEffect } from 'react';
 import AddDefaultScheduleModal from '../../component/AddDefaultScheduleModal/AddDefaultScheduleModal';
 import Schedule from './Schedule/Schedule';
-import { getScheduleByBox } from '../../api/pages/SetDefaultSchedule';
+import { getScheduleByBox } from '../../api/pages/SetDefaultSchedule/SetDefaultSchedule';
 import { errorHandle } from '../../util/util';
 import { useNavigate } from "react-router-dom";
+
+
+// TODO 요일별 시간표 기능 만들기
+
 
 export default function SetDefaultSchedule() {
 
@@ -15,7 +19,6 @@ export default function SetDefaultSchedule() {
 
     useEffect(() => {
         getScheduleByBox().then((response) => {
-            console.log(response.data);
             setSchedules(response.data);
         }).catch((error) => {
             errorHandle(error, navigate);
@@ -58,7 +61,7 @@ export default function SetDefaultSchedule() {
             <div className={styles.titleWrapper3}>
                 <span>요일별 시간표</span>
             </div>
-
+            
             <div className={styles.weekWrapper}>
                 <table className={styles.table}>
                     <thead>
@@ -114,7 +117,7 @@ export default function SetDefaultSchedule() {
                 </table>
             </div>
 
-            <AddDefaultScheduleModal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen}/>
+            <AddDefaultScheduleModal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} setSchedules={setSchedules} />
 
         </div>
     );

@@ -1,0 +1,107 @@
+.font1 {
+    font-size: 1.4rem;
+    width: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.font2 {
+    font-size: 1.2rem;
+    width: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inputStyle {
+    font-family: var(--comm-font-family);
+    font-size: 1.8rem;
+    background-color: var(--comm-bg-sky-blue);
+    border-radius: 5px;
+    border: 0;
+    outline: 0;
+    right: 10%;
+    width: 90%;
+}
+
+.rowWrapper1 {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.rowWrapper1left {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    justify-content: left;
+}
+
+.rowWrapper2 {
+    margin-top: 10px;
+    height: 20%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.rowWrapper3 {
+    height: 35%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.deleteButton {
+    font-size: 1.2rem;
+    font-family: var(--comm-font-family);
+    margin-left: 3px;
+    height: 60%;
+    outline: 0;
+    background-color: rgba(238, 139, 154, 1);
+    border: 2px solid rgba(163, 185, 184, 0.2);
+    border-radius: 3px;
+    width: 30%;
+    cursor: pointer;
+}
+
+.closeButton {
+    font-size: 1.2rem;
+    font-family: var(--comm-font-family);
+    margin-left: 3px;
+    height: 60%;
+    outline: 0;
+    background-color: rgba(238, 139, 154, 1);
+    border: 2px solid rgba(163, 185, 184, 0.2);
+    border-radius: 3px;
+    width: 30%;
+    cursor: pointer;
+}
+
+.eachTime {
+    max-width: 250px;
+    max-height: 140px;
+    min-height: 50px;
+    text-align: center;
+    flex: 1 1 30%;
+    margin: 3px;
+    background-color: var(--comm-bg-sky-blue);
+    border-radius: 3px;
+    box-shadow: var(--comm-box-shadow);
+    border: 1px solid rgba(208, 223, 241, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timesWrapper {
+    height: 40%;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    overflow-y: scroll;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
