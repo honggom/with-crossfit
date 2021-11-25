@@ -2,12 +2,10 @@ import styles from './SetDefaultSchedule.module.css';
 import React, { useState, useEffect } from 'react';
 import AddDefaultScheduleModal from '../../component/AddDefaultScheduleModal/AddDefaultScheduleModal';
 import Schedule from './Schedule/Schedule';
-import { getScheduleByBox } from '../../api/pages/SetDefaultSchedule/SetDefaultSchedule';
+import { getScheduleByBox, getScheduleSetByBox } from '../../api/pages/SetDefaultSchedule/SetDefaultSchedule';
 import { errorHandle } from '../../util/util';
 import { useNavigate } from "react-router-dom";
-
-
-// TODO 요일별 시간표 기능 만들기
+import ScheduleByDay from './ScheduleByDay/ScheduleByDay';
 
 
 export default function SetDefaultSchedule() {
@@ -16,14 +14,23 @@ export default function SetDefaultSchedule() {
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [schedules, setSchedules] = useState([]);
+    const [scheduleSet, setScheduleSet] = useState(null);
 
     useEffect(() => {
+
         getScheduleByBox().then((response) => {
             setSchedules(response.data);
         }).catch((error) => {
             errorHandle(error, navigate);
         });
-    },[]);
+
+        getScheduleSetByBox().then((response) => {
+            setScheduleSet(response.data);
+        }).catch((error) => {
+            errorHandle(error, navigate);
+        });
+
+    }, []);
 
     return (
         <div className={styles.wrapper}>
@@ -43,9 +50,9 @@ export default function SetDefaultSchedule() {
                             <th className={styles.th1}>시간표 명</th>
                             <th className={styles.th2}>
                                 <button className={styles.addButton}
-                                        onClick={() => {
-                                            setModalIsOpen(true);
-                                        }}
+                                    onClick={() => {
+                                        setModalIsOpen(true);
+                                    }}
                                 >
                                     +
                                 </button>
@@ -61,64 +68,20 @@ export default function SetDefaultSchedule() {
             <div className={styles.titleWrapper3}>
                 <span>요일별 시간표</span>
             </div>
-            
+
             <div className={styles.weekWrapper}>
                 <table className={styles.table}>
                     <thead>
                         <tr>
                             <th className={styles.th3}>요일</th>
                             <th className={styles.th4}>설정된 시간표</th>
-                            <th className={styles.th5}>수정</th>
+                            <th className={styles.th5}>변경</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td className={styles.td2}><span>월요일</span></td>
-                            <td className={styles.td3}><span>평일</span></td>
-                            <td className={styles.td4}><span><button>edit</button></span></td>
-                        </tr>
-
-                        <tr>
-                            <td className={styles.td2}><span>화요일</span></td>
-                            <td className={styles.td3}><span>평일</span></td>
-                            <td className={styles.td4}><span><button>edit</button></span></td>
-                        </tr>
-
-                        <tr>
-                            <td className={styles.td2}><span>수요일</span></td>
-                            <td className={styles.td3}><span>평일</span></td>
-                            <td className={styles.td4}><span><button>edit</button></span></td>
-                        </tr>
-
-                        <tr>
-                            <td className={styles.td2}><span>목요일</span></td>
-                            <td className={styles.td3}><span>평일</span></td>
-                            <td className={styles.td4}><span><button>edit</button></span></td>
-                        </tr>
-
-                        <tr>
-                            <td className={styles.td2}><span>금요일</span></td>
-                            <td className={styles.td3}><span>평일</span></td>
-                            <td className={styles.td4}><span><button>edit</button></span></td>
-                        </tr>
-
-                        <tr>
-                            <td className={styles.td2}><span>토요일</span></td>
-                            <td className={styles.td3}><span>평일</span></td>
-                            <td className={styles.td4}><span><button>edit</button></span></td>
-                        </tr>
-
-                        <tr>
-                            <td className={styles.td2}><span>일요일</span></td>
-                            <td className={styles.td3}><span>평일</span></td>
-                            <td className={styles.td4}><span><button>edit</button></span></td>
-                        </tr>
-                    </tbody>
+                    <ScheduleByDay scheduleSet={scheduleSet} schedules={schedules} setScheduleSet={setScheduleSet} />
                 </table>
             </div>
-
             <AddDefaultScheduleModal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} setSchedules={setSchedules} />
-
         </div>
     );
 }

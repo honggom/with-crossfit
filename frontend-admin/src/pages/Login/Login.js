@@ -3,8 +3,6 @@ import { FcGoogle } from 'react-icons/fc';
 
 export default function Login() {
 
-    // TODO 디자인
-
     const backEndBaseUri = process.env.REACT_APP_BACK_END_BASE_URI;
     
     return (

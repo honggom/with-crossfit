@@ -13,4 +13,16 @@ const getScheduleByBox = async () => {
     return await axios(config);
 };
 
-export { getScheduleByBox };
+const getScheduleSetByBox = async () => {
+
+    const config = {
+        method: 'GET',
+        url: `${backEndBaseUri}/admin/api/schedule-set`,
+        withCredentials: true,
+    }
+
+    return await axios(config);
+};
+
+
+export { getScheduleByBox, getScheduleSetByBox };

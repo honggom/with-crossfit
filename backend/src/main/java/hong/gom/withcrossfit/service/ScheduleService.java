@@ -2,24 +2,29 @@ package hong.gom.withcrossfit.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import hong.gom.withcrossfit.dto.EachTimeDto;
-import hong.gom.withcrossfit.dto.MyRmDto;
 import hong.gom.withcrossfit.dto.ScheduleDto;
+import hong.gom.withcrossfit.dto.UpdateScheduleSetDto;
 import hong.gom.withcrossfit.entity.Box;
 import hong.gom.withcrossfit.entity.EachTime;
 import hong.gom.withcrossfit.entity.Schedule;
+import hong.gom.withcrossfit.entity.ScheduleSet;
 import hong.gom.withcrossfit.jwt.TokenUtils;
 import hong.gom.withcrossfit.repository.EachTimeRepository;
 import hong.gom.withcrossfit.repository.ScheduleRepository;
+import hong.gom.withcrossfit.repository.ScheduleSetRepository;
 import hong.gom.withcrossfit.repository.SpUserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -28,11 +33,15 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class ScheduleService {
 	
-	private final SpUserRepository userRepository;
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	private final TokenUtils tokenUtils;
+	private final ModelMapper modelMapper;
+	
+	private final SpUserRepository userRepository;
 	private final ScheduleRepository scheduleRepository;
 	private final EachTimeRepository eachTimeRepository;
-	private final ModelMapper modelMapper;
+	private final ScheduleSetRepository scheduleSetRepository;
 	
 	public ResponseEntity insertScheduleService(String jwt, ScheduleDto scheduleDto) {
 		String email = tokenUtils.getEmail(jwt);
@@ -77,9 +86,56 @@ public class ScheduleService {
 	
 	public ResponseEntity deleteScheduleByIdService(Long id) {
 		Schedule schedule = scheduleRepository.findById(id).get();
-		
 		int result = eachTimeRepository.deleteBySchedule(schedule);
 		scheduleRepository.delete(schedule);
+		return new ResponseEntity(HttpStatus.OK);
+	}
+	
+	public ResponseEntity<ScheduleSet> getScheduleSetByBoxService(String jwt) {
+		String email = tokenUtils.getEmail(jwt);
+		Box box = userRepository.findByEmail(email).getBox();
+		
+		Optional<ScheduleSet> scheduleSet =	scheduleSetRepository.findByBox(box);
+		
+		if(scheduleSet.isPresent()) {
+			logger.info("scheduleSet 존재함");
+			return ResponseEntity.ok().body(scheduleSet.get());
+		} else {
+			logger.info("scheduleSet 존재하지 않음");
+			return ResponseEntity.ok().body(scheduleSetRepository.save(ScheduleSet.builder()
+					                                                              .box(box)
+					                                                              .build()));
+		}
+	}
+	
+	public ResponseEntity updateScheduleSetService(UpdateScheduleSetDto dto) {
+		ScheduleSet scheduleSet = scheduleSetRepository.findById(dto.getScheduleSetId()).get();
+		
+		Schedule newSchedule = null;
+		
+		String day = dto.getDay();
+		
+		if (dto.getScheduleId() != -1) { // 휴일이 아닌 경우
+			newSchedule = scheduleRepository.findById(dto.getScheduleId()).get();
+		}
+		
+		if (day.equals("monday")) {
+			scheduleSet.setMonday(newSchedule);
+		} else if (day.equals("tuesday")) {
+			scheduleSet.setTuesday(newSchedule);
+		} else if (day.equals("wednesday")) {
+			scheduleSet.setWednesday(newSchedule);
+		} else if (day.equals("thursday")) {
+			scheduleSet.setThursday(newSchedule);
+		} else if (day.equals("friday")) {
+			scheduleSet.setFriday(newSchedule);
+		} else if (day.equals("saturady")) {
+			scheduleSet.setSaturady(newSchedule);
+		} else if (day.equals("sunday")) {
+			scheduleSet.setSunday(newSchedule);
+		}
+		
+		scheduleSetRepository.save(scheduleSet);
 		
 		return new ResponseEntity(HttpStatus.OK);
 	}

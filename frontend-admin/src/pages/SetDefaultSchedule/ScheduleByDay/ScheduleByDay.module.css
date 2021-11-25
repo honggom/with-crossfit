@@ -1,0 +1,25 @@
+.td2 {
+    text-align: center;
+}
+
+.td3 {
+    text-align: center;
+}
+
+.td3 span {
+    color: rgba(101, 163, 238, 1);
+}
+
+.td4 {
+    text-align: center;
+}
+
+.holiday {
+    color: red !important;
+}
+
+.select {
+    background-color: var(--comm-bg-sky-blue);
+    border: 2px solid rgba(163, 185, 184, 0.6);
+    border-radius: 3px;
+}

@@ -115,7 +115,11 @@ export default function ReadScheduleModal({ isOpen, setIsOpen, name, eachTimes, 
                                         errorHandle(error, navigate);
                                     });
                                 }).catch((error) => {
-                                    errorHandle(error, navigate);
+                                    if (error.response.status === 400) {
+                                        alert(error.response.data);
+                                    } else {
+                                        errorHandle(error, navigate)
+                                    }
                                 });
                             }
                         }}
