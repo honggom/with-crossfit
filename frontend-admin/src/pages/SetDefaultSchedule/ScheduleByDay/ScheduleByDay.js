@@ -24,10 +24,6 @@ export default function ScheduleByDay({ scheduleSet, schedules, setScheduleSet }
                     <select defaultValue={selected}
                         className={styles.select}
                         onChange={(e) => {
-                            console.log(scheduleSetId);
-                            console.log(day);
-                            console.log(e.target.value);
-
                             let scheduleId = e.target.value;
 
                             if (scheduleId === 'holiday') {
