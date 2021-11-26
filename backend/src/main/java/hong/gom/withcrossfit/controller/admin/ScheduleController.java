@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+
 import hong.gom.withcrossfit.dto.EachTimeDto;
 import hong.gom.withcrossfit.dto.ScheduleDto;
+import hong.gom.withcrossfit.dto.SpecificScheduleDto;
 import hong.gom.withcrossfit.dto.UpdateScheduleSetDto;
 import hong.gom.withcrossfit.entity.ScheduleSet;
 import hong.gom.withcrossfit.entity.SpecificSchedule;
@@ -49,7 +52,7 @@ public class ScheduleController {
 		
 		System.out.println(start);
 		System.out.println(end);
-		return null;
+		return scheduleService.getSpecificScheduleService(jwt, start, end);
 	}
 	
 	@PostMapping("/schedule")
@@ -85,6 +88,11 @@ public class ScheduleController {
 	@PutMapping("/schedule-set")
 	public ResponseEntity updateScheduleSet(@RequestBody UpdateScheduleSetDto dto) {
 		return scheduleService.updateScheduleSetService(dto);
+	}
+	
+	@PostMapping("/specific-schedule")
+	public ResponseEntity insertSpecificSchedule(@CookieValue(name = "refresh") String jwt, @RequestBody SpecificScheduleDto dto) {
+		return scheduleService.insertSpecificScheduleService(jwt, dto);
 	}
 
 

@@ -1,17 +1,22 @@
 import Modal from 'react-modal';
-import styles from './AddDefaultScheduleModal.module.css';
+import styles from './WriteSpecificScheduleModal.module.css';
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { errorHandle } from '../../util/util';
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import TimePicker from '@mui/lab/TimePicker';
 import EachTime from '../EachTime/EachTime';
-import { insertSchedule } from '../../api/component/AddDefaultScheduleModal';
-import { useNavigate } from "react-router-dom";
-import { errorHandle } from '../../util/util';
-import { getScheduleByBox } from '../../api/pages/SetDefaultSchedule/SetDefaultSchedule';
+import { insertSpecificSchedule } from '../../api/component/WriteSpecificScheduleModal/WriteSpecificScheduleModal';
 
-export default function AddDefaultScheduleModal({ modalIsOpen, setModalIsOpen, setSchedules }) {
+export default function WriteSpecificScheduleModal({ isOpen, setIsOpen, dateStr }) {
+
+    let navigate = useNavigate();
+
+    const overlay = {
+        zIndex: '1'
+    }
 
     const content = {
         display: 'flex',
@@ -21,10 +26,8 @@ export default function AddDefaultScheduleModal({ modalIsOpen, setModalIsOpen, s
         height: '60%',
         margin: 'var(--comm-margin)',
         borderRadius: 'var(--comm-border-radius)',
-        overflowX: 'hidden'
+        overflowX: 'hidden',
     }
-
-    let navigate = useNavigate();
 
     const [name, setName] = useState('');
     const [start, setStart] = useState(null);
@@ -33,7 +36,10 @@ export default function AddDefaultScheduleModal({ modalIsOpen, setModalIsOpen, s
 
     return (
         <>
-            <Modal isOpen={modalIsOpen} style={{ content: content }}>
+            <Modal isOpen={isOpen} style={{ overlay: overlay, content: content }}>
+                <div className={styles.titleWrapper}>
+                    <span>별도 시간표 작성 ({dateStr})</span>
+                </div>
 
                 <div className={styles.rowWrapper1}>
                     <span className={styles.fontStyle}>시간표 명</span>
@@ -95,6 +101,9 @@ export default function AddDefaultScheduleModal({ modalIsOpen, setModalIsOpen, s
                 </div>
 
                 <div className={styles.rowWrapper3}>
+                    <button className={styles.setToHolidayButton}>
+                        휴무로 설정
+                    </button>
                     <button className={styles.submitButtonStyle}
                         onClick={() => {
                             if (name === '') {
@@ -102,18 +111,9 @@ export default function AddDefaultScheduleModal({ modalIsOpen, setModalIsOpen, s
                             } else if (eachTimes.length === 0) {
                                 alert('시간표를 최소 1개 이상 작성해주세요.');
                             } else {
-                                insertSchedule(name, eachTimes).then((response) => {
-                                    alert('작성되었습니다.');
-                                    setName('');
-                                    setStart(null);
-                                    setEnd(null);
-                                    setEachTimes([]);
+                                console.log('작성..');
+                                insertSpecificSchedule(name, eachTimes, dateStr).then((response) => {
 
-                                    getScheduleByBox().then((response) => {
-                                        setSchedules(response.data);
-                                    }).catch((error) => {
-                                        errorHandle(error, navigate);
-                                    });
                                 }).catch((error) => {
                                     errorHandle(error, navigate);
                                 })
@@ -124,13 +124,12 @@ export default function AddDefaultScheduleModal({ modalIsOpen, setModalIsOpen, s
                     </button>
                     <button className={styles.closeButtonStyle}
                         onClick={() => {
-                            setModalIsOpen(false);
+                            setIsOpen(false);
                         }}
                     >
                         X
                     </button>
                 </div>
-
             </Modal>
         </>
     );

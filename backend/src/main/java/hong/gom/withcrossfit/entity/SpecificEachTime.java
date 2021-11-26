@@ -33,7 +33,7 @@ public class SpecificEachTime {
     
     private LocalTime end;
     
-    @ManyToOne(targetEntity = Schedule.class)
+    @ManyToOne(targetEntity = SpecificSchedule.class)
     @JoinColumn(name="specific_schedule_id")
     private SpecificSchedule specificSchedule;
 

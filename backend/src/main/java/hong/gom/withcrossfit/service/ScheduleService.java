@@ -1,5 +1,6 @@
 package hong.gom.withcrossfit.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,16 +17,22 @@ import org.springframework.stereotype.Service;
 
 import hong.gom.withcrossfit.dto.EachTimeDto;
 import hong.gom.withcrossfit.dto.ScheduleDto;
+import hong.gom.withcrossfit.dto.SpecificEachTimeDto;
+import hong.gom.withcrossfit.dto.SpecificScheduleDto;
 import hong.gom.withcrossfit.dto.UpdateScheduleSetDto;
 import hong.gom.withcrossfit.entity.Box;
 import hong.gom.withcrossfit.entity.EachTime;
 import hong.gom.withcrossfit.entity.Schedule;
 import hong.gom.withcrossfit.entity.ScheduleSet;
+import hong.gom.withcrossfit.entity.SpecificEachTime;
+import hong.gom.withcrossfit.entity.SpecificSchedule;
 import hong.gom.withcrossfit.jwt.TokenUtils;
 import hong.gom.withcrossfit.repository.EachTimeRepository;
 import hong.gom.withcrossfit.repository.ScheduleRepository;
 import hong.gom.withcrossfit.repository.ScheduleSetRepository;
 import hong.gom.withcrossfit.repository.SpUserRepository;
+import hong.gom.withcrossfit.repository.SpecificEachTimeRepository;
+import hong.gom.withcrossfit.repository.SpecificScheduleRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -40,8 +47,20 @@ public class ScheduleService {
 	
 	private final SpUserRepository userRepository;
 	private final ScheduleRepository scheduleRepository;
+	private final SpecificScheduleRepository specificScheduleRepository;
+	private final SpecificEachTimeRepository specificEachTimeRepository;
 	private final EachTimeRepository eachTimeRepository;
 	private final ScheduleSetRepository scheduleSetRepository;
+	
+	public ResponseEntity<List<SpecificSchedule>> getSpecificScheduleService(String jwt, String start, String end) {
+		String email = tokenUtils.getEmail(jwt);
+		Box box = userRepository.findByEmail(email).getBox();
+		LocalDate startDate = makeToLocalDate(start);
+		LocalDate endDate = makeToLocalDate(end);
+		
+		return ResponseEntity.ok()
+				             .body(specificScheduleRepository.findByBoxAndDateBetween(box, startDate, endDate));
+	}
 	
 	public ResponseEntity insertScheduleService(String jwt, ScheduleDto scheduleDto) {
 		String email = tokenUtils.getEmail(jwt);
@@ -52,14 +71,13 @@ public class ScheduleService {
 				                                   .box(box)
 				                                   .build());
 		
-	    List<EachTime> times = new ArrayList<>();
 		
 		for (EachTimeDto time : scheduleDto.getTimes()) {
-			times.add(eachTimeRepository.save(EachTime.builder()
-					                                  .start(time.getStart())
-					                                  .end(time.getEnd())
-					                                  .schedule(savedSchedule)
-					                                  .build()));
+			eachTimeRepository.save(EachTime.builder()
+					                        .start(time.getStart())
+					                        .end(time.getEnd())
+					                        .schedule(savedSchedule)
+					                        .build());
 		}
 		
 		return new ResponseEntity(HttpStatus.OK);
@@ -138,5 +156,37 @@ public class ScheduleService {
 		scheduleSetRepository.save(scheduleSet);
 		
 		return new ResponseEntity(HttpStatus.OK);
+	}
+	
+	public ResponseEntity insertSpecificScheduleService(String jwt, SpecificScheduleDto dto) {
+		String email = tokenUtils.getEmail(jwt);
+		Box box = userRepository.findByEmail(email).getBox();
+		
+		
+		SpecificSchedule savedSpecificSchedule = specificScheduleRepository.save(SpecificSchedule.builder()
+				                                   .name(dto.getName())
+				                                   .box(box)
+				                                   .date(makeToLocalDate(dto.getDateStr()))
+				                                   .build());
+		
+		
+		for (SpecificEachTimeDto time : dto.getTimes()) {
+			specificEachTimeRepository.save(SpecificEachTime.builder()
+					                                        .start(time.getStart())
+					                                        .end(time.getEnd())
+					                                        .specificSchedule(savedSpecificSchedule)
+					                                        .build());
+		}
+		return new ResponseEntity(HttpStatus.OK);
+	}
+	
+	private LocalDate makeToLocalDate(String dateStr) {
+		String[] dates = dateStr.split("-");
+		
+		int year = Integer.parseInt(dates[0]);
+		int month = Integer.parseInt(dates[1]);
+		int date = Integer.parseInt(dates[2]);
+		
+		return LocalDate.of(year, month, date);
 	}
 }
