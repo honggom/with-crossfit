@@ -1,15 +1,18 @@
 import Modal from 'react-modal';
-import styles from './ReadScheduleModal.module.css';
+import styles from './ReadSpecificScheduleModal.module.css';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { deleteScheduleById } from '../../api/component/ReadScheduleModal/ReadScheduleModal';
 import { useNavigate } from "react-router-dom";
 import { errorHandle, sortByTime } from '../../util/util';
-import { getScheduleByBox } from '../../api/pages/SetDefaultSchedule/SetDefaultSchedule';
+import { deleteSpecificScheduleById } from '../../api/component/ReadSpecificScheduleModal/ReadSpecificScheduleModal';
 
-export default function ReadScheduleModal({ isOpen, setIsOpen, name, eachTimes, scheduleId, setSchedules }) {
+export default function ReadSpecificScheduleModal({ isSpecificOpen, setIsSpecificOpen, name, eachTimes, id }) {
 
     let navigate = useNavigate();
+    
+    const overlay = {
+        zIndex: '1'
+    }
 
     const content = {
         display: 'flex',
@@ -51,7 +54,7 @@ export default function ReadScheduleModal({ isOpen, setIsOpen, name, eachTimes, 
 
     return (
         <>
-            <Modal isOpen={isOpen} style={{ content: content }}>
+            <Modal isOpen={isSpecificOpen} style={{ overlay: overlay, content: content }}>
 
                 <div className={styles.rowWrapper1}>
                     <span className={styles.font1}>{name}</span>
@@ -85,20 +88,11 @@ export default function ReadScheduleModal({ isOpen, setIsOpen, name, eachTimes, 
                     <button className={styles.deleteButton}
                         onClick={() => {
                             if (window.confirm("삭제하시겠습니까?")) {
-                                deleteScheduleById(scheduleId).then((response) => {
-                                    alert('삭제되었습니다.');
-                                    setIsOpen(false);
-                                    getScheduleByBox().then((response) => {
-                                        setSchedules(response.data);
-                                    }).catch((error) => {
-                                        errorHandle(error, navigate);
-                                    });
+                                deleteSpecificScheduleById(id).then((response) => {
+                                    alert("삭제되었습니다.");
+                                    window.location.reload();
                                 }).catch((error) => {
-                                    if (error.response.status === 400) {
-                                        alert(error.response.data);
-                                    } else {
-                                        errorHandle(error, navigate)
-                                    }
+                                    errorHandle(error, navigate);
                                 });
                             }
                         }}
@@ -106,7 +100,7 @@ export default function ReadScheduleModal({ isOpen, setIsOpen, name, eachTimes, 
                         삭제
                     </button>
                     <button className={styles.closeButton}
-                        onClick={() => { setIsOpen(false); }}
+                        onClick={() => { setIsSpecificOpen(false); }}
                     >
                         X
                     </button>

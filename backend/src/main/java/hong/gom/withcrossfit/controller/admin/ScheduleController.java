@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
+import hong.gom.withcrossfit.dto.DayOffSpecificScheduleDto;
 import hong.gom.withcrossfit.dto.EachTimeDto;
 import hong.gom.withcrossfit.dto.ScheduleDto;
 import hong.gom.withcrossfit.dto.SpecificScheduleDto;
+import hong.gom.withcrossfit.dto.SpecificScheduleResponseDto;
 import hong.gom.withcrossfit.dto.UpdateScheduleSetDto;
 import hong.gom.withcrossfit.entity.ScheduleSet;
 import hong.gom.withcrossfit.entity.SpecificSchedule;
@@ -40,19 +42,26 @@ public class ScheduleController {
 	
 	@GetMapping("/now")
 	public ResponseEntity<LocalDate> getNow() {
-		System.out.println(LocalDate.now());
+		logger.info("now : " + LocalDate.now());
 		return ResponseEntity.ok().body(LocalDate.now().plusDays(1L));
 	}
 	
-	// TODO 메서드 완성
 	@GetMapping("/specific-schedule/{start}/{end}")
 	public ResponseEntity<List<SpecificSchedule>> getSpecificSchedule(@CookieValue(name = "refresh") String jwt,
 									                                  @PathVariable String start, 
 									                                  @PathVariable String end) {
 		
-		System.out.println(start);
-		System.out.println(end);
 		return scheduleService.getSpecificScheduleService(jwt, start, end);
+	}
+	
+	@GetMapping("/specific-schedule/{date}")
+	public ResponseEntity<SpecificScheduleResponseDto> getSpecificScheduleByDate(@CookieValue(name = "refresh") String jwt, @PathVariable String date) {
+		return scheduleService.getSpecificScheduleByDateService(jwt, date);
+	}
+	
+	@DeleteMapping("/specific-schedule/{id}")
+	public ResponseEntity deleteSpecificScheduleById(@PathVariable Long id) {
+		return scheduleService.deleteSpecificScheduleByIdService(id);
 	}
 	
 	@PostMapping("/schedule")
@@ -93,6 +102,11 @@ public class ScheduleController {
 	@PostMapping("/specific-schedule")
 	public ResponseEntity insertSpecificSchedule(@CookieValue(name = "refresh") String jwt, @RequestBody SpecificScheduleDto dto) {
 		return scheduleService.insertSpecificScheduleService(jwt, dto);
+	}
+	
+	@PostMapping("/specific-schedule/day-off")
+	public ResponseEntity insertDayOffSpecificSchedule(@CookieValue(name = "refresh") String jwt, @RequestBody DayOffSpecificScheduleDto dto) {
+		return scheduleService.insertDayOffSpecificScheduleService(jwt, dto.getDateStr());
 	}
 
 

@@ -13,6 +13,17 @@ const getSpecificSchedule = async (start, end) => {
     return await axios(config);
 };
 
+const getSpecificScheduleByDate = async (date) => {
+
+    const config = {
+        method: 'GET',
+        url: `${backEndBaseUri}/admin/api/specific-schedule/${date}`,
+        withCredentials: true,
+    }
+
+    return await axios(config);
+};
+
 const getNow = async () => {
 
     const config = {
@@ -24,4 +35,4 @@ const getNow = async () => {
     return await axios(config);
 };
 
-export { getSpecificSchedule, getNow };
+export { getSpecificSchedule, getSpecificScheduleByDate, getNow };

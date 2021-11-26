@@ -11,6 +11,8 @@ import lombok.ToString;
 @ToString
 public class SpecificEachTimeDto {
 	
+	private Long id;
+	
     private LocalTime start;
     
     private LocalTime end;

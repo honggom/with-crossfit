@@ -5,12 +5,16 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import koLocale from '@fullcalendar/core/locales/ko';
-import { getSpecificSchedule } from '../../api/pages/ManageSchedule';
+import { getSpecificSchedule, getSpecificScheduleByDate } from '../../api/pages/ManageSchedule';
 import { errorHandle } from '../../util/util';
 import { getScheduleSetByBox } from '../../api/pages/SetDefaultSchedule/SetDefaultSchedule';
-import WriteSpecificScheduleModal from '../../component/WriteSpecificScheduleModal/WriteSpecificScheduleModal'
+import WriteSpecificScheduleModal from '../../component/WriteSpecificScheduleModal/WriteSpecificScheduleModal';
+import ReadSpecificScheduleModal from '../../component/ReadSpecificScheduleModal/ReadSpecificScheduleModal';
+import { deleteSpecificScheduleById } from '../../api/component/ReadSpecificScheduleModal/ReadSpecificScheduleModal';
 
 export default function ManageSchedule() {
+
+    // TODO 이전 날 ~ 오늘 까지는 스케쥴 작성 불가능
 
     let navigate = useNavigate();
 
@@ -19,6 +23,11 @@ export default function ManageSchedule() {
     const [end, setEnd] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [dateStr, setDateStr] = useState('');
+
+    const [isSpecificOpen, setIsSpecificOpen] = useState(false);
+    const [eachTimes, setEachTimes] = useState([]);
+    const [name, setName] = useState('');
+    const [specificId, setSpecificId] = useState(null);
 
     return (
         <div className={styles.wrapper}>
@@ -39,16 +48,33 @@ export default function ManageSchedule() {
                     plugins={[dayGridPlugin, interactionPlugin]}
                     initialView="dayGridMonth"
                     dateClick={(info) => {
+                        getSpecificScheduleByDate(info.dateStr).then((response) => {
+                            const specific = response.data;
 
-                        // TODO 
-                        // 1. 이전 날 ~ 오늘 까지는 스케쥴 작성 불가능
-                        // 2. 스페시픽 삭제 기능
-                        // 3. 스페시픽 클릭 했을 때 다른 모달 뜨기
-                        // 4. 휴무로 설정 기능
+                            if (specific === '') {
+                                setIsOpen(true);
+                                setDateStr(info.dateStr);
+                            } else {
+                                if (specific.dayOff) {
+                                    if(window.confirm('휴무를 해제하시겠습니까?')) {
+                                        deleteSpecificScheduleById(specific.id).then((response) => {
+                                            alert('휴무가 해제되었습니다.');
+                                            window.location.reload();
+                                        }).catch((error) => {
+                                            errorHandle(error, navigate);
+                                        })
+                                    }
+                                } else {
+                                    setSpecificId(specific.id);
+                                    setIsSpecificOpen(true);
+                                    setEachTimes(specific.times);
+                                    setName(specific.name);
+                                }
+                            }
 
-
-                        setIsOpen(true);
-                        setDateStr(info.dateStr);
+                        }).catch((error) => {
+                            errorHandle(error, navigate);
+                        });
                     }}
                     events={events}
                     datesSet={(info) => {
@@ -61,7 +87,7 @@ export default function ManageSchedule() {
                                 endParam = endParam.toLocaleDateString().replace(/ /g, "").replace('.', '-').replace('.', '-').replace('.', '');
 
                                 getSpecificSchedule(startParam, endParam).then((res2) => {
-                                    
+
                                     let current = new Date(info.start);
                                     const endDay = new Date(info.end);
                                     const tempEvents = [];
@@ -124,9 +150,13 @@ export default function ManageSchedule() {
                                                 }
                                             }
 
-                                            for(const specific of res2.data) {
+                                            for (const specific of res2.data) {
                                                 if (monthDate === specific.date) {
-                                                    event = {title: specific.name, date: monthDate, color: 'purple'}
+                                                    if (specific.dayOff) {
+                                                        event = {title: '휴무', date: monthDate, color: 'red' }
+                                                    } else {
+                                                        event = { title: specific.name, date: monthDate, color: 'purple' }
+                                                    }
                                                 }
                                             }
 
@@ -146,14 +176,10 @@ export default function ManageSchedule() {
                         }
                     }
                     }
-                    eventClick={(info) => {
-                        console.log(info.event);
-                        console.log(info.view);
-                    }}
                 />
             </div>
-
             <WriteSpecificScheduleModal isOpen={isOpen} setIsOpen={setIsOpen} dateStr={dateStr} />
+            <ReadSpecificScheduleModal isSpecificOpen={isSpecificOpen} setIsSpecificOpen={setIsSpecificOpen} eachTimes={eachTimes} name={name} id={specificId} />
         </div>
     );
 }

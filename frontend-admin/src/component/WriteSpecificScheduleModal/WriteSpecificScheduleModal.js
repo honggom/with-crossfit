@@ -8,7 +8,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import TimePicker from '@mui/lab/TimePicker';
 import EachTime from '../EachTime/EachTime';
-import { insertSpecificSchedule } from '../../api/component/WriteSpecificScheduleModal/WriteSpecificScheduleModal';
+import { insertSpecificSchedule, insertDayOffSpecificSchedule } from '../../api/component/WriteSpecificScheduleModal/WriteSpecificScheduleModal';
 
 export default function WriteSpecificScheduleModal({ isOpen, setIsOpen, dateStr }) {
 
@@ -101,24 +101,35 @@ export default function WriteSpecificScheduleModal({ isOpen, setIsOpen, dateStr 
                 </div>
 
                 <div className={styles.rowWrapper3}>
-                    <button className={styles.setToHolidayButton}>
+                    <button className={styles.setToHolidayButton}
+                            onClick={() => {
+                                if(window.confirm('휴무로 설정하시겠습니까?')){
+                                    insertDayOffSpecificSchedule(dateStr).then((response) => {
+                                        alert('휴무로 설정되었습니다.');
+                                        window.location.reload();
+                                    }).catch((error) => {
+    
+                                    });
+                                }
+                            }}        
+                    >
                         휴무로 설정
                     </button>
                     <button className={styles.submitButtonStyle}
-                        onClick={() => {
-                            if (name === '') {
-                                alert('시간표 명을 작성해주세요.');
-                            } else if (eachTimes.length === 0) {
-                                alert('시간표를 최소 1개 이상 작성해주세요.');
-                            } else {
-                                console.log('작성..');
-                                insertSpecificSchedule(name, eachTimes, dateStr).then((response) => {
-
-                                }).catch((error) => {
-                                    errorHandle(error, navigate);
-                                })
-                            }
-                        }}
+                            onClick={() => {
+                                if (name === '') {
+                                    alert('시간표 명을 작성해주세요.');
+                                } else if (eachTimes.length === 0) {
+                                    alert('시간표를 최소 1개 이상 작성해주세요.');
+                                } else {
+                                    insertSpecificSchedule(name, eachTimes, dateStr).then((response) => {
+                                        alert('작성되었습니다.');
+                                        window.location.reload();
+                                    }).catch((error) => {
+                                        errorHandle(error, navigate);
+                                    })
+                                }
+                            }}
                     >
                         작성
                     </button>

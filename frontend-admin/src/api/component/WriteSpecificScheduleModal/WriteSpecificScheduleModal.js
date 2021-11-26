@@ -20,4 +20,20 @@ const insertSpecificSchedule = async (name, eachTimes, dateStr) => {
     return await axios(config);
 };
 
-export { insertSpecificSchedule };
+const insertDayOffSpecificSchedule = async (dateStr) => {
+
+    const data = {
+        dateStr: dateStr
+    }
+
+    const config = {
+        method: 'POST',
+        url: `${backEndBaseUri}/admin/api/specific-schedule/day-off`,
+        data: data,
+        withCredentials: true,
+    }
+
+    return await axios(config);
+};
+
+export { insertSpecificSchedule, insertDayOffSpecificSchedule };

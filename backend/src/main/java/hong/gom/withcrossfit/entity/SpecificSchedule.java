@@ -41,4 +41,6 @@ public class SpecificSchedule {
     
     private LocalDate date;
     
+    private boolean isDayOff = false;
+    
 }
