@@ -1,10 +1,10 @@
 import styles from './MyGrade.module.css';
 
-export default function MyGrade() {
+export default function MyGrade({ grade }) {
 
     return (
         <>
-            <span>등급 : 레인보우</span>
+            {grade && (<span>등급 : {grade}</span>)}
         </>
     );
 }

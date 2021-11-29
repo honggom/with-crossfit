@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import hong.gom.withcrossfit.entity.listener.BaseEntity;
+import hong.gom.withcrossfit.enums.Grade;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -56,6 +57,8 @@ public class SpUser extends BaseEntity implements UserDetails {
     private String password;
 
     private boolean enabled;
+    
+    private Grade grade;
 
     @Override
     public String getUsername() {

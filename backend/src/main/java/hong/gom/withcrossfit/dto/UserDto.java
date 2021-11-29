@@ -3,6 +3,7 @@ package hong.gom.withcrossfit.dto;
 import java.time.LocalDateTime;
 
 import hong.gom.withcrossfit.entity.Box;
+import hong.gom.withcrossfit.enums.Grade;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,5 +20,7 @@ public class UserDto {
 	private String name;
 	
 	private LocalDateTime createdAt;
+	
+	private Grade grade;
 
 }

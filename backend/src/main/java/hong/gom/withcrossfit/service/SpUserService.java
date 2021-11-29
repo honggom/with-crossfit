@@ -15,6 +15,7 @@ import hong.gom.withcrossfit.dto.UserDto;
 import hong.gom.withcrossfit.entity.SpAuthority;
 import hong.gom.withcrossfit.entity.SpOAuth2User;
 import hong.gom.withcrossfit.entity.SpUser;
+import hong.gom.withcrossfit.enums.Grade;
 import hong.gom.withcrossfit.repository.SpOAuth2UserRepository;
 import hong.gom.withcrossfit.repository.SpUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,7 @@ public class SpUserService implements UserDetailsService {
 			user.setEmail(oAuth2User.getEmail());
 			user.setName(oAuth2User.getName());
 			user.setEnabled(true);
+			user.setGrade(Grade.RAINBOW);
 			user = userRepository.save(user);
 			addAuthority(user.getUserId(), "ROLE_USER");
 

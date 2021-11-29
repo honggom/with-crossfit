@@ -37,8 +37,8 @@ public class Scheduler {
 	private final EachTimeRepository eachTimeRepository;
 	private final SpecificEachTimeRepository specificEachTimeRepository;
 	
-	// 매일 0시 00분 0 0 0 1/1 * ?
-	// @Scheduled(cron = "0 0/1 * * * ?")
+	// 매일 00시에 예약 스케쥴 작성 
+	@Scheduled(cron = "0 0 0 1/1 * ?")
 	public void cronRun() {
 		LocalDate now = LocalDate.now().plusDays(1L);
 		DayOfWeek dayOfWeek = now.getDayOfWeek();

@@ -38,4 +38,27 @@ function percentTranslate(percent, number) {
     return percent * number / 100;
 }
 
-export { errorHandle, isRightNumber, calculateToLb, calculateToKg, percentTranslate };
+// 시간을 오름차순으로 정렬한다
+function sortByTime(arr) {
+    const temp = [...arr];
+
+    temp.sort((a, b) => {
+        const aTimes = a.start.split(':');
+        const bTimes = b.start.split(':');
+        const aTime = Number(aTimes[0] + aTimes[1]);
+        const bTime = Number(bTimes[0] + bTimes[1]);
+
+        if (aTime > bTime) {
+            return 1;
+        }
+
+        if (aTime < bTime) {
+            return -1;
+        }
+        return 0;
+    })
+    return temp;
+}
+
+
+export { errorHandle, isRightNumber, calculateToLb, calculateToKg, percentTranslate, sortByTime };

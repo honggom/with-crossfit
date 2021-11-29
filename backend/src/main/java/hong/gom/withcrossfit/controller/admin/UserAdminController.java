@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hong.gom.withcrossfit.dto.BoxIdAndUserEmailDto;
 import hong.gom.withcrossfit.dto.UserDto;
-import hong.gom.withcrossfit.service.UserApiService;
+import hong.gom.withcrossfit.service.UserAdminApiService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/api/user")
-public class UserController {
+public class UserAdminController {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	private final UserApiService userService;
+	private final UserAdminApiService userService;
 	
 	@GetMapping("/not-registered")
 	public ResponseEntity<List<UserDto>> getNotRegisteredUser() {

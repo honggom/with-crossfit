@@ -6,6 +6,7 @@ import { getBox, getNotRegisteredUser, insertNewBoxToUser } from '../../api/page
 import { useNavigate } from "react-router-dom";
 import { errorHandle } from '../../util/util';
 import Boxes from './Boxes/Boxes';
+import styles from './UserTable.module.css';
 
 export default function UserTable() {
 

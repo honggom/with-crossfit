@@ -1,10 +1,10 @@
 import styles from './MyName.module.css';
 
-export default function MyName() {
+export default function MyName({ name }) {
 
     return (
         <>
-            <span>이름 : 변재홍</span>
+            {name && (<span>이름 : {name}</span>)}
         </>
     );
 }

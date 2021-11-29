@@ -1,20 +1,14 @@
 package hong.gom.withcrossfit.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import hong.gom.withcrossfit.dto.BoxIdAndUserEmailDto;
 import hong.gom.withcrossfit.dto.UserDto;
-import hong.gom.withcrossfit.entity.Box;
 import hong.gom.withcrossfit.entity.SpUser;
-import hong.gom.withcrossfit.repository.BoxRepository;
+import hong.gom.withcrossfit.jwt.TokenUtils;
 import hong.gom.withcrossfit.repository.SpUserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -23,29 +17,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserApiService {
 	
-	private final SpUserRepository userRepository;
-	private final BoxRepository boxRepository;
-	
+	private final TokenUtils tokenUtils;
 	private final ModelMapper modelMapper;
+	private final SpUserRepository userRepository;
 	
-	public List<UserDto> getNotRegisteredUserService() {
+	public ResponseEntity<UserDto> getUserService(String jwt) {
+		String email = tokenUtils.getEmail(jwt);
+		SpUser user = userRepository.findByEmail(email);
 		
-		List<SpUser> users = userRepository.findByBoxIsNull();
+		UserDto userDto = modelMapper.map(user, UserDto.class);
 		
-		return users.stream()
-				.map(user -> modelMapper.map(user, UserDto.class))
-				.collect(Collectors.toList());
+		return ResponseEntity.ok().body(userDto);
 	}
 	
-	public ResponseEntity insertNewBoxToUser(BoxIdAndUserEmailDto boxIdAndUserEmailDto) {
-		
-		Box box = boxRepository.findById(boxIdAndUserEmailDto.getBoxId()).get();
-		SpUser user = userRepository.findByEmail(boxIdAndUserEmailDto.getEmail());
-		
-		user.setBox(box);
-		userRepository.save(user);
-		
-		return new ResponseEntity(HttpStatus.OK);
-	}
-
+	
 }
