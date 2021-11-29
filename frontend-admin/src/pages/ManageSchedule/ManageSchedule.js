@@ -14,7 +14,7 @@ import { deleteSpecificScheduleById } from '../../api/component/ReadSpecificSche
 
 export default function ManageSchedule() {
 
-    // TODO 이전 날 ~ 오늘 까지는 스케쥴 작성 불가능
+    // TODO 시간표 보여주기
 
     let navigate = useNavigate();
 
@@ -48,33 +48,41 @@ export default function ManageSchedule() {
                     plugins={[dayGridPlugin, interactionPlugin]}
                     initialView="dayGridMonth"
                     dateClick={(info) => {
-                        getSpecificScheduleByDate(info.dateStr).then((response) => {
-                            const specific = response.data;
+                        const temp = new Date();
+                        const now = new Date(temp.getFullYear(), temp.getMonth(), temp.getDate());
 
-                            if (specific === '') {
-                                setIsOpen(true);
-                                setDateStr(info.dateStr);
-                            } else {
-                                if (specific.dayOff) {
-                                    if(window.confirm('휴무를 해제하시겠습니까?')) {
-                                        deleteSpecificScheduleById(specific.id).then((response) => {
-                                            alert('휴무가 해제되었습니다.');
-                                            window.location.reload();
-                                        }).catch((error) => {
-                                            errorHandle(error, navigate);
-                                        })
-                                    }
+                        if (info.date <= now) {
+                            console.log('시간표 보여주기');
+                        } else {
+                            getSpecificScheduleByDate(info.dateStr).then((response) => {
+                                const specific = response.data;
+
+                                if (specific === '') {
+                                    setIsOpen(true);
+                                    setDateStr(info.dateStr);
                                 } else {
-                                    setSpecificId(specific.id);
-                                    setIsSpecificOpen(true);
-                                    setEachTimes(specific.times);
-                                    setName(specific.name);
+                                    if (specific.dayOff) {
+                                        if (window.confirm('휴무를 해제하시겠습니까?')) {
+                                            deleteSpecificScheduleById(specific.id).then((response) => {
+                                                alert('휴무가 해제되었습니다.');
+                                                window.location.reload();
+                                            }).catch((error) => {
+                                                errorHandle(error, navigate);
+                                            })
+                                        }
+                                    } else {
+                                        setSpecificId(specific.id);
+                                        setIsSpecificOpen(true);
+                                        setEachTimes(specific.times);
+                                        setName(specific.name);
+                                    }
                                 }
-                            }
 
-                        }).catch((error) => {
-                            errorHandle(error, navigate);
-                        });
+                            }).catch((error) => {
+                                errorHandle(error, navigate);
+                            });
+
+                        }
                     }}
                     events={events}
                     datesSet={(info) => {
@@ -153,7 +161,7 @@ export default function ManageSchedule() {
                                             for (const specific of res2.data) {
                                                 if (monthDate === specific.date) {
                                                     if (specific.dayOff) {
-                                                        event = {title: '휴무', date: monthDate, color: 'red' }
+                                                        event = { title: '휴무', date: monthDate, color: 'red' }
                                                     } else {
                                                         event = { title: specific.name, date: monthDate, color: 'purple' }
                                                     }
