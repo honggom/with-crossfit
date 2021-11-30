@@ -81,5 +81,4 @@ export default function WodHistory() {
             </div>
         </div>
     );
-
 }

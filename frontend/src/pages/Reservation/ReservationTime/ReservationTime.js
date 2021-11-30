@@ -68,7 +68,7 @@ export default function ReservationTime({ reservationStatus, start, time, idx, c
                                     if (error.response.status === 400) {
                                         alert(error.response.data);
                                     } else {
-                                        errorHandle(error, navigate)
+                                        errorHandle(error, navigate);
                                     }
                                 });
                             }

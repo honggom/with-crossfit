@@ -1,8 +1,9 @@
 import styles from './Reservation.module.css';
 import ReservationTime from './ReservationTime/ReservationTime';
 import React, { useState, useEffect } from 'react';
-import { sortByTime, changeToString } from '../../util/util';
+import { errorHandle, sortByTime, changeToString } from '../../util/util';
 import { getReservation, getReservationStatus } from '../../api/pages/Reservation';
+import { useNavigate } from "react-router-dom";
 
 export default function Reservation() {
 
@@ -10,6 +11,8 @@ export default function Reservation() {
     const [ams, setAms] = useState([]);
     const [pms, setPms] = useState([]);
     const [date, setDate] = useState('');
+
+    let navigate = useNavigate();
 
     useEffect(() => {
         const dt = new Date();
@@ -41,10 +44,10 @@ export default function Reservation() {
                 setPms(tempPms);
 
             }).catch((error) => {
-
+                errorHandle(error, navigate);
             });
         }).catch((error) => {
-
+            errorHandle(error, navigate);
         });
     }, []);
 
