@@ -13,4 +13,15 @@ const getReservation = async () => {
     return await axios(config);
 };
 
-export { getReservation };
+const getReservationStatus = async () => {
+
+    const config = {
+        method: 'GET',
+        url: `${backEndBaseUri}/api/reservation/status`,
+        withCredentials: true,
+    }
+
+    return await axios(config);
+};
+
+export { getReservation, getReservationStatus };

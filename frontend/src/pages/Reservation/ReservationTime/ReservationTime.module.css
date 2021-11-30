@@ -9,9 +9,31 @@
     border: 1px solid rgba(208, 223, 241, 1);
 }
 
+.wrapper2 {
+    min-height: 50px;
+    text-align: center;
+    flex: 1 1 30%;
+    margin: 3px;
+    background-color: rgba(205, 234, 168, 1);
+    border-radius: 3px;
+    box-shadow: var(--comm-box-shadow);
+    border: 1px solid rgba(187, 206, 163, 1);
+}
+
+.wrapper3 {
+    min-height: 50px;
+    text-align: center;
+    flex: 1 1 30%;
+    margin: 3px;
+    background-color: rgba(195, 198, 191, 1);
+    border-radius: 3px;
+    box-shadow: var(--comm-box-shadow);
+    border: 1px solid rgba(208, 223, 241, 1);
+}
+
 .time {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .reservationCountStatus {

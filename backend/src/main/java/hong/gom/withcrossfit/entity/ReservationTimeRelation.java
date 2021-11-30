@@ -1,5 +1,7 @@
 package hong.gom.withcrossfit.entity;
 
+import java.time.LocalDate;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,4 +37,6 @@ public class ReservationTimeRelation {
     @OneToOne
     @JoinColumn(name = "user_id")
     private SpUser user;
+    
+    private LocalDate date;
 }

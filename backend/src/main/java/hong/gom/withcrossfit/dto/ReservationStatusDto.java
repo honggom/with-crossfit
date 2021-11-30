@@ -7,12 +7,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ReservationTimeDto {
-	
-	private Long id;
+public class ReservationStatusDto {
+
+	private boolean reserved;
+	private Long reservationTimeId;
 	private LocalTime start;
 	private LocalTime end;
-	private int reservationCount;
-	private int maxReservation;
-
 }
