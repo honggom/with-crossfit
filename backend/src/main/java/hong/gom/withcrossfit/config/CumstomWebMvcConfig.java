@@ -1,6 +1,5 @@
 package hong.gom.withcrossfit.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -15,9 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class CumstomWebMvcConfig implements WebMvcConfigurer {
 
 	private final CustomInterceptor Interceptor;
-	
-	@Autowired
-	private Environment env;
+	private final Environment env;
 	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
