@@ -18,14 +18,23 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/admin/api")
 public class BoxController {
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	private final BoxService boxService;
+	
+	private void logging(String message) {
+		LOGGER.info("BoxController INFO : " + message);
+	}
 	
 	@GetMapping("/box")
 	public ResponseEntity<List<BoxDto>> getBox() {
-		return ResponseEntity.ok()
-		        .body(boxService.getBoxService());
+		List<BoxDto> boxes = boxService.getBoxService();
+		
+		if (boxes.isEmpty()) {
+			logging("기본 박스가 존재하지 않음");
+			return ResponseEntity.notFound().build();
+		} else {
+			return ResponseEntity.ok().body(boxes);
+		}
 	}
 	
 }

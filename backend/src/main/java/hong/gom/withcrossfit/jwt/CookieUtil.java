@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class CookieUtils {
+public class CookieUtil {
 	
 	private final Environment env;
 	

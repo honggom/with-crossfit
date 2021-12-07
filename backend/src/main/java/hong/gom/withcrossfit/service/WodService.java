@@ -13,7 +13,7 @@ import hong.gom.withcrossfit.dto.WodDto;
 import hong.gom.withcrossfit.entity.Box;
 import hong.gom.withcrossfit.entity.SpUser;
 import hong.gom.withcrossfit.entity.Wod;
-import hong.gom.withcrossfit.jwt.TokenUtils;
+import hong.gom.withcrossfit.jwt.TokenUtil;
 import hong.gom.withcrossfit.repository.SpUserRepository;
 import hong.gom.withcrossfit.repository.WodRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class WodService {
 
 	private final SpUserRepository userRepository;
-	private final TokenUtils tokenUtils;
+	private final TokenUtil tokenUtils;
 	private final WodRepository wodRepository;
 	private final ModelMapper modelMapper;
 	

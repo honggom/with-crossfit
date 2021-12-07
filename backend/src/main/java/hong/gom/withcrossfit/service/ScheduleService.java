@@ -26,7 +26,7 @@ import hong.gom.withcrossfit.entity.Schedule;
 import hong.gom.withcrossfit.entity.ScheduleSet;
 import hong.gom.withcrossfit.entity.SpecificEachTime;
 import hong.gom.withcrossfit.entity.SpecificSchedule;
-import hong.gom.withcrossfit.jwt.TokenUtils;
+import hong.gom.withcrossfit.jwt.TokenUtil;
 import hong.gom.withcrossfit.repository.EachTimeRepository;
 import hong.gom.withcrossfit.repository.ScheduleRepository;
 import hong.gom.withcrossfit.repository.ScheduleSetRepository;
@@ -42,7 +42,7 @@ public class ScheduleService {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	private final TokenUtils tokenUtils;
+	private final TokenUtil tokenUtils;
 	private final ModelMapper modelMapper;
 	
 	private final SpUserRepository userRepository;

@@ -8,12 +8,14 @@ import javax.persistence.Table;
 
 import hong.gom.withcrossfit.entity.listener.BaseEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -24,7 +26,7 @@ public class Box extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    // TODO maxReser 설정하는 기능 추가
+    // TODO maxReservation 설정하는 기능 추가
     private int maxReservation = 16;
     
     private String name;

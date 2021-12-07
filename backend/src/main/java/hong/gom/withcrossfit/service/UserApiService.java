@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import hong.gom.withcrossfit.dto.UserDto;
 import hong.gom.withcrossfit.entity.SpUser;
-import hong.gom.withcrossfit.jwt.TokenUtils;
+import hong.gom.withcrossfit.jwt.TokenUtil;
 import hong.gom.withcrossfit.repository.SpUserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserApiService {
 	
-	private final TokenUtils tokenUtils;
+	private final TokenUtil tokenUtils;
 	private final ModelMapper modelMapper;
 	private final SpUserRepository userRepository;
 	

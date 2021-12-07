@@ -8,18 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-
-import hong.gom.withcrossfit.jwt.CookieUtils;
-import hong.gom.withcrossfit.jwt.TokenUtils;
-import lombok.RequiredArgsConstructor;
 
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
 	private static final int UNAUTHENTICATED = 401;
 	private static final int FORBIDDEN = 403;
 	

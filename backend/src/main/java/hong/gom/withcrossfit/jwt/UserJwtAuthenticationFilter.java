@@ -25,16 +25,12 @@ import org.springframework.web.filter.GenericFilterBean;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends GenericFilterBean {
+public class UserJwtAuthenticationFilter extends GenericFilterBean {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-	private final TokenUtils tokenUtils;
-
-	private final CookieUtils cookieUtils;
-
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	private final TokenUtil tokenUtils;
+	private final CookieUtil cookieUtils;
 	private final Environment env;
-
 	private RequestMatcher requestMatcher = new AntPathRequestMatcher("/api/**");
 
 	@Override
@@ -42,7 +38,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 		try {
 			if (requestMatcher.matches((HttpServletRequest) request)) {
-				logger.info("JwtAuthFilter 진입 ====================================");
+				logging("UserJwtAuthenticationFilter 진입 ...");
 
 				Map<String, String> jwts = tokenUtils.getJwtFromCookie(((HttpServletRequest) request).getCookies());
 
@@ -50,31 +46,31 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 				String refresh = jwts.get(env.getProperty("jwt.refresh-name"));
 
 				if (!tokenUtils.isExpired(jwt)) {
-					logger.info("jwt 유효");
+					logging("유효한 JWT");
 
 					Map<String, Object> jwtClaims = tokenUtils.getJwtBody(jwt);
 					authenticated(jwtClaims.get("email").toString(), jwtClaims.get("role").toString());
 				} else {
 					if (!tokenUtils.isExpired(refresh)) {
-						logger.info("ref 유효");
+						logging("유효한 REFRESH JWT");
 
 						Map<String, Object> refreshJwtClaims = tokenUtils.getJwtBody(refresh);
 
 						String refreshJwtEmail = refreshJwtClaims.get("email").toString();
 						String newJwt = tokenUtils.generateJwt(refreshJwtEmail,
 								refreshJwtClaims.get("role").toString());
-						logger.info("jwt 갱신");
+						logging("JWT 갱신 완료");
 
 						cookieUtils.addJwtCookie((HttpServletResponse) response, newJwt);
 						authenticated(refreshJwtEmail, refreshJwtClaims.get("role").toString());
 					} else {
-						logger.info("쿠키 둘다 만료");
+						logging("JWT 및 REFRESH JWT 쿠기 만료됨");
 						((HttpServletResponse)response).setStatus(401);
 					}
 				}
 			}
 		} catch (Exception e) {
-			logger.info("쿠키가 존재하지 않음");
+			logging("쿠키가 존재하지 않음");
 			((HttpServletResponse)response).setStatus(401);
 		} finally {
 			filterChain.doFilter(request, response);
@@ -86,6 +82,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 				List.of(new SimpleGrantedAuthority(role)));
 
 		SecurityContextHolder.getContext().setAuthentication(auth);
+	}
+	
+	private void logging(String message) {
+		LOGGER.info("UserJwtAuthenticationFilter INFO : " + message);
 	}
 
 }

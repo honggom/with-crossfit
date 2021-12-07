@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class WebMvcConfig implements WebMvcConfigurer {
+public class CumstomWebMvcConfig implements WebMvcConfigurer {
 
 	private final CustomInterceptor Interceptor;
 	

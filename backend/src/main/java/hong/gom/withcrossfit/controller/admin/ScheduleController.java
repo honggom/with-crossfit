@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-
 import hong.gom.withcrossfit.dto.DayOffSpecificScheduleDto;
 import hong.gom.withcrossfit.dto.EachTimeDto;
 import hong.gom.withcrossfit.dto.ScheduleDto;
@@ -36,13 +34,12 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/admin/api")
 public class ScheduleController {
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	private final ScheduleService scheduleService;
 	
 	@GetMapping("/now")
 	public ResponseEntity<LocalDate> getNow() {
-		logger.info("now : " + LocalDate.now());
+		LOGGER.info("now : " + LocalDate.now());
 		return ResponseEntity.ok().body(LocalDate.now().plusDays(1L));
 	}
 	

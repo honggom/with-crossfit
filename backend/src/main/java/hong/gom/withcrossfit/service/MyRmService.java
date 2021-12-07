@@ -1,11 +1,11 @@
 package hong.gom.withcrossfit.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,18 +13,19 @@ import org.springframework.stereotype.Service;
 import hong.gom.withcrossfit.dto.MyRmDto;
 import hong.gom.withcrossfit.entity.MyRm;
 import hong.gom.withcrossfit.entity.SpUser;
-import hong.gom.withcrossfit.jwt.TokenUtils;
+import hong.gom.withcrossfit.jwt.TokenUtil;
 import hong.gom.withcrossfit.repository.MyRmRepository;
 import hong.gom.withcrossfit.repository.SpUserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MyRmService {
 	
 	private final MyRmRepository myRmRepository;
 	private final SpUserRepository userRepository;
-	private final TokenUtils tokenUtils;
+	private final TokenUtil tokenUtils;
 	private final ModelMapper modelMapper;
 	
 	public List<MyRmDto> getMyRmService(String jwt) {

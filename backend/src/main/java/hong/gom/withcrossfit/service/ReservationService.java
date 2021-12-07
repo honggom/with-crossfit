@@ -19,7 +19,7 @@ import hong.gom.withcrossfit.entity.Reservation;
 import hong.gom.withcrossfit.entity.ReservationTime;
 import hong.gom.withcrossfit.entity.ReservationTimeRelation;
 import hong.gom.withcrossfit.entity.SpUser;
-import hong.gom.withcrossfit.jwt.TokenUtils;
+import hong.gom.withcrossfit.jwt.TokenUtil;
 import hong.gom.withcrossfit.repository.ReservationRepository;
 import hong.gom.withcrossfit.repository.ReservationTimeRelationRepository;
 import hong.gom.withcrossfit.repository.ReservationTimeRepository;
@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReservationService {
 	
-	private final TokenUtils tokenUtils;
+	private final TokenUtil tokenUtils;
 	private final ModelMapper modelMapper;
 	private final SpUserRepository userRepository;
 	private final ReservationRepository reservationRepository;

@@ -19,23 +19,20 @@ import org.springframework.stereotype.Component;
 import hong.gom.withcrossfit.entity.SpAuthority;
 import hong.gom.withcrossfit.entity.SpOAuth2User;
 import hong.gom.withcrossfit.entity.SpUser;
-import hong.gom.withcrossfit.jwt.CookieUtils;
+import hong.gom.withcrossfit.jwt.CookieUtil;
 import hong.gom.withcrossfit.jwt.Token;
-import hong.gom.withcrossfit.jwt.TokenUtils;
+import hong.gom.withcrossfit.jwt.TokenUtil;
 import hong.gom.withcrossfit.service.SpUserService;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class SpOAuth2SuccessHandler implements AuthenticationSuccessHandler  {
+public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler  {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-	private final TokenUtils tokenUtils;
-	
+	private final TokenUtil tokenUtils;
 	private final SpUserService userService;
-	
-	private final CookieUtils cookieUtils;
+	private final CookieUtil cookieUtils;
 	
 	@Autowired
 	private Environment env;
