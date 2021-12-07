@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/admin/api")
 public class WodController {
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	
 	private final WodService wodService;
 	

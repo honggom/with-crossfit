@@ -32,7 +32,6 @@ public class UserAdminController {
 	
 	@PostMapping("/register")
 	public ResponseEntity insertNewBoxToUser(@RequestBody BoxIdAndUserEmailDto boxIdAndUserEmailDto) {
-		System.out.println(boxIdAndUserEmailDto.toString());
 		return userService.insertNewBoxToUser(boxIdAndUserEmailDto);
 	}
 

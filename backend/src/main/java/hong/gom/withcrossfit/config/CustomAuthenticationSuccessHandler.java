@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -33,9 +32,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	private final TokenUtil tokenUtils;
 	private final SpUserService userService;
 	private final CookieUtil cookieUtils;
-	
-	@Autowired
-	private Environment env;
+	private final Environment env;
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
