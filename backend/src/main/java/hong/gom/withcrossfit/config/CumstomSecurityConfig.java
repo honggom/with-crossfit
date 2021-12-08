@@ -1,6 +1,7 @@
 package hong.gom.withcrossfit.config;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,6 +19,7 @@ import hong.gom.withcrossfit.jwt.UserJwtAuthenticationFilter;
 import hong.gom.withcrossfit.service.SpOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 
+@Profile("!default")
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor

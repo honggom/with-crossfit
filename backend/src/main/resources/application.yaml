@@ -1,4 +1,7 @@
 spring:
+  servlet:
+    encoding:
+      force-response: true
   mail:
     host: smtp.gmail.com
     port: 587

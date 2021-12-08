@@ -13,7 +13,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	private static final int UNAUTHENTICATED = 401;
 	private static final int FORBIDDEN = 403;
 	
@@ -27,13 +27,17 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 	private void setResponse(HttpServletResponse response) throws IOException {
 		response.setContentType("application/json;charset=UTF-8");
 		if (response.getStatus() == 403) {
-			logger.info("접근 권한 없음");
+			logging("접근 권한 없음");
 			response.getWriter().print("{ \"error\":"  + FORBIDDEN + "}");
 			return;
 		} else {
-			logger.info("쿠키가 없거나 토큰이 만료됨");
+			logging("쿠키가 없거나 토큰이 만료됨");
 			response.getWriter().print("{ \"error\":"  + UNAUTHENTICATED + "}");
 			return;
 		}
+	}
+	
+	private void logging(String message) {
+		LOGGER.info("CustomAuthenticationEntryPoint INFO : " + message);
 	}
 }

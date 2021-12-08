@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler  {
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	private final TokenUtil tokenUtils;
 	private final SpUserService userService;
 	private final CookieUtil cookieUtils;
@@ -37,7 +37,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-		logger.info("AuthenticationSuccessHandler 진입 ...");
+		logging("CustomAuthenticationSuccessHandler 진입 ...");
 
 		Object principal = authentication.getPrincipal();
 		boolean isAdmin = false;
@@ -57,20 +57,20 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 			
 			if (isAdmin) {
 				if(user.getBox() == null) {
-					logger.info("박스 미등록 관리자 로그인");
+					logging("박스 미등록 관리자 로그인");
 					redirectUrl = env.getProperty("front-end-admin.base-url") + "/not-registered";
 				} else {
-					logger.info(user.getBox().getName() + " 지점 관리자 로그인");
+					logging(user.getBox().getName() + " 지점 관리자 로그인");
 					Token adminToken = tokenUtils.generateJwtAndRefresh(user.getEmail(), "ROLE_ADMIN");
 					cookieUtils.addCookies(response, adminToken);
 					redirectUrl = env.getProperty("front-end-admin.base-url") + "/home";
 				}
 			} else {
 				if(user.getBox() == null) {
-					logger.info("미등록 유저 로그인");
+					logging("미등록 유저 로그인");
 					redirectUrl = env.getProperty("front-end.base-url") + "/not-registered";
 				} else {
-					logger.info("유저 로그인");
+					logging("유저 로그인");
 					Token userToken = tokenUtils.generateJwtAndRefresh(user.getEmail(), "ROLE_USER");
 					cookieUtils.addCookies(response, userToken);
 					redirectUrl = env.getProperty("front-end.base-url") + "/home";
@@ -78,5 +78,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 			}
 		}
 		response.sendRedirect(redirectUrl);
+	}
+	
+	private void logging(String message) {
+		LOGGER.info("CustomAuthenticationSuccessHandler INFO : " + message);
 	}
 }
