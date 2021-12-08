@@ -25,8 +25,9 @@ import hong.gom.withcrossfit.dto.SpecificScheduleDto;
 import hong.gom.withcrossfit.dto.SpecificScheduleResponseDto;
 import hong.gom.withcrossfit.dto.UpdateScheduleSetDto;
 import hong.gom.withcrossfit.entity.ScheduleSet;
-import hong.gom.withcrossfit.entity.SpecificSchedule;
+import hong.gom.withcrossfit.response.ErrorResponse;
 import hong.gom.withcrossfit.service.ScheduleService;
+import hong.gom.withcrossfit.util.RegexValidator;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -36,6 +37,7 @@ public class ScheduleController {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	private final ScheduleService scheduleService;
+	private final RegexValidator regexValidator;
 	
 	@GetMapping("/now")
 	public ResponseEntity<LocalDate> getNow() {
@@ -44,11 +46,16 @@ public class ScheduleController {
 	}
 	
 	@GetMapping("/specific-schedule/{start}/{end}")
-	public ResponseEntity<List<SpecificSchedule>> getSpecificSchedule(@CookieValue(name = "refresh") String jwt,
+	public ResponseEntity getSpecificSchedule(@CookieValue(name = "refresh") String jwt,
 									                                  @PathVariable String start, 
 									                                  @PathVariable String end) {
 		
-		return scheduleService.getSpecificScheduleService(jwt, start, end);
+		String timeRegex = "[0-9]{2}:[0-9]{2}";
+		
+		if (regexValidator.isRightValue(timeRegex, start) && regexValidator.isRightValue(timeRegex, end)) {
+			return new ResponseEntity(scheduleService.getSpecificScheduleService(jwt, start, end), HttpStatus.OK);
+		}
+		return new ResponseEntity(new ErrorResponse(400, String.format("시작날짜 : [%s] 또는 종료날짜 : [%s]의 형식이 잘못되었습니다.", start, end)), HttpStatus.BAD_REQUEST);
 	}
 	
 	@GetMapping("/specific-schedule/{date}")

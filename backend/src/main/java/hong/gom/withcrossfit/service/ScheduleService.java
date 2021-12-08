@@ -52,14 +52,16 @@ public class ScheduleService {
 	private final EachTimeRepository eachTimeRepository;
 	private final ScheduleSetRepository scheduleSetRepository;
 	
-	public ResponseEntity<List<SpecificSchedule>> getSpecificScheduleService(String jwt, String start, String end) {
+	public List<SpecificScheduleResponseDto> getSpecificScheduleService(String jwt, String start, String end) {
 		String email = tokenUtils.getEmail(jwt);
 		Box box = userRepository.findByEmail(email).getBox();
 		LocalDate startDate = makeToLocalDate(start);
 		LocalDate endDate = makeToLocalDate(end);
 		
-		return ResponseEntity.ok()
-				             .body(specificScheduleRepository.findByBoxAndDateBetween(box, startDate, endDate));
+		return specificScheduleRepository.findByBoxAndDateBetween(box, startDate, endDate)
+				                         .stream()
+				                         .map(schedule -> modelMapper.map(schedule, SpecificScheduleResponseDto.class))
+				                         .collect(Collectors.toList());
 	}
 	
 	public ResponseEntity<SpecificScheduleResponseDto> getSpecificScheduleByDateService(String jwt, String date) {

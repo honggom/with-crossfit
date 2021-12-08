@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hong.gom.withcrossfit.dto.BoxDto;
+import hong.gom.withcrossfit.response.ErrorResponse;
 import hong.gom.withcrossfit.service.BoxService;
 import lombok.RequiredArgsConstructor;
 
@@ -26,14 +28,14 @@ public class BoxController {
 	}
 	
 	@GetMapping("/box")
-	public ResponseEntity<List<BoxDto>> getBox() {
+	public ResponseEntity getBox() {
 		List<BoxDto> boxes = boxService.getBoxService();
 		
 		if (boxes.isEmpty()) {
 			logging("기본 박스가 존재하지 않음");
-			return ResponseEntity.notFound().build();
+			return new ResponseEntity<>(new ErrorResponse(404, "기본 박스가 존재하지 않습니다. 개발자에게 문의하세요."), HttpStatus.NOT_FOUND);
 		} else {
-			return ResponseEntity.ok().body(boxes);
+			return new ResponseEntity<>(boxes, HttpStatus.OK);
 		}
 	}
 	
