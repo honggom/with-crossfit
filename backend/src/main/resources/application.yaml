@@ -1,4 +1,5 @@
 spring:
+  config:    activate:      on-profile: dev
   servlet:
     encoding:
       force-response: true
@@ -43,7 +44,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true

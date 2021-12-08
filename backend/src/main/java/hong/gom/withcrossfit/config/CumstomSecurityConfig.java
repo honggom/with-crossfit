@@ -19,7 +19,7 @@ import hong.gom.withcrossfit.jwt.UserJwtAuthenticationFilter;
 import hong.gom.withcrossfit.service.SpOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 
-@Profile("!default")
+@Profile("dev")
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor

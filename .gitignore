@@ -39,7 +39,7 @@ out/
 .vscode/
 
 ### application.yml ###
-/backend/src/main/resources/
+backend/src/main/resources/
 
 ### front ###
 /**/node_modules
