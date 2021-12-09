@@ -6,8 +6,6 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import hong.gom.withcrossfit.dto.BoxIdAndUserEmailDto;
@@ -25,11 +23,9 @@ public class UserAdminApiService {
 	
 	private final SpUserRepository userRepository;
 	private final BoxRepository boxRepository;
-	
 	private final ModelMapper modelMapper;
 	
 	public List<UserDto> getNotRegisteredUserService() {
-		
 		List<SpUser> users = userRepository.findByBoxIsNull();
 		
 		return users.stream()
@@ -37,15 +33,12 @@ public class UserAdminApiService {
 				.collect(Collectors.toList());
 	}
 	
-	public ResponseEntity insertNewBoxToUser(BoxIdAndUserEmailDto boxIdAndUserEmailDto) {
-		
+	public void insertNewBoxToUser(BoxIdAndUserEmailDto boxIdAndUserEmailDto) {
 		Box box = boxRepository.findById(boxIdAndUserEmailDto.getBoxId()).get();
 		SpUser user = userRepository.findByEmail(boxIdAndUserEmailDto.getEmail());
 		
 		user.setBox(box);
 		userRepository.save(user);
-		
-		return new ResponseEntity(HttpStatus.OK);
 	}
 
 }
