@@ -40,11 +40,9 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class ScheduleService {
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	private final TokenUtil tokenUtils;
 	private final ModelMapper modelMapper;
-	
 	private final SpUserRepository userRepository;
 	private final ScheduleRepository scheduleRepository;
 	private final SpecificScheduleRepository specificScheduleRepository;
@@ -64,7 +62,7 @@ public class ScheduleService {
 				                         .collect(Collectors.toList());
 	}
 	
-	public ResponseEntity<SpecificScheduleResponseDto> getSpecificScheduleByDateService(String jwt, String date) {
+	public SpecificScheduleResponseDto getSpecificScheduleByDateService(String jwt, String date) {
 		String email = tokenUtils.getEmail(jwt);
 		Box box = userRepository.findByEmail(email).getBox();
 		
@@ -81,22 +79,18 @@ public class ScheduleService {
 			
 			responseDto.setTimes(timesDto);
 			
-			return ResponseEntity.ok().body(responseDto);
-		} else {
-			return ResponseEntity.ok().body(null);
+			return responseDto;
 		}
-		
+		return null;
 	}
 	
-	public ResponseEntity deleteSpecificScheduleByIdService(Long id) {
+	public void deleteSpecificScheduleByIdService(Long id) {
 		SpecificSchedule specificSchedule = specificScheduleRepository.findById(id).get();
 		specificEachTimeRepository.deleteBySpecificSchedule(specificSchedule);
 		specificScheduleRepository.delete(specificSchedule);
-		
-		return new ResponseEntity(HttpStatus.OK);
 	}
 	
-	public ResponseEntity insertScheduleService(String jwt, ScheduleDto scheduleDto) {
+	public void insertScheduleService(String jwt, ScheduleDto scheduleDto) {
 		String email = tokenUtils.getEmail(jwt);
 		Box box = userRepository.findByEmail(email).getBox();
 		
@@ -113,54 +107,51 @@ public class ScheduleService {
 					                        .schedule(savedSchedule)
 					                        .build());
 		}
-		
-		return new ResponseEntity(HttpStatus.OK);
 	}
 	
-	public ResponseEntity<List<ScheduleDto>> getScheduleByBoxService(String jwt) {
+	public List<ScheduleDto> getScheduleByBoxService(String jwt) {
 		String email = tokenUtils.getEmail(jwt);
 		Box box = userRepository.findByEmail(email).getBox();
 		
 		List<Schedule> schedules = scheduleRepository.findByBox(box);
 		
-		return ResponseEntity.ok().body(schedules.stream()
-				                                 .map(schedule -> modelMapper.map(schedule, ScheduleDto.class))
-				                                 .collect(Collectors.toList()));
+		return schedules.stream()
+				        .map(schedule -> modelMapper.map(schedule, ScheduleDto.class))
+				        .collect(Collectors.toList());
 	}
 	
-	public ResponseEntity<List<EachTimeDto>> getEachTimeByScheduleIdService(Long id) {
+	public List<EachTimeDto> getEachTimeByScheduleIdService(Long id) {
 		List<EachTime> eachTimes = eachTimeRepository.findBySchedule(scheduleRepository.findById(id).get());
 		
-		return ResponseEntity.ok().body(eachTimes.stream()
-				                                 .map(eachTime -> modelMapper.map(eachTime, EachTimeDto.class))
-				                                 .collect(Collectors.toList()));
+		return eachTimes.stream()
+                        .map(eachTime -> modelMapper.map(eachTime, EachTimeDto.class))
+                        .collect(Collectors.toList());
 	}
 	
-	public ResponseEntity deleteScheduleByIdService(Long id) {
+	public void deleteScheduleByIdService(Long id) {
 		Schedule schedule = scheduleRepository.findById(id).get();
 		int result = eachTimeRepository.deleteBySchedule(schedule);
 		scheduleRepository.delete(schedule);
-		return new ResponseEntity(HttpStatus.OK);
 	}
 	
-	public ResponseEntity<ScheduleSet> getScheduleSetByBoxService(String jwt) {
+	public ScheduleSet getScheduleSetByBoxService(String jwt) {
 		String email = tokenUtils.getEmail(jwt);
 		Box box = userRepository.findByEmail(email).getBox();
 		
 		Optional<ScheduleSet> scheduleSet =	scheduleSetRepository.findByBox(box);
 		
 		if(scheduleSet.isPresent()) {
-			logger.info("scheduleSet 존재함");
-			return ResponseEntity.ok().body(scheduleSet.get());
+			logging("scheduleSet 존재함");
+			return scheduleSet.get();
 		} else {
-			logger.info("scheduleSet 존재하지 않음");
-			return ResponseEntity.ok().body(scheduleSetRepository.save(ScheduleSet.builder()
-					                                                              .box(box)
-					                                                              .build()));
+			logging("scheduleSet 존재하지 않음");
+			return scheduleSetRepository.save(ScheduleSet.builder()
+                                                         .box(box)
+					                                     .build());
 		}
 	}
 	
-	public ResponseEntity updateScheduleSetService(UpdateScheduleSetDto dto) {
+	public void updateScheduleSetService(UpdateScheduleSetDto dto) {
 		ScheduleSet scheduleSet = scheduleSetRepository.findById(dto.getScheduleSetId()).get();
 		
 		Schedule newSchedule = null;
@@ -188,11 +179,9 @@ public class ScheduleService {
 		}
 		
 		scheduleSetRepository.save(scheduleSet);
-		
-		return new ResponseEntity(HttpStatus.OK);
 	}
 	
-	public ResponseEntity insertSpecificScheduleService(String jwt, SpecificScheduleDto dto) {
+	public void insertSpecificScheduleService(String jwt, SpecificScheduleDto dto) {
 		String email = tokenUtils.getEmail(jwt);
 		Box box = userRepository.findByEmail(email).getBox();
 		
@@ -211,7 +200,17 @@ public class ScheduleService {
 					                                        .specificSchedule(savedSpecificSchedule)
 					                                        .build());
 		}
-		return new ResponseEntity(HttpStatus.OK);
+	}
+	
+	public void insertDayOffSpecificScheduleService(String jwt, String dateStr) {
+		String email = tokenUtils.getEmail(jwt);
+		Box box = userRepository.findByEmail(email).getBox();
+		
+		specificScheduleRepository.save(SpecificSchedule.builder()
+                                  .box(box)
+                                  .date(makeToLocalDate(dateStr))
+                                  .isDayOff(true)
+                                  .build());
 	}
 	
 	private LocalDate makeToLocalDate(String dateStr) {
@@ -224,17 +223,8 @@ public class ScheduleService {
 		return LocalDate.of(year, month, date);
 	}
 	
-	public ResponseEntity insertDayOffSpecificScheduleService(String jwt, String dateStr) {
-		String email = tokenUtils.getEmail(jwt);
-		Box box = userRepository.findByEmail(email).getBox();
-		
-		specificScheduleRepository.save(SpecificSchedule.builder()
-                                  .box(box)
-                                  .date(makeToLocalDate(dateStr))
-                                  .isDayOff(true)
-                                  .build());
-		
-		return new ResponseEntity(HttpStatus.OK);
+	private void logging(String message) {
+		LOGGER.info("ScheduleService INFO : " + message);
 	}
 }
 

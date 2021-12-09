@@ -25,7 +25,7 @@ import hong.gom.withcrossfit.dto.SpecificScheduleDto;
 import hong.gom.withcrossfit.dto.SpecificScheduleResponseDto;
 import hong.gom.withcrossfit.dto.UpdateScheduleSetDto;
 import hong.gom.withcrossfit.entity.ScheduleSet;
-import hong.gom.withcrossfit.response.ErrorResponse;
+import hong.gom.withcrossfit.response.ResponseDto;
 import hong.gom.withcrossfit.service.ScheduleService;
 import hong.gom.withcrossfit.util.RegexValidator;
 import lombok.RequiredArgsConstructor;
@@ -38,80 +38,134 @@ public class ScheduleController {
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	private final ScheduleService scheduleService;
 	private final RegexValidator regexValidator;
+	private static final String YEAR_MONTH_DATE_REGEX = "[0-9]{4}:[0-9]{2}:[0-9]{2}";
 	
 	@GetMapping("/now")
 	public ResponseEntity<LocalDate> getNow() {
-		LOGGER.info("now : " + LocalDate.now());
+		logging("now ==> " + LocalDate.now());
 		return ResponseEntity.ok().body(LocalDate.now().plusDays(1L));
 	}
 	
 	@GetMapping("/specific-schedule/{start}/{end}")
 	public ResponseEntity getSpecificSchedule(@CookieValue(name = "refresh") String jwt,
-									                                  @PathVariable String start, 
-									                                  @PathVariable String end) {
+									          @PathVariable String start, 
+									          @PathVariable String end) {
 		
-		String timeRegex = "[0-9]{2}:[0-9]{2}";
-		
-		if (regexValidator.isRightValue(timeRegex, start) && regexValidator.isRightValue(timeRegex, end)) {
+		if (regexValidator.isRightValue(YEAR_MONTH_DATE_REGEX, start) && regexValidator.isRightValue(YEAR_MONTH_DATE_REGEX, end)) {
 			return new ResponseEntity(scheduleService.getSpecificScheduleService(jwt, start, end), HttpStatus.OK);
 		}
-		return new ResponseEntity(new ErrorResponse(400, String.format("시작날짜 : [%s] 또는 종료날짜 : [%s]의 형식이 잘못되었습니다.", start, end)), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity(new ResponseDto(400, String.format("시작날짜 : [%s] 또는 종료날짜 : [%s]의 형식이 잘못되었습니다.", start, end)), HttpStatus.BAD_REQUEST);
 	}
 	
 	@GetMapping("/specific-schedule/{date}")
-	public ResponseEntity<SpecificScheduleResponseDto> getSpecificScheduleByDate(@CookieValue(name = "refresh") String jwt, @PathVariable String date) {
-		return scheduleService.getSpecificScheduleByDateService(jwt, date);
+	public ResponseEntity getSpecificScheduleByDate(@CookieValue(name = "refresh") String jwt, 
+                                                    @PathVariable String date) {
+		
+		SpecificScheduleResponseDto dto = scheduleService.getSpecificScheduleByDateService(jwt, date);
+		
+		if (dto == null) {
+			logging("getSpecificScheduleByDate ==> 별도 일정이 존재하지 않음");
+			return ResponseEntity.ok(null);
+		}
+		return new ResponseEntity(dto, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/specific-schedule/{id}")
 	public ResponseEntity deleteSpecificScheduleById(@PathVariable Long id) {
-		return scheduleService.deleteSpecificScheduleByIdService(id);
+		if (id == null) {
+			logging("deleteSpecificScheduleById ==> 파라미터 id가 null");
+			new ResponseEntity(new ResponseDto(400, "오류가 발생하였습니다."), HttpStatus.BAD_REQUEST);
+		}
+        scheduleService.deleteSpecificScheduleByIdService(id);
+        return new ResponseEntity(new ResponseDto(200, "별도 일정이 정상적으로 삭제되었습니다."), HttpStatus.OK);
 	}
 	
 	@PostMapping("/schedule")
-	public ResponseEntity insertSchedule(@CookieValue(name = "refresh") String jwt, @RequestBody ScheduleDto scheduleDto) {
-		return scheduleService.insertScheduleService(jwt, scheduleDto);
+	public ResponseEntity insertSchedule(@CookieValue(name = "refresh") String jwt, 
+			                             @RequestBody ScheduleDto scheduleDto) {
+		
+		if (scheduleDto == null) {
+			logging("insertSchedule ==> 파라미터 scheduleDto가 null");
+			new ResponseEntity(new ResponseDto(400, "오류가 발생하였습니다."), HttpStatus.BAD_REQUEST);
+		}
+		scheduleService.insertScheduleService(jwt, scheduleDto);
+		return new ResponseEntity(new ResponseDto(200, "별도 일정이 정상적으로 추가되었습니다."), HttpStatus.OK);
 	}
 	
 	@GetMapping("/schedule")
-	public ResponseEntity<List<ScheduleDto>> getScheduleByBox(@CookieValue(name = "refresh") String jwt) {
-		return scheduleService.getScheduleByBoxService(jwt);
+	public ResponseEntity getScheduleByBox(@CookieValue(name = "refresh") String jwt) {
+		List<ScheduleDto> results = scheduleService.getScheduleByBoxService(jwt);
+		
+		if (results == null) {
+			logging("getScheduleByBox ==> results가 null");
+			return new ResponseEntity(new ResponseDto(404, "기본 일정이 존재하지 않습니다."), HttpStatus.NOT_FOUND);
+		} else if (results.isEmpty()) {
+			logging("getScheduleByBox ==> results가 empty");
+			return new ResponseEntity(new ResponseDto(404, "기본 일정이 존재하지 않습니다."), HttpStatus.NOT_FOUND);
+		} 
+		return new ResponseEntity(results, HttpStatus.OK);
 	}
 	
 	@GetMapping("/schedule/{id}")
-	public ResponseEntity<List<EachTimeDto>> getEachTimeByScheduleId(@PathVariable Long id) {
-		return scheduleService.getEachTimeByScheduleIdService(id);
+	public ResponseEntity getEachTimeByScheduleId(@PathVariable Long id) {
+		List<EachTimeDto> results = scheduleService.getEachTimeByScheduleIdService(id);
+		
+		if (results == null) {
+			logging("getEachTimeByScheduleId ==> results가 null");
+			return new ResponseEntity(new ResponseDto(404, "기본 일정의 시간이 존재하지 않습니다."), HttpStatus.NOT_FOUND);
+		} else if (results.isEmpty()) {
+			logging("getEachTimeByScheduleId ==> results가 empty");
+			return new ResponseEntity(new ResponseDto(404, "기본 일정의 시간이 존재하지 않습니다."), HttpStatus.NOT_FOUND);
+		} 
+		return new ResponseEntity(results, HttpStatus.OK); 
 	}
 	
 	@DeleteMapping("/schedule/{id}")
 	public ResponseEntity deleteScheduleById(@PathVariable Long id) {
 		try {
-			ResponseEntity reponse = scheduleService.deleteScheduleByIdService(id);
-			return reponse;
+			scheduleService.deleteScheduleByIdService(id);
+			return new ResponseEntity(new ResponseDto(200, "기본 일정이 정상적으로 삭제되었습니다."), HttpStatus.OK);
 		} catch (DataIntegrityViolationException e) {
-			return new ResponseEntity("해당 기본 시간표로 설정된 요일이 있습니다.(기본 시간표를 삭제하고 싶으시면 설정된 요일의 시간표를 변경해주세요.)", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity(new ResponseDto(400, "해당 기본 시간표로 설정된 요일이 있습니다.(기본 시간표를 삭제하고 싶으시면 설정된 요일의 시간표를 변경해주세요.)"), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
+	// TODO entity -> dto
 	@GetMapping("/schedule-set")
-	public ResponseEntity<ScheduleSet> getScheduleSetByBox(@CookieValue(name = "refresh") String jwt) {
-		return scheduleService.getScheduleSetByBoxService(jwt);
+	public ResponseEntity getScheduleSetByBox(@CookieValue(name = "refresh") String jwt) {
+		ScheduleSet result = scheduleService.getScheduleSetByBoxService(jwt);
+		return new ResponseEntity(result, HttpStatus.OK);
 	}
 	
 	@PutMapping("/schedule-set")
 	public ResponseEntity updateScheduleSet(@RequestBody UpdateScheduleSetDto dto) {
-		return scheduleService.updateScheduleSetService(dto);
+		if (dto != null && dto.getDay() != null && dto.getScheduleId() != null && dto.getScheduleSetId() != null) {
+			scheduleService.updateScheduleSetService(dto);
+			return new ResponseEntity(new ResponseDto(200, "기본 일정이 정상적으로 변경되었습니다."), HttpStatus.OK);
+		}
+		logging("updateScheduleSet ==> dto가 유효하지 않음 (dto : " + dto.toString() + " )");
+		return new ResponseEntity(new ResponseDto(400, "요청이 유효하지 않습니다."), HttpStatus.BAD_REQUEST);
+		
 	}
 	
 	@PostMapping("/specific-schedule")
 	public ResponseEntity insertSpecificSchedule(@CookieValue(name = "refresh") String jwt, @RequestBody SpecificScheduleDto dto) {
-		return scheduleService.insertSpecificScheduleService(jwt, dto);
+		scheduleService.insertSpecificScheduleService(jwt, dto);
+		return new ResponseEntity(new ResponseDto(200, "별도 일정이 정상적으로 저장되었습니다."), HttpStatus.OK);
 	}
 	
 	@PostMapping("/specific-schedule/day-off")
 	public ResponseEntity insertDayOffSpecificSchedule(@CookieValue(name = "refresh") String jwt, @RequestBody DayOffSpecificScheduleDto dto) {
-		return scheduleService.insertDayOffSpecificScheduleService(jwt, dto.getDateStr());
+		if (dto != null && regexValidator.isRightValue(YEAR_MONTH_DATE_REGEX, dto.getDateStr())) {
+			scheduleService.insertDayOffSpecificScheduleService(jwt, dto.getDateStr());
+			return new ResponseEntity(new ResponseDto(200, "별도 휴일이 정상적으로 저장되었습니다."), HttpStatus.OK);
+		}
+		logging("insertDayOffSpecificSchedule ==> dto가 유효하지 않음 (dto : " + dto.toString() + " )");
+		return new ResponseEntity(new ResponseDto(400, "요청이 유효하지 않습니다."), HttpStatus.BAD_REQUEST);
 	}
-
+	
+	private void logging(String message) {
+		LOGGER.info("ScheduleController INFO : " + message);
+	}
 
 }
