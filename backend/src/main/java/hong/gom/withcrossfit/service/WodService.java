@@ -1,5 +1,8 @@
 package hong.gom.withcrossfit.service;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
@@ -28,84 +31,68 @@ public class WodService {
 	private final WodRepository wodRepository;
 	private final ModelMapper modelMapper;
 	
-	public ResponseEntity<Page<Wod>> getWodService(String jwt, Pageable pageable) {
+	public Page<Wod> getWodService(String jwt, Pageable pageable) {
 		String email = tokenUtils.getEmail(jwt);
 		Box box = userRepository.findByEmail(email).getBox();
-		return ResponseEntity.ok().body(wodRepository.findBybox(box, pageable));
+		return wodRepository.findBybox(box, pageable);
 	}
 	
-	public ResponseEntity<WodDto> getWodByIdService(String jwt, Long id) {
+	public WodDto getWodByIdService(String jwt, Long id) {
 		String email = tokenUtils.getEmail(jwt);
-		Wod wod = wodRepository.findById(id).get();
-		WodDto dto = modelMapper.map(wod, WodDto.class);
+		Optional<Wod> wod = wodRepository.findById(id);
 		
-		if (wod.getWriter().getEmail().equals(email)) {
-			dto.setEditable(true);
-		} else {
-			dto.setEditable(false);
-		}
-		
-		return ResponseEntity.ok().body(dto);
+		if (wod.isPresent()) {
+			WodDto dto = modelMapper.map(wod.get(), WodDto.class);
+			if (wod.get().getWriter().getEmail().equals(email)) {
+				dto.setEditable(true);
+			} else {
+				dto.setEditable(false);
+			}
+			return dto;
+		} 
+		return null;
 	}
 
-	public ResponseEntity insertWodService(String jwt, WodDto wodDto) {
-		String email = tokenUtils.getEmail(jwt);
-		SpUser user = userRepository.findByEmail(email);
-		Box box = user.getBox();
-		
-		Wod oldWod = wodRepository.findByDateAndBox(wodDto.getDate(), box);
-		
-		if (oldWod == null) {
-			wodRepository.save(Wod.builder()
-					              .writer(user)
-					              .date(wodDto.getDate())
-					              .title(wodDto.getTitle())
-					              .content(wodDto.getContent())
-					              .box(box)
-					              .build());
-			return new ResponseEntity(HttpStatus.OK);
-		} else {
-			return new ResponseEntity("이미 해당 날짜에 작성된 WOD가 존재합니다.", HttpStatus.BAD_REQUEST);
-		}
+	public void insertWodService(SpUser user, WodDto wodDto) {
+		wodRepository.save(Wod.builder()
+					          .writer(user)
+					          .date(wodDto.getDate())
+					          .title(wodDto.getTitle())
+					          .content(wodDto.getContent())
+					          .box(user.getBox())
+					          .build());
 	}
 	
-	public ResponseEntity updateWodService(String jwt, WodDto wodDto) {
-		String email = tokenUtils.getEmail(jwt);
-		SpUser user = userRepository.findByEmail(email);
-		Box box = user.getBox();
-		
-		Wod oldWod = wodRepository.findByDateAndBox(wodDto.getDate(), box);
+	public boolean isAlreadyExistWodByBoxAndDate(Box box, LocalDate date) {
+		Wod oldWod = wodRepository.findByDateAndBox(date, box);
 		
 		if (oldWod == null) {
-			updateWod(wodDto);
-			return new ResponseEntity(HttpStatus.OK);
-		} else if (wodDto.getId() == oldWod.getId()) {
-			updateWod(wodDto);
-			return new ResponseEntity(HttpStatus.OK);
-		} else {
-			return new ResponseEntity("이미 해당 날짜에 작성된 WOD가 존재합니다.", HttpStatus.BAD_REQUEST);
+			return false;	
 		}
+		return true;
 	}
 	
-	private Wod updateWod(WodDto wodDto) {
+	public void updateWodService(WodDto wodDto) {
 		Wod newWod = wodRepository.findById(wodDto.getId()).get();
 		
 		newWod.setDate(wodDto.getDate());
 		newWod.setContent(wodDto.getContent());
 		newWod.setTitle(wodDto.getTitle());
 		
-		return wodRepository.save(newWod);
+		wodRepository.save(newWod);
 	}
 	
-	public ResponseEntity deleteWodByIdService(String jwt, Long id) {
+	public boolean isWriter(String jwt, Long id) {
 		String email = tokenUtils.getEmail(jwt);
 		Wod wod = wodRepository.findById(id).get();
 		
 		if (email.equals(wod.getWriter().getEmail())) {
-			wodRepository.delete(wod);
-			return new ResponseEntity(HttpStatus.OK);
-		} else {
-			return new ResponseEntity("권한이 없습니다.", HttpStatus.BAD_REQUEST);
+			return true;
 		}
+		return false;
+	}
+	
+	public void deleteWodByIdService(Long id) {
+		wodRepository.deleteById(id);
 	}
 }

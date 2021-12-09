@@ -16,6 +16,7 @@ import hong.gom.withcrossfit.entity.SpAuthority;
 import hong.gom.withcrossfit.entity.SpOAuth2User;
 import hong.gom.withcrossfit.entity.SpUser;
 import hong.gom.withcrossfit.enums.Grade;
+import hong.gom.withcrossfit.jwt.TokenUtil;
 import hong.gom.withcrossfit.repository.SpOAuth2UserRepository;
 import hong.gom.withcrossfit.repository.SpUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class SpUserService implements UserDetailsService {
 
 	private final SpUserRepository userRepository;
 	private final SpOAuth2UserRepository oAuth2UserRepository;
+	private final TokenUtil tokenUtil;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -73,6 +75,11 @@ public class SpUserService implements UserDetailsService {
 			return oAuth2UserRepository.save(oAuth2User);
 		});
 		return userRepository.findById(dbUser.getUserId()).get();
+	}
+	
+	public SpUser findUserByJwt(String jwt) {
+		String email = tokenUtil.getEmail(jwt);
+		return userRepository.findByEmail(email);
 	}
 
 }
