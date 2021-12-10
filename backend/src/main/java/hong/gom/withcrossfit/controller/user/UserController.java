@@ -2,12 +2,14 @@ package hong.gom.withcrossfit.controller.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hong.gom.withcrossfit.dto.UserDto;
+import hong.gom.withcrossfit.response.ResponseDto;
 import hong.gom.withcrossfit.service.UserApiService;
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +21,11 @@ public class UserController {
 	private	final UserApiService userService; 
 	
 	@GetMapping("/api/user")
-	public ResponseEntity<UserDto> getUser(@CookieValue(name = "refresh") String jwt) {
-		return userService.getUserService(jwt);
+	public ResponseEntity getUser(@CookieValue(name = "refresh") String jwt) {
+		UserDto dto = userService.getUserService(jwt);
+		if (dto == null) {
+            return new ResponseEntity(new ResponseDto(404, "정보를 불러올 수 없습니다."), HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity(HttpStatus.OK);
 	}
 }

@@ -37,10 +37,10 @@ public class ReservationService {
 	private final ReservationRepository reservationRepository;
 	private final ReservationTimeRepository reservationTimeRepository;
 	private final ReservationTimeRelationRepository reservationTimeRelationRepository;
+	private final SpUserService spUserService;
  	
-	public ResponseEntity<List<ReservationTimeDto>> getReservationService(String jwt) {
-		String email = tokenUtils.getEmail(jwt);
-		SpUser user = userRepository.findByEmail(email);
+	public List<ReservationTimeDto> getReservationService(String jwt) {
+		SpUser user = spUserService.findUserByJwt(jwt);
 			
 		LocalDate now = LocalDate.now();
 		Reservation reservation = reservationRepository.findByDateAndBox(now, user.getBox());
@@ -50,14 +50,14 @@ public class ReservationService {
 			time.setReservationCount(reservationTimeRelationRepository.countByReservationTime(time));
 		}
 		
-		return ResponseEntity.ok().body(times.stream()
-									         .map(time -> modelMapper.map(time, ReservationTimeDto.class))
-			                                 .collect(Collectors.toList()));
+		return times.stream()
+				    .map(time -> modelMapper.map(time, ReservationTimeDto.class))
+			        .collect(Collectors.toList());
 	}
 	
-	public ResponseEntity<ReservationStatusDto> getReservationStatusService(String jwt) {
-		String email = tokenUtils.getEmail(jwt);
-		SpUser user = userRepository.findByEmail(email);
+	public ReservationStatusDto getReservationStatusService(String jwt) {
+		SpUser user = spUserService.findUserByJwt(jwt);
+		
 		LocalDate now = LocalDate.now();
 		
 		int count = reservationTimeRelationRepository.countByUserAndDate(user, now);
@@ -75,49 +75,36 @@ public class ReservationService {
 		} else {
 			dto.setReserved(false);
 		}
-		
-		return ResponseEntity.ok().body(dto);
+		return dto;
 	}
 	
-	public ResponseEntity insertReservationTimeRelationService(String jwt, Long reservationTimeId) {
-		String email = tokenUtils.getEmail(jwt);
-		SpUser user = userRepository.findByEmail(email);
-		Box box = user.getBox();
-		LocalDate now = LocalDate.now();
-		
-		Optional<ReservationTime> reservationTime = reservationTimeRepository.findById(reservationTimeId);
-		
-		int count = reservationTimeRelationRepository.countByReservationTime(reservationTime.get());
-		
-		if (box.getMaxReservation() <= count) {
-			return new ResponseEntity("예약 인원이 가득찼습니다.", HttpStatus.BAD_REQUEST);
-		}
-		
-		Optional<ReservationTimeRelation> reservationTimeRelation = reservationTimeRelationRepository
-				                                                      .findByReservationTimeAndUserAndDate(reservationTime.get(), user, now);
-		
-		if (reservationTimeRelation.isPresent()) {
-			return new ResponseEntity("이미 예약하셨습니다.", HttpStatus.BAD_REQUEST);
-		} else {
-			reservationTimeRelationRepository.save(ReservationTimeRelation.builder()
-						                                                  .reservationTime(reservationTime.get())
-						                                                  .date(now)
-					                                                      .user(user)
-					                                                      .build());
-			return new ResponseEntity(HttpStatus.OK);
-		}
+	public void insertReservationTimeRelationService(ReservationTime reservationTime, SpUser user, LocalDate now) {
+        reservationTimeRelationRepository.save(ReservationTimeRelation.builder()
+						                                              .reservationTime(reservationTime)
+						                                              .date(now)
+					                                                  .user(user)
+					                                                  .build());
 	}
 	
-	public ResponseEntity deleteReservationTimeRelationService(String jwt, Long reservationTimeId) {
+	public Optional<ReservationTime> findByIdService(Long reservationTimeId) {
+		return reservationTimeRepository.findById(reservationTimeId);
+	}
+	
+	public int countByReservationTimeService(ReservationTime reservationTime) {
+		return reservationTimeRelationRepository.countByReservationTime(reservationTime);
+	}
+	
+	public Optional<ReservationTimeRelation> findByReservationTimeAndUserAndDateService(ReservationTime reservationTime, SpUser user, LocalDate now) {
+		return reservationTimeRelationRepository.findByReservationTimeAndUserAndDate(reservationTime, user, now);
+	}
+	
+	public void deleteReservationTimeRelationService(String jwt, Long reservationTimeId) {
 		ReservationTime reservationTime = reservationTimeRepository.findById(reservationTimeId).get();
 		
-		String email = tokenUtils.getEmail(jwt);
-		SpUser user = userRepository.findByEmail(email);
+		SpUser user = spUserService.findUserByJwt(jwt);
 		
 		LocalDate now = LocalDate.now();
 		
 		reservationTimeRelationRepository.deleteByReservationTimeAndUserAndDate(reservationTime, user, now);
-		
-		return new ResponseEntity(HttpStatus.OK);
 	}
 }

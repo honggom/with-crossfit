@@ -80,7 +80,7 @@ public class WodController {
 	public ResponseEntity deleteWodById(@CookieValue(name="refresh") String jwt, @PathVariable Long id) {
 		if (wodService.isWriter(jwt, id)) {
 			wodService.deleteWodByIdService(id);
-			new ResponseEntity(new ResponseDto(200, "와드가 정상적으로 삭제되었습니다."), HttpStatus.OK);
+			return new ResponseEntity(new ResponseDto(200, "와드가 정상적으로 삭제되었습니다."), HttpStatus.OK);
 		}
 		return new ResponseEntity(new ResponseDto(403, "삭제 권한이 없습니다."), HttpStatus.FORBIDDEN);
 	}

@@ -44,7 +44,7 @@ public class MyRmService {
 		return modelMapper.map(rm, MyRmDto.class);
 	}
 	
-	public ResponseEntity updateMyRmService(MyRmDto myRmDto) {
+	public void updateMyRmService(MyRmDto myRmDto) {
 		MyRm rm = myRmRepository.findById(myRmDto.getId()).get();
 		
 		rm.setName(myRmDto.getName());
@@ -52,16 +52,13 @@ public class MyRmService {
 		rm.setLb(myRmDto.getLb());
 		
 		myRmRepository.save(rm);
-		
-		return new ResponseEntity(HttpStatus.OK);
 	}
 	
-	public ResponseEntity deleteMyRmByIdService(Long id) {
+	public void deleteMyRmByIdService(Long id) {
 		myRmRepository.deleteById(id);
-		return new ResponseEntity(HttpStatus.OK);
 	}
 	
-	public ResponseEntity insertMyRmService(MyRmDto myRmDto, String jwt) {
+	public void insertMyRmService(MyRmDto myRmDto, String jwt) {
 		String email = tokenUtils.getEmail(jwt);
 		SpUser user = userRepository.findByEmail(email);
 		
@@ -71,7 +68,5 @@ public class MyRmService {
 				      .lb(myRmDto.getLb())
 				      .user(user)
 				      .build());
-		
-		return new ResponseEntity(HttpStatus.OK);
 	}
 }
