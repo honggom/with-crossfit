@@ -32,6 +32,12 @@ public class ReservationService {
 	private final ReservationTimeRelationRepository reservationTimeRelationRepository;
 	private final SpUserService spUserService;
  	
+	// TODO 리팩토링
+	// 아래 함수 별로 안 좋은 함수 같음
+	// 왜냐 ?
+	// 1. 의존을 너무 많이 함 (reservationRepository를 3번이나 사용함)
+	// 2. 의존을 너무 많이 해서 유닛 테스트 작성이 어려움 (getReservationService의 유닛 테스트 코드를 작성한다고 가정하면
+	// Mock을 많이 사용해야 됨..)
 	public List<ReservationTimeDto> getReservationService(String jwt) {
 		SpUser user = spUserService.findUserByJwt(jwt);
 			
