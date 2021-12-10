@@ -1,6 +1,7 @@
 package hong.gom.withcrossfit.controller.user;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import hong.gom.withcrossfit.dto.MyRmDto;
+import hong.gom.withcrossfit.entity.MyRm;
+import hong.gom.withcrossfit.entity.SpUser;
 import hong.gom.withcrossfit.response.ResponseDto;
 import hong.gom.withcrossfit.service.MyRmService;
+import hong.gom.withcrossfit.service.SpUserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -23,34 +27,38 @@ import lombok.RequiredArgsConstructor;
 public class MyRmController {
 	
 	private final MyRmService myRmService;
+	private final SpUserService spUserService;
 	
 	@GetMapping("/api/my-rm")
 	public ResponseEntity getMyRm(@CookieValue(name="refresh") String jwt) {
-		List<MyRmDto> results = myRmService.getMyRmService(jwt);
+		SpUser user = spUserService.findUserByJwt(jwt);
+		List<MyRm> rms = myRmService.getMyRms(user);
 		
-		if (results.isEmpty()) {
-			new ResponseEntity(new ResponseDto(200, "RM 기록이 없습니다."), HttpStatus.OK);
+		if (rms.isEmpty()) {
+			return new ResponseEntity(new ResponseDto(200, "RM 기록이 없습니다."), HttpStatus.OK);
 		}
-		return new ResponseEntity(results, HttpStatus.OK);
+		return new ResponseEntity(myRmService.convertToDto(rms), HttpStatus.OK);
 	}
 	
 	@GetMapping("/api/my-rm/{id}")
 	public ResponseEntity getMyRmById(@PathVariable Long id) {
-		MyRmDto result = myRmService.getMyRmByIdService(id);
+		Optional<MyRm> rm = myRmService.getMyRmById(id);
 		
-		if (result == null) {
-			new ResponseEntity(new ResponseDto(404, "RM 기록이 없습니다."), HttpStatus.NOT_FOUND);
+		if (rm.isPresent()) {
+			return new ResponseEntity(myRmService.convertToDto(rm.get()), HttpStatus.OK);
 		}
-		return new ResponseEntity(result, HttpStatus.OK);
+		return new ResponseEntity(new ResponseDto(404, "RM 기록이 없습니다."), HttpStatus.NOT_FOUND);
 	}
 	
 	@PutMapping("/api/my-rm")
-	public ResponseEntity updateMyRm(@RequestBody MyRmDto myRmDto) {
-		if (myRmDto != null) {
-			myRmService.updateMyRmService(myRmDto);
+	public ResponseEntity updateMyRm(@RequestBody MyRmDto newRmDto) {
+		Optional<MyRm> oldRm = myRmService.getMyRmById(newRmDto.getId());
+		
+		if (oldRm.isPresent()) {
+			myRmService.updateMyRm(oldRm.get(), newRmDto);	
 			return new ResponseEntity(new ResponseDto(200, "RM이 정상적으로 수정되었습니다."), HttpStatus.OK);
-		} 
-		return new ResponseEntity(new ResponseDto(400, "잘못된 요청입니다."), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity(new ResponseDto(404, "RM 기록이 없습니다."), HttpStatus.NOT_FOUND);
 	}
 	
 	@DeleteMapping("/api/my-rm/{id}")
@@ -62,7 +70,8 @@ public class MyRmController {
 	@PostMapping("/api/my-rm")
 	public ResponseEntity insertMyRm(@RequestBody MyRmDto myRmDto,
 							         @CookieValue(name="refresh") String jwt) {
-		myRmService.insertMyRmService(myRmDto, jwt);
+		SpUser user = spUserService.findUserByJwt(jwt);
+		myRmService.insertMyRmService(user, myRmDto);
 		return new ResponseEntity(new ResponseDto(200, "RM이 정상적으로 추가되었습니다."), HttpStatus.OK);
 	}
 }

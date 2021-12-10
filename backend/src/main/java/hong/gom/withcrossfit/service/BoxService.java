@@ -21,13 +21,14 @@ public class BoxService {
 	private final BoxRepository boxRepository;
 	private final ModelMapper modelMapper;
 	
-	public List<BoxDto> getBoxService() {
-		
-		List<Box> boxes = boxRepository.findAll();
-		
+	public List<Box> getBoxes() {
+		return boxRepository.findAll(); 
+	}
+	
+	public List<BoxDto> convertToDto(List<Box> boxes) {
 		return boxes.stream()
-				.map(box -> modelMapper.map(box, BoxDto.class))
-				.collect(Collectors.toList());
+			        .map(box -> modelMapper.map(box, BoxDto.class))
+			        .collect(Collectors.toList());
 	}
 	
 }

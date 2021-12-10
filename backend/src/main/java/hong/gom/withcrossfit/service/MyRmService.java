@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 import hong.gom.withcrossfit.dto.MyRmDto;
 import hong.gom.withcrossfit.entity.MyRm;
 import hong.gom.withcrossfit.entity.SpUser;
-import hong.gom.withcrossfit.jwt.TokenUtil;
 import hong.gom.withcrossfit.repository.MyRmRepository;
-import hong.gom.withcrossfit.repository.SpUserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -23,44 +21,39 @@ import lombok.RequiredArgsConstructor;
 public class MyRmService {
 	
 	private final MyRmRepository myRmRepository;
-	private final SpUserRepository userRepository;
-	private final TokenUtil tokenUtil;
 	private final ModelMapper modelMapper;
 	
-	public List<MyRmDto> getMyRmService(String jwt) {
-		String email = tokenUtil.getEmail(jwt);
-		SpUser user = userRepository.findByEmail(email);
-		
-		List<MyRm> rms = myRmRepository.findByUser(user);
-		
+	public List<MyRmDto> convertToDto(List<MyRm> rms) {
 		return rms.stream()
 				  .map(rm -> modelMapper.map(rm, MyRmDto.class))
 				  .collect(Collectors.toList());
 	}
 	
-	public MyRmDto getMyRmByIdService(Long id) {
-		Optional<MyRm> rm = myRmRepository.findById(id);
-		return modelMapper.map(rm.get(), MyRmDto.class);
+	public MyRmDto convertToDto(MyRm rm) {
+		return modelMapper.map(rm, MyRmDto.class);
 	}
 	
-	public void updateMyRmService(MyRmDto myRmDto) {
-		MyRm rm = myRmRepository.findById(myRmDto.getId()).get();
+	public List<MyRm> getMyRms(SpUser user) {
+		return myRmRepository.findByUser(user);
+	}
+	
+	public Optional<MyRm> getMyRmById(Long id) {
+		return myRmRepository.findById(id);
+	}
+	
+	public void updateMyRm(MyRm oldRm, MyRmDto newRmDto) {
+		oldRm.setName(newRmDto.getName());
+		oldRm.setRepetition(newRmDto.getRepetition());
+		oldRm.setLb(newRmDto.getLb());
 		
-		rm.setName(myRmDto.getName());
-		rm.setRepetition(myRmDto.getRepetition());
-		rm.setLb(myRmDto.getLb());
-		
-		myRmRepository.save(rm);
+		myRmRepository.save(oldRm);
 	}
 	
 	public void deleteMyRmByIdService(Long id) {
 		myRmRepository.deleteById(id);
 	}
 	
-	public void insertMyRmService(MyRmDto myRmDto, String jwt) {
-		String email = tokenUtil.getEmail(jwt);
-		SpUser user = userRepository.findByEmail(email);
-		
+	public void insertMyRmService(SpUser user, MyRmDto myRmDto) {
 		myRmRepository.save(MyRm.builder()
 				      .name(myRmDto.getName())
 				      .repetition(myRmDto.getRepetition())
