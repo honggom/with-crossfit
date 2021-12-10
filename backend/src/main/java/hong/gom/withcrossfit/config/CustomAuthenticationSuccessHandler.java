@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -24,6 +25,7 @@ import hong.gom.withcrossfit.jwt.TokenUtil;
 import hong.gom.withcrossfit.service.SpUserService;
 import lombok.RequiredArgsConstructor;
 
+@Profile("dev")
 @Component
 @RequiredArgsConstructor
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler  {

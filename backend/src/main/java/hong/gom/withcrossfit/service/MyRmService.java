@@ -1,13 +1,12 @@
 package hong.gom.withcrossfit.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import hong.gom.withcrossfit.dto.MyRmDto;
@@ -25,11 +24,11 @@ public class MyRmService {
 	
 	private final MyRmRepository myRmRepository;
 	private final SpUserRepository userRepository;
-	private final TokenUtil tokenUtils;
+	private final TokenUtil tokenUtil;
 	private final ModelMapper modelMapper;
 	
 	public List<MyRmDto> getMyRmService(String jwt) {
-		String email = tokenUtils.getEmail(jwt);
+		String email = tokenUtil.getEmail(jwt);
 		SpUser user = userRepository.findByEmail(email);
 		
 		List<MyRm> rms = myRmRepository.findByUser(user);
@@ -40,8 +39,8 @@ public class MyRmService {
 	}
 	
 	public MyRmDto getMyRmByIdService(Long id) {
-		MyRm rm = myRmRepository.findById(id).get();
-		return modelMapper.map(rm, MyRmDto.class);
+		Optional<MyRm> rm = myRmRepository.findById(id);
+		return modelMapper.map(rm.get(), MyRmDto.class);
 	}
 	
 	public void updateMyRmService(MyRmDto myRmDto) {
@@ -59,7 +58,7 @@ public class MyRmService {
 	}
 	
 	public void insertMyRmService(MyRmDto myRmDto, String jwt) {
-		String email = tokenUtils.getEmail(jwt);
+		String email = tokenUtil.getEmail(jwt);
 		SpUser user = userRepository.findByEmail(email);
 		
 		myRmRepository.save(MyRm.builder()

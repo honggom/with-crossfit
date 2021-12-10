@@ -8,22 +8,17 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import hong.gom.withcrossfit.dto.ReservationStatusDto;
 import hong.gom.withcrossfit.dto.ReservationTimeDto;
-import hong.gom.withcrossfit.entity.Box;
 import hong.gom.withcrossfit.entity.Reservation;
 import hong.gom.withcrossfit.entity.ReservationTime;
 import hong.gom.withcrossfit.entity.ReservationTimeRelation;
 import hong.gom.withcrossfit.entity.SpUser;
-import hong.gom.withcrossfit.jwt.TokenUtil;
 import hong.gom.withcrossfit.repository.ReservationRepository;
 import hong.gom.withcrossfit.repository.ReservationTimeRelationRepository;
 import hong.gom.withcrossfit.repository.ReservationTimeRepository;
-import hong.gom.withcrossfit.repository.SpUserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -31,9 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReservationService {
 	
-	private final TokenUtil tokenUtils;
 	private final ModelMapper modelMapper;
-	private final SpUserRepository userRepository;
 	private final ReservationRepository reservationRepository;
 	private final ReservationTimeRepository reservationTimeRepository;
 	private final ReservationTimeRelationRepository reservationTimeRelationRepository;
