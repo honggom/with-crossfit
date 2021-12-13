@@ -23,6 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import hong.gom.withcrossfit.dto.BoxDto;
+import hong.gom.withcrossfit.entity.Box;
 import hong.gom.withcrossfit.service.BoxService;
 
 @WebMvcTest(controllers = BoxController.class)
@@ -48,18 +49,26 @@ class BoxControllerTest {
 	@Test
 	void getBox_api_테스트() throws Exception {
 		// given
-		BoxDto box1 = new BoxDto();
-		box1.setName("난곡");
+		Box box1 = Box.builder().name("난곡").build();
 
-		BoxDto box2 = new BoxDto();
-		box2.setName("서울대");
+		Box box2 = Box.builder().name("서울대").build();
 
-		BoxDto box3 = new BoxDto();
-		box3.setName("이수");
+		Box box3 = Box.builder().name("이수").build();
+		
+		BoxDto boxDto1 = new BoxDto();
+		boxDto1.setName("난곡");
+		
+		BoxDto boxDto2 = new BoxDto();
+		boxDto2.setName("서울대");
+		
+		BoxDto boxDto3 = new BoxDto();
+		boxDto3.setName("이수");
 
-		List<BoxDto> boxes = List.of(box1, box2, box3);
+		List<Box> boxes = List.of(box1, box2, box3);
+		List<BoxDto> boxDtos = List.of(boxDto1, boxDto2, boxDto3);
 
-		given(boxService.getBoxService()).willReturn(boxes);
+		given(boxService.getBoxes()).willReturn(boxes);
+		given(boxService.convertToDto(boxes)).willReturn(boxDtos);
 
 		// when
 		final ResultActions actions = mvc.perform(get("/admin/api/box")

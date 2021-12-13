@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
-import hong.gom.withcrossfit.dto.MyRmDto;
 import hong.gom.withcrossfit.entity.MyRm;
 import hong.gom.withcrossfit.repository.MyRmRepository;
 
@@ -41,20 +40,14 @@ class MyRmServiceTest {
                          .build();
 		
 		given(myRmRepository.findById(fakeId)).willReturn(Optional.of(newRm));
-		given(modelMapper.map(newRm, MyRmDto.class)).willReturn(MyRmDto.builder()
-		                                                               .id(fakeId)
-                                                                       .name("squat")
-                                                                       .repetition(10)
-                                                                       .lb(100) 
-				                                                       .build());
 		
 		// when
-		MyRmDto dto = myRmService.getMyRmByIdService(fakeId);
+		Optional<MyRm> rm = myRmService.getMyRmById(fakeId);
 		
 		// then
-		assertEquals(dto.getId(), newRm.getId());
-		assertEquals(dto.getRepetition(), newRm.getRepetition());
-		assertEquals(dto.getLb(), newRm.getLb());
+		assertEquals(rm.get().getId(), newRm.getId());
+		assertEquals(rm.get().getRepetition(), newRm.getRepetition());
+		assertEquals(rm.get().getLb(), newRm.getLb());
 	}
 
 }

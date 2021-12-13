@@ -11,9 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ActiveProfiles;
 
-import hong.gom.withcrossfit.dto.BoxDto;
 import hong.gom.withcrossfit.entity.Box;
 import hong.gom.withcrossfit.repository.BoxRepository;
 
@@ -48,7 +46,7 @@ class BoxServiceTest {
 		boxRepository.saveAll(List.of(box1, box2, box3));
 		
 		// when
-		List<BoxDto> boxes = boxService.getBoxService();
+		List<Box> boxes = boxService.getBoxes();
 		
 		// then
 		assertEquals(3, boxes.size());
