@@ -3,22 +3,17 @@ package hong.gom.withcrossfit.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import hong.gom.withcrossfit.dto.EachTimeDto;
 import hong.gom.withcrossfit.dto.ScheduleDto;
 import hong.gom.withcrossfit.dto.SpecificEachTimeDto;
 import hong.gom.withcrossfit.dto.SpecificScheduleDto;
-import hong.gom.withcrossfit.dto.SpecificScheduleResponseDto;
 import hong.gom.withcrossfit.dto.UpdateScheduleSetDto;
 import hong.gom.withcrossfit.entity.Box;
 import hong.gom.withcrossfit.entity.EachTime;
@@ -26,11 +21,9 @@ import hong.gom.withcrossfit.entity.Schedule;
 import hong.gom.withcrossfit.entity.ScheduleSet;
 import hong.gom.withcrossfit.entity.SpecificEachTime;
 import hong.gom.withcrossfit.entity.SpecificSchedule;
-import hong.gom.withcrossfit.jwt.TokenUtil;
 import hong.gom.withcrossfit.repository.EachTimeRepository;
 import hong.gom.withcrossfit.repository.ScheduleRepository;
 import hong.gom.withcrossfit.repository.ScheduleSetRepository;
-import hong.gom.withcrossfit.repository.SpUserRepository;
 import hong.gom.withcrossfit.repository.SpecificEachTimeRepository;
 import hong.gom.withcrossfit.repository.SpecificScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,64 +34,31 @@ import lombok.RequiredArgsConstructor;
 public class ScheduleService {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-	private final TokenUtil tokenUtils;
-	private final ModelMapper modelMapper;
-	private final SpUserRepository userRepository;
 	private final ScheduleRepository scheduleRepository;
 	private final SpecificScheduleRepository specificScheduleRepository;
 	private final SpecificEachTimeRepository specificEachTimeRepository;
 	private final EachTimeRepository eachTimeRepository;
 	private final ScheduleSetRepository scheduleSetRepository;
 	
-	public List<SpecificScheduleResponseDto> getSpecificScheduleService(String jwt, String start, String end) {
-		String email = tokenUtils.getEmail(jwt);
-		Box box = userRepository.findByEmail(email).getBox();
-		LocalDate startDate = makeToLocalDate(start);
-		LocalDate endDate = makeToLocalDate(end);
-		
-		return specificScheduleRepository.findByBoxAndDateBetween(box, startDate, endDate)
-				                         .stream()
-				                         .map(schedule -> modelMapper.map(schedule, SpecificScheduleResponseDto.class))
-				                         .collect(Collectors.toList());
+	public List<SpecificSchedule> getSpecificSchedule(Box box, LocalDate startDate, LocalDate endDate) {
+		return specificScheduleRepository.findByBoxAndDateBetween(box, startDate, endDate);
 	}
 	
-	public SpecificScheduleResponseDto getSpecificScheduleByDateService(String jwt, String date) {
-		String email = tokenUtils.getEmail(jwt);
-		Box box = userRepository.findByEmail(email).getBox();
-		
-		Optional<SpecificSchedule> specificSchedule = specificScheduleRepository.findByBoxAndDate(box, makeToLocalDate(date));
-		
-		if (specificSchedule.isPresent()) {
-			SpecificScheduleResponseDto responseDto = modelMapper.map(specificSchedule.get(), SpecificScheduleResponseDto.class);
-			
-			List<SpecificEachTime> times = specificEachTimeRepository.findBySpecificSchedule(specificSchedule.get());
-			
-			List<SpecificEachTimeDto> timesDto = times.stream()
-					                                  .map(time -> modelMapper.map(time, SpecificEachTimeDto.class))
-					                                  .collect(Collectors.toList());
-			
-			responseDto.setTimes(timesDto);
-			
-			return responseDto;
-		}
-		return null;
+	public Optional<SpecificSchedule> getSpecificScheduleByDate(Box box, LocalDate date) {
+		return specificScheduleRepository.findByBoxAndDate(box, date);
 	}
 	
-	public void deleteSpecificScheduleByIdService(Long id) {
+	public void deleteSpecificScheduleById(Long id) {
 		SpecificSchedule specificSchedule = specificScheduleRepository.findById(id).get();
 		specificEachTimeRepository.deleteBySpecificSchedule(specificSchedule);
 		specificScheduleRepository.delete(specificSchedule);
 	}
 	
-	public void insertScheduleService(String jwt, ScheduleDto scheduleDto) {
-		String email = tokenUtils.getEmail(jwt);
-		Box box = userRepository.findByEmail(email).getBox();
-		
+	public void insertSchedule(Box box, ScheduleDto scheduleDto) {
 		Schedule savedSchedule = scheduleRepository.save(Schedule.builder()
 				                                   .name(scheduleDto.getName())
 				                                   .box(box)
 				                                   .build());
-		
 		
 		for (EachTimeDto time : scheduleDto.getTimes()) {
 			eachTimeRepository.save(EachTime.builder()
@@ -109,35 +69,21 @@ public class ScheduleService {
 		}
 	}
 	
-	public List<ScheduleDto> getScheduleByBoxService(String jwt) {
-		String email = tokenUtils.getEmail(jwt);
-		Box box = userRepository.findByEmail(email).getBox();
-		
-		List<Schedule> schedules = scheduleRepository.findByBox(box);
-		
-		return schedules.stream()
-				        .map(schedule -> modelMapper.map(schedule, ScheduleDto.class))
-				        .collect(Collectors.toList());
+	public List<Schedule> getScheduleByBoxService(Box box) {
+		return scheduleRepository.findByBox(box);
 	}
 	
-	public List<EachTimeDto> getEachTimeByScheduleIdService(Long id) {
-		List<EachTime> eachTimes = eachTimeRepository.findBySchedule(scheduleRepository.findById(id).get());
-		
-		return eachTimes.stream()
-                        .map(eachTime -> modelMapper.map(eachTime, EachTimeDto.class))
-                        .collect(Collectors.toList());
+	public List<EachTime> getEachTimeByScheduleId(Long id) {
+		return eachTimeRepository.findBySchedule(scheduleRepository.findById(id).get());
 	}
 	
 	public void deleteScheduleByIdService(Long id) {
 		Schedule schedule = scheduleRepository.findById(id).get();
-		int result = eachTimeRepository.deleteBySchedule(schedule);
+		eachTimeRepository.deleteBySchedule(schedule);
 		scheduleRepository.delete(schedule);
 	}
 	
-	public ScheduleSet getScheduleSetByBoxService(String jwt) {
-		String email = tokenUtils.getEmail(jwt);
-		Box box = userRepository.findByEmail(email).getBox();
-		
+	public ScheduleSet getScheduleSetByBox(Box box) {
 		Optional<ScheduleSet> scheduleSet =	scheduleSetRepository.findByBox(box);
 		
 		if(scheduleSet.isPresent()) {
@@ -181,15 +127,11 @@ public class ScheduleService {
 		scheduleSetRepository.save(scheduleSet);
 	}
 	
-	public void insertSpecificScheduleService(String jwt, SpecificScheduleDto dto) {
-		String email = tokenUtils.getEmail(jwt);
-		Box box = userRepository.findByEmail(email).getBox();
-		
-		
+	public void insertSpecificSchedule(Box box, SpecificScheduleDto dto, LocalDate date) {
 		SpecificSchedule savedSpecificSchedule = specificScheduleRepository.save(SpecificSchedule.builder()
 				                                   .name(dto.getName())
 				                                   .box(box)
-				                                   .date(makeToLocalDate(dto.getDateStr()))
+				                                   .date(date)
 				                                   .build());
 		
 		
@@ -202,25 +144,12 @@ public class ScheduleService {
 		}
 	}
 	
-	public void insertDayOffSpecificScheduleService(String jwt, String dateStr) {
-		String email = tokenUtils.getEmail(jwt);
-		Box box = userRepository.findByEmail(email).getBox();
-		
+	public void insertDayOffSpecificSchedule(Box box, LocalDate date) {
 		specificScheduleRepository.save(SpecificSchedule.builder()
                                   .box(box)
-                                  .date(makeToLocalDate(dateStr))
+                                  .date(date)
                                   .isDayOff(true)
                                   .build());
-	}
-	
-	private LocalDate makeToLocalDate(String dateStr) {
-		String[] dates = dateStr.split("-");
-		
-		int year = Integer.parseInt(dates[0]);
-		int month = Integer.parseInt(dates[1]);
-		int date = Integer.parseInt(dates[2]);
-		
-		return LocalDate.of(year, month, date);
 	}
 	
 	private void logging(String message) {
