@@ -22,6 +22,7 @@ import hong.gom.withcrossfit.entity.Wod;
 import hong.gom.withcrossfit.response.ResponseDto;
 import hong.gom.withcrossfit.service.SpUserService;
 import hong.gom.withcrossfit.service.WodService;
+import hong.gom.withcrossfit.util.Converter;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -32,11 +33,14 @@ public class WodController {
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	private final WodService wodService;
 	private final SpUserService spUserService;
+	private final Converter converter;
 	
 	// TODO wod -> wod dto
 	@GetMapping("/wod")
 	public ResponseEntity getWod(@CookieValue(name="refresh") String jwt, Pageable pageable) {
-		Page<Wod> results = wodService.getWodService(jwt, pageable);
+		SpUser user = spUserService.findUserByJwt(jwt);
+		
+		Page<Wod> results = wodService.getWod(user.getBox(), pageable);
 		
 		if (results.getContent().isEmpty()) {
 			return new ResponseEntity(new ResponseDto(204, "작성된 와드가 존재하지 않습니다."), HttpStatus.NO_CONTENT);
@@ -46,10 +50,12 @@ public class WodController {
 	
 	@GetMapping("/wod/{id}")
 	public ResponseEntity getWodById(@CookieValue(name="refresh") String jwt, @PathVariable Long id) {
-		WodDto result = wodService.getWodByIdService(jwt, id);
+		SpUser user = spUserService.findUserByJwt(jwt);
 		
-		if (result != null) {
-			return new ResponseEntity(result, HttpStatus.OK);
+		Wod wod = wodService.getWodById(user.getEmail(), id);
+		
+		if (wod != null) {
+			return new ResponseEntity(converter.convertToWodDto(wod), HttpStatus.OK);
 		}
 		return new ResponseEntity(new ResponseDto(404, "와드가 존재하지 않습니다."), HttpStatus.NOT_FOUND);
 	}
@@ -78,7 +84,9 @@ public class WodController {
 	
 	@DeleteMapping("/wod/{id}")
 	public ResponseEntity deleteWodById(@CookieValue(name="refresh") String jwt, @PathVariable Long id) {
-		if (wodService.isWriter(jwt, id)) {
+		SpUser user = spUserService.findUserByJwt(jwt);
+		
+		if (wodService.isWriter(user.getEmail(), id)) {
 			wodService.deleteWodByIdService(id);
 			return new ResponseEntity(new ResponseDto(200, "와드가 정상적으로 삭제되었습니다."), HttpStatus.OK);
 		}

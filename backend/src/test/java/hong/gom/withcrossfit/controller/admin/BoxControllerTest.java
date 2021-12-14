@@ -25,6 +25,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import hong.gom.withcrossfit.dto.BoxDto;
 import hong.gom.withcrossfit.entity.Box;
 import hong.gom.withcrossfit.service.BoxService;
+import hong.gom.withcrossfit.util.Converter;
 
 @WebMvcTest(controllers = BoxController.class)
 @MockBean(JpaMetamodelMappingContext.class)
@@ -45,6 +46,9 @@ class BoxControllerTest {
 
 	@MockBean
 	private BoxService boxService;
+	
+	@MockBean
+	private Converter converter;
 
 	@Test
 	void getBox_api_테스트() throws Exception {
@@ -68,7 +72,7 @@ class BoxControllerTest {
 		List<BoxDto> boxDtos = List.of(boxDto1, boxDto2, boxDto3);
 
 		given(boxService.getBoxes()).willReturn(boxes);
-		given(boxService.convertToDto(boxes)).willReturn(boxDtos);
+		given(converter.convertToBoxDtoList(boxes)).willReturn(boxDtos);
 
 		// when
 		final ResultActions actions = mvc.perform(get("/admin/api/box")

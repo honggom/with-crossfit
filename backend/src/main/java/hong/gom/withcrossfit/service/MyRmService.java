@@ -2,11 +2,9 @@ package hong.gom.withcrossfit.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import hong.gom.withcrossfit.dto.MyRmDto;
@@ -21,17 +19,6 @@ import lombok.RequiredArgsConstructor;
 public class MyRmService {
 	
 	private final MyRmRepository myRmRepository;
-	private final ModelMapper modelMapper;
-	
-	public List<MyRmDto> convertToDto(List<MyRm> rms) {
-		return rms.stream()
-				  .map(rm -> modelMapper.map(rm, MyRmDto.class))
-				  .collect(Collectors.toList());
-	}
-	
-	public MyRmDto convertToDto(MyRm rm) {
-		return modelMapper.map(rm, MyRmDto.class);
-	}
 	
 	public List<MyRm> getMyRms(SpUser user) {
 		return myRmRepository.findByUser(user);

@@ -46,6 +46,8 @@ public class Wod extends BaseEntity {
     
     private String title;
     
+    private boolean editable;
+    
     private String content;
     
 }

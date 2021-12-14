@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,8 +13,6 @@ import hong.gom.withcrossfit.dto.WodDto;
 import hong.gom.withcrossfit.entity.Box;
 import hong.gom.withcrossfit.entity.SpUser;
 import hong.gom.withcrossfit.entity.Wod;
-import hong.gom.withcrossfit.jwt.TokenUtil;
-import hong.gom.withcrossfit.repository.SpUserRepository;
 import hong.gom.withcrossfit.repository.WodRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -24,29 +21,22 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class WodService {
 
-	private final SpUserRepository userRepository;
-	private final TokenUtil tokenUtils;
 	private final WodRepository wodRepository;
-	private final ModelMapper modelMapper;
 	
-	public Page<Wod> getWodService(String jwt, Pageable pageable) {
-		String email = tokenUtils.getEmail(jwt);
-		Box box = userRepository.findByEmail(email).getBox();
+	public Page<Wod> getWod(Box box, Pageable pageable) {
 		return wodRepository.findBybox(box, pageable);
 	}
 	
-	public WodDto getWodByIdService(String jwt, Long id) {
-		String email = tokenUtils.getEmail(jwt);
+	public Wod getWodById(String email, Long id) {
 		Optional<Wod> wod = wodRepository.findById(id);
 		
 		if (wod.isPresent()) {
-			WodDto dto = modelMapper.map(wod.get(), WodDto.class);
 			if (wod.get().getWriter().getEmail().equals(email)) {
-				dto.setEditable(true);
+				wod.get().setEditable(true);
 			} else {
-				dto.setEditable(false);
+				wod.get().setEditable(false);
 			}
-			return dto;
+			return wod.get();
 		} 
 		return null;
 	}
@@ -80,8 +70,7 @@ public class WodService {
 		wodRepository.save(newWod);
 	}
 	
-	public boolean isWriter(String jwt, Long id) {
-		String email = tokenUtils.getEmail(jwt);
+	public boolean isWriter(String email, Long id) {
 		Wod wod = wodRepository.findById(id).get();
 		
 		if (email.equals(wod.getWriter().getEmail())) {

@@ -20,6 +20,7 @@ import hong.gom.withcrossfit.entity.SpUser;
 import hong.gom.withcrossfit.response.ResponseDto;
 import hong.gom.withcrossfit.service.MyRmService;
 import hong.gom.withcrossfit.service.SpUserService;
+import hong.gom.withcrossfit.util.Converter;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -28,6 +29,7 @@ public class MyRmController {
 	
 	private final MyRmService myRmService;
 	private final SpUserService spUserService;
+	private final Converter converter;
 	
 	@GetMapping("/api/my-rm")
 	public ResponseEntity getMyRm(@CookieValue(name="refresh") String jwt) {
@@ -37,7 +39,7 @@ public class MyRmController {
 		if (rms.isEmpty()) {
 			return new ResponseEntity(new ResponseDto(200, "RM 기록이 없습니다."), HttpStatus.OK);
 		}
-		return new ResponseEntity(myRmService.convertToDto(rms), HttpStatus.OK);
+		return new ResponseEntity(converter.convertToMyRmDtoList(rms), HttpStatus.OK);
 	}
 	
 	@GetMapping("/api/my-rm/{id}")
@@ -45,7 +47,7 @@ public class MyRmController {
 		Optional<MyRm> rm = myRmService.getMyRmById(id);
 		
 		if (rm.isPresent()) {
-			return new ResponseEntity(myRmService.convertToDto(rm.get()), HttpStatus.OK);
+			return new ResponseEntity(converter.convertToMyRmDto(rm.get()), HttpStatus.OK);
 		}
 		return new ResponseEntity(new ResponseDto(404, "RM 기록이 없습니다."), HttpStatus.NOT_FOUND);
 	}

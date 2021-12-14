@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import hong.gom.withcrossfit.dto.ReservationStatusDto;
-import hong.gom.withcrossfit.dto.ReservationTimeDto;
 import hong.gom.withcrossfit.dto.ReservationTimeIdDto;
 import hong.gom.withcrossfit.entity.Box;
 import hong.gom.withcrossfit.entity.ReservationTime;
@@ -26,6 +25,7 @@ import hong.gom.withcrossfit.entity.SpUser;
 import hong.gom.withcrossfit.response.ResponseDto;
 import hong.gom.withcrossfit.service.ReservationService;
 import hong.gom.withcrossfit.service.SpUserService;
+import hong.gom.withcrossfit.util.Converter;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -35,20 +35,24 @@ public class ReservationController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final ReservationService reservationService;
 	private final SpUserService spUserService;
+	private final Converter converter;
 	
 	@GetMapping("/api/reservation")
 	public ResponseEntity getReservation(@CookieValue(name = "refresh") String jwt) {
-		List<ReservationTimeDto> results = reservationService.getReservationService(jwt);
+		SpUser user = spUserService.findUserByJwt(jwt);
+		
+		List<ReservationTime> results = reservationService.getReservation(user);
 		
 		if (results.isEmpty()) {
 			new ResponseEntity(new ResponseDto(404, "예약 시간이 존재하지 않습니다."), HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity(results, HttpStatus.OK);
+		return new ResponseEntity(converter.convertToReservationTimeDtoList(results), HttpStatus.OK);
 	}
 	
 	@GetMapping("/api/reservation/status")
 	public ResponseEntity getReservationStatus(@CookieValue(name = "refresh") String jwt) {
-		ReservationStatusDto result = reservationService.getReservationStatusService(jwt); 
+		SpUser user = spUserService.findUserByJwt(jwt);
+		ReservationStatusDto result = reservationService.getReservationStatus(user); 
 		return new ResponseEntity(result, HttpStatus.OK);
 	}
 	
@@ -78,7 +82,8 @@ public class ReservationController {
 	
 	@DeleteMapping("/api/reservation-time-relation/{reservationTimeId}") 
 	public ResponseEntity deleteReservationTimeRelation(@CookieValue(name = "refresh") String jwt, @PathVariable Long reservationTimeId) {
-		reservationService.deleteReservationTimeRelationService(jwt, reservationTimeId);
+		SpUser user = spUserService.findUserByJwt(jwt);
+		reservationService.deleteReservationTimeRelationService(user, reservationTimeId);
 		return new ResponseEntity(new ResponseDto(200, "예약이 정상적으로 취소되었습니다."), HttpStatus.OK);
 	}
 		

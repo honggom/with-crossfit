@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hong.gom.withcrossfit.dto.BoxIdAndUserEmailDto;
-import hong.gom.withcrossfit.dto.UserDto;
+import hong.gom.withcrossfit.entity.SpUser;
 import hong.gom.withcrossfit.response.ResponseDto;
 import hong.gom.withcrossfit.service.UserAdminApiService;
+import hong.gom.withcrossfit.util.Converter;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -25,15 +26,16 @@ public class UserAdminController {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	private final UserAdminApiService userService;
+	private final Converter converter;
 	
 	@GetMapping("/not-registered")
 	public ResponseEntity getNotRegisteredUser() {
-		List<UserDto> results = userService.getNotRegisteredUserService();
+		List<SpUser> users = userService.getNotRegisteredUserService();
 		
-		if (results.isEmpty()) {
+		if (users.isEmpty()) {
 			new ResponseEntity(new ResponseDto(204, "미등록된 사용자가 존재하지 않습니다."), HttpStatus.NO_CONTENT);
 		}
-		return new ResponseEntity(results, HttpStatus.OK);
+		return new ResponseEntity(converter.convertToUserDtoList(users), HttpStatus.OK);
 	}
 	
 	@PostMapping("/register")

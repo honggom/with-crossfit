@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hong.gom.withcrossfit.dto.DayOffSpecificScheduleDto;
-import hong.gom.withcrossfit.dto.EachTimeDto;
 import hong.gom.withcrossfit.dto.ScheduleDto;
 import hong.gom.withcrossfit.dto.SpecificEachTimeDto;
 import hong.gom.withcrossfit.dto.SpecificScheduleDto;

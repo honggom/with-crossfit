@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import hong.gom.withcrossfit.entity.Box;
 import hong.gom.withcrossfit.response.ResponseDto;
 import hong.gom.withcrossfit.service.BoxService;
+import hong.gom.withcrossfit.util.Converter;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -22,6 +23,7 @@ public class BoxController {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	private final BoxService boxService;
+	private final Converter converter;
 	
 	private void logging(String message) {
 		LOGGER.info("BoxController INFO : " + message);
@@ -35,7 +37,7 @@ public class BoxController {
 			logging("기본 박스가 존재하지 않음");
 			return new ResponseEntity<>(new ResponseDto(404, "기본 박스가 존재하지 않습니다. 개발자에게 문의하세요."), HttpStatus.NOT_FOUND);
 		} else {
-			return new ResponseEntity<>(boxService.convertToDto(boxes), HttpStatus.OK);
+			return new ResponseEntity<>(converter.convertToBoxDtoList(boxes), HttpStatus.OK);
 		}
 	}
 	
