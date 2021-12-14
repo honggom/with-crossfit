@@ -10,7 +10,9 @@ import lombok.ToString;
 public class UpdateScheduleSetDto {
 	
 	private Long scheduleSetId;
+	
 	private String day;
+	
 	private Long scheduleId;
 	
 }

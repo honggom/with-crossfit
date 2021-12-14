@@ -10,9 +10,13 @@ import lombok.Setter;
 public class ReservationTimeDto {
 	
 	private Long id;
+	
 	private LocalTime start;
+	
 	private LocalTime end;
+	
 	private int reservationCount;
+	
 	private int maxReservation;
 
 }

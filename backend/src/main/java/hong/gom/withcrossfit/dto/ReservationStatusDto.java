@@ -10,7 +10,10 @@ import lombok.Setter;
 public class ReservationStatusDto {
 
 	private boolean reserved;
+	
 	private Long reservationTimeId;
+	
 	private LocalTime start;
+	
 	private LocalTime end;
 }

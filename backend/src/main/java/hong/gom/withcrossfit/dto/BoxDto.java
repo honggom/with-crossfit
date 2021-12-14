@@ -10,7 +10,9 @@ import lombok.ToString;
 public class BoxDto {
 	
     private Long id;
+    
     private String name;
+    
     private String address;
 
 }

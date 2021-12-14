@@ -12,6 +12,7 @@ import lombok.ToString;
 public class Token {
 	
     private String jwt;
+    
     private String refresh;
 
 }

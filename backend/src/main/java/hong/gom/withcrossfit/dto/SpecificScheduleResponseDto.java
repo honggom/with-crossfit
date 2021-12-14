@@ -13,9 +13,13 @@ import lombok.ToString;
 public class SpecificScheduleResponseDto {
 	
 	private Long id;
+	
 	private String name;
+	
 	private LocalDate date;
+	
 	private boolean isDayOff;
+	
 	private List<SpecificEachTimeDto> times;
 	
 }

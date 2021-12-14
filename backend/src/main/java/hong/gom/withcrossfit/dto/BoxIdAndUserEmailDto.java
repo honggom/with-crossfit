@@ -10,5 +10,6 @@ import lombok.ToString;
 public class BoxIdAndUserEmailDto {
 	
 	private Long boxId;
+	
 	private String email;
 }
