@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 
 import hong.gom.withcrossfit.entity.MyRm;
 import hong.gom.withcrossfit.repository.MyRmRepository;
@@ -23,9 +22,6 @@ class MyRmServiceTest {
 	
 	@Mock
 	private MyRmRepository myRmRepository;
-	
-	@Mock
-	private ModelMapper modelMapper;
 	
 	@Test
 	void 저장된_RM을_ID로_조회한다() {
